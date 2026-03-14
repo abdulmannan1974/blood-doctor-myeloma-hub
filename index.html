@@ -425,20 +425,173 @@ Object.assign(REGIMEN_DB, {
   },
 });
 
-var GENERIC_REGIMENS = {
-  'Isa-Rd':{full:'Isatuximab-irfc + Lenalidomide + Dexamethasone',setting:'Non-HCT candidates',category:'Cat 2A'},
-  'VRd-lite':{full:'Bortezomib + Lenalidomide + Dexamethasone (dose-reduced)',setting:'Frail patients',category:'Cat 2A'},
-  'Rd':{full:'Lenalidomide + Low-Dose Dexamethasone',setting:'Non-HCT candidates',category:'Cat 1'},
-  'Vd':{full:'Bortezomib + Dexamethasone',setting:'Useful in certain circumstances',category:'Cat 1'},
-  'KPd':{full:'Carfilzomib + Pomalidomide + Dexamethasone',setting:'Relapsed (anti-CD38 refractory)',category:'Cat 2A'},
-  'Dara-Vd':{full:'Daratumumab + Bortezomib + Dexamethasone',setting:'Relapsed (lenalidomide refractory)',category:'Cat 1'},
-  'Elo-Pd':{full:'Elotuzumab + Pomalidomide + Dexamethasone',setting:'Relapsed after 2 prior (Len+PI)',category:'Cat 2A'},
-  'Ixa-Pd':{full:'Ixazomib + Pomalidomide + Dexamethasone',setting:'Relapsed after 2 prior, progression within 60 days',category:'Cat 2A'},
-  'Elo-Rd':{full:'Elotuzumab + Lenalidomide + Dexamethasone',setting:'Relapsed/refractory',category:'Cat 1'},
-  'Ixa-Rd':{full:'Ixazomib + Lenalidomide + Dexamethasone',setting:'Relapsed/refractory',category:'Cat 1'},
-  'Linvoseltamab':{full:'Linvoseltamab-gcpt (BCMA x CD3 bispecific)',setting:'After ≥4 prior lines',category:'Preferred'},
-  'Selinexor-d':{full:'Selinexor + Dexamethasone',setting:'Penta-refractory (≥4 prior lines)',category:'Other Recommended'},
-};
+Object.assign(REGIMEN_DB, {
+  'Isa-Rd': {
+    full:'Isatuximab-irfc + Lenalidomide + Dexamethasone',
+    abbr:'Isa-Rd', setting:'Non-HCT candidates (Other Recommended)', category:'Category 2A',
+    drugs:[
+      {name:'Isatuximab-irfc',cls:'Anti-CD38 monoclonal antibody',dose:'10 mg/kg IV weekly (cycle 1), then every 2 weeks',route:'IV infusion',key:'Anti-CD38 targeting with direct apoptosis induction'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle, continue until progression',route:'Oral',key:'Cereblon modulation, immune activation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO weekly (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory, direct anti-myeloma'}
+    ],
+    trials:'IMROZ trial (phase 3): Isa-Rd vs Rd in transplant-ineligible NDMM. PFS at 60 months: 63.2% vs 45.2% (HR 0.60, P<0.001). ORR: 91.3% vs 82.4%. MRD-negative (10\u207b\u2075): 26.0% vs 10.7%. Deep responses with manageable safety profile in elderly population.',
+    sideEffects:'Infusion-related reactions (mainly first dose), neutropenia, infections (pneumonia, URTIs), diarrhoea, fatigue. Type and screen before starting (interferes with Coombs test). Generally well tolerated in elderly patients.',
+    monitoring:'CBC with differential each cycle; SPEP/SIFE/FLC for response assessment; type and screen before first dose; VTE prophylaxis (IMiD-based regimen); HSV/VZV prophylaxis; hepatitis B screening',
+    special:'Suitable for transplant-ineligible patients. Continue until progression with dose modifications as needed. Isatuximab-irfc may be substituted with daratumumab in practice though different trial data. SC daratumumab formulation not available for isatuximab.',
+    evidence:{e:4,s:4,q:4,c:3,a:1}
+  },
+  'VRd-lite': {
+    full:'Bortezomib + Lenalidomide + Dexamethasone (Dose-Reduced)',
+    abbr:'VRd-lite', setting:'Frail patients, Non-HCT (Useful in Certain Circumstances)', category:'Category 2A',
+    drugs:[
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m\u00b2 SC on days 1, 8, 15 of 35-day cycle (weekly, reduced frequency)',route:'SC',key:'26S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'15 mg PO days 1-21 of 35-day cycle (reduced from standard 25 mg)',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO on day of and day after bortezomib (reduced from 40 mg)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'O\'Donnell et al. (Br J Haematol 2018): Modified VRd (VRd-lite) in patients assessed as frail by IMWG Frailty Score. ORR: 86%. Median PFS: 35 months. Significantly fewer grade 3-4 adverse events compared to full-dose VRd (31% vs 56%). Maintained efficacy with improved tolerability in the frail population.',
+    sideEffects:'Reduced toxicity compared to standard VRd. Peripheral neuropathy (reduced with weekly SC bortezomib), fatigue, mild cytopenias, GI disturbance. Lower rates of grade 3-4 infections and thromboembolic events due to reduced dexamethasone.',
+    monitoring:'CBC every 2 weeks initially; neuropathy assessment; renal function; SPEP/SIFE/FLC; frailty re-assessment at each visit; VTE prophylaxis; HSV/VZV prophylaxis',
+    special:'Specifically designed for frail patients assessed by IMWG Frailty Score or Myeloma Frailty Calculator. Extended cycle length (35 days) allows recovery time. Can escalate to full-dose VRd if performance status improves. Preferred over full-dose VRd in patients with frailty score indicating "frail" category.',
+    evidence:{e:3,s:4,q:3,c:3,a:2}
+  },
+  'Rd': {
+    full:'Lenalidomide + Low-Dose Dexamethasone',
+    abbr:'Rd', setting:'Non-HCT candidates (Useful in Certain Circumstances, Category 1)', category:'Category 1',
+    drugs:[
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle, continue until progression',route:'Oral',key:'Cereblon E3 ligase modulation, immune activation, anti-angiogenic'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO on days 1, 8, 15, 22 of 28-day cycle (low-dose); reduce to 20 mg weekly if >75 years',route:'Oral',key:'Direct anti-myeloma activity'}
+    ],
+    trials:'ECOG E4A03/FIRST trial: Low-dose dexamethasone (40 mg weekly) vs high-dose (40 mg days 1-4, 9-12, 17-20) with lenalidomide. Low-dose: superior OS at 1 year (96% vs 87%, P=0.0002). FIRST trial (phase 3): Continuous Rd vs MPT in transplant-ineligible NDMM. Median PFS: 25.5 vs 21.2 months (HR 0.72, P<0.001). Continuous Rd was standard of care before triplet/quadruplet era.',
+    sideEffects:'Neutropenia, fatigue, diarrhoea, constipation, muscle cramps, rash, VTE risk (thromboprophylaxis mandatory). Risk of secondary primary malignancies with prolonged use. Low-dose dexamethasone significantly better tolerated than high-dose.',
+    monitoring:'CBC monthly; SPEP/SIFE/FLC each cycle; VTE prophylaxis per risk score; annual skin examination (SPM risk); renal function; HSV/VZV prophylaxis',
+    special:'Category 1 option for non-HCT candidates. Now largely superseded by triplets and quadruplets (Dara-Rd, VRd, Dara-VRd). Still appropriate for very frail patients who cannot tolerate additional agents. Low-dose dexamethasone (40 mg weekly) is mandatory over high-dose. Continue until progression.',
+    evidence:{e:3,s:4,q:5,c:4,a:2}
+  },
+  'Vd': {
+    full:'Bortezomib + Dexamethasone',
+    abbr:'Vd', setting:'Useful in Certain Circumstances (primary and relapsed)', category:'Category 1',
+    drugs:[
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m\u00b2 SC days 1, 8, 15 of 21-day cycle (weekly preferred)',route:'SC (preferred)',key:'26S proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO on day of and day after bortezomib; OR 40 mg weekly',route:'Oral',key:'Anti-inflammatory, direct anti-myeloma'}
+    ],
+    trials:'VISTA trial backbone: Bortezomib-dexamethasone is the base doublet. ORR as doublet: 75-80%. Now primarily used as backbone upon which triplets/quadruplets are built. Can serve as bridge therapy or in patients who cannot tolerate IMiDs. ENDEAVOR trial used Kd vs Vd showing carfilzomib superiority (median PFS: 18.7 vs 9.4 months).',
+    sideEffects:'Peripheral neuropathy (dose-limiting; reduced with weekly SC administration), thrombocytopenia (cyclical, nadir day 11), GI disturbance, fatigue, herpes zoster reactivation. SC administration reduces neuropathy incidence by ~40% compared to IV.',
+    monitoring:'Neuropathy assessment each cycle (critical); CBC; renal function; HSV/VZV prophylaxis mandatory; consider PJP prophylaxis with high-dose dexamethasone',
+    special:'Simple doublet useful when IMiDs are contraindicated (renal failure, VTE history, neuropathy from thalidomide). Can add third agent when patient stabilises. Bortezomib is preferred in renal impairment as it does not require dose adjustment. Weekly SC is standard of care over twice-weekly IV.',
+    evidence:{e:3,s:3,q:4,c:4,a:3}
+  },
+  'KPd': {
+    full:'Carfilzomib + Pomalidomide + Dexamethasone',
+    abbr:'KPd', setting:'Relapsed/refractory MM (anti-CD38 refractory, bortezomib refractory, lenalidomide refractory)', category:'Category 2A (Preferred for anti-CD38 refractory)',
+    drugs:[
+      {name:'Carfilzomib',cls:'Proteasome inhibitor (2nd generation)',dose:'20 mg/m\u00b2 days 1-2 cycle 1, then 27 mg/m\u00b2 days 1,2,8,9,15,16 of 28-day cycle (twice-weekly); OR 56 mg/m\u00b2 weekly on days 1,8,15',route:'IV infusion',key:'Irreversible 20S proteasome inhibition'},
+      {name:'Pomalidomide',cls:'IMiD (3rd generation)',dose:'4 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation, more potent than lenalidomide, active in lenalidomide-refractory disease'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO weekly (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'EMN011/HO114 (phase 2): KPd in RRMM (median 2 prior lines). ORR: 84%. Median PFS: 14.4 months. Particularly active in lenalidomide-refractory patients (ORR 79%). KEY combination for anti-CD38 refractory disease where both daratumumab and isatuximab have failed. Emerging as an important backbone in the anti-CD38 refractory space.',
+    sideEffects:'Neutropenia, thrombocytopenia, cardiac toxicity (carfilzomib), infections, fatigue, VTE risk (pomalidomide). No significant peripheral neuropathy from carfilzomib.',
+    monitoring:'Echocardiogram at baseline; BP monitoring; CBC weekly initially; renal function; VTE prophylaxis mandatory (IMiD-based regimen); HSV/VZV prophylaxis; cardiac enzymes if symptomatic',
+    special:'Critical regimen for anti-CD38 refractory patients (post-daratumumab/isatuximab progression). Combines two drug classes without anti-CD38 dependence. Pomalidomide retains activity in lenalidomide-refractory disease. Monitor cardiac function carefully with carfilzomib.',
+    evidence:{e:4,s:3,q:3,c:3,a:1}
+  },
+  'Dara-Vd': {
+    full:'Daratumumab + Bortezomib + Dexamethasone',
+    abbr:'Dara-Vd', setting:'Relapsed/refractory MM (lenalidomide refractory, Preferred)', category:'Category 1',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 monoclonal antibody',dose:'16 mg/kg IV weekly (cycles 1-3), every 3 weeks (cycles 4-8), every 4 weeks thereafter; OR SC 1800 mg/30,000 units',route:'IV or SC',key:'Anti-CD38 targeting'},
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m\u00b2 SC days 1, 4, 8, 11 of 21-day cycle (cycles 1-8), then days 1, 8 (cycles 9+)',route:'SC (preferred)',key:'26S proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO on day of and day after bortezomib',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'CASTOR trial (phase 3): Dara-Vd vs Vd in RRMM (1-3 prior lines). Median PFS: 16.7 vs 7.1 months (HR 0.31, P<0.0001). ORR: 82.9% vs 63.2%. MRD-negative (10\u207b\u2075): 12.8% vs 2.4%. Updated analysis at median 40 months follow-up confirmed sustained PFS benefit.',
+    sideEffects:'Infusion reactions (daratumumab), thrombocytopenia (bortezomib cyclical pattern), peripheral neuropathy, infections (pneumonia), neutropenia. Type and screen before starting daratumumab.',
+    monitoring:'CBC each cycle; neuropathy assessment; SPEP/SIFE/FLC; type and screen before daratumumab; HSV/VZV prophylaxis; infection surveillance',
+    special:'Category 1 preferred option for lenalidomide-refractory patients at first relapse. CASTOR data showed benefit across all subgroups including high-risk cytogenetics. Bortezomib fixed duration (8 cycles) then stops, but daratumumab continues until progression.',
+    evidence:{e:4,s:3,q:5,c:4,a:1}
+  },
+  'Elo-Pd': {
+    full:'Elotuzumab + Pomalidomide + Dexamethasone',
+    abbr:'Elo-Pd', setting:'Relapsed/refractory MM after 2 prior therapies including lenalidomide and a PI', category:'Category 2A',
+    drugs:[
+      {name:'Elotuzumab',cls:'Anti-SLAMF7 (CS1) monoclonal antibody',dose:'10 mg/kg IV on days 1, 8, 15, 22 (cycles 1-2), then days 1, 15 (cycles 3+) of 28-day cycle; OR 20 mg/kg IV day 1 (cycles 3+)',route:'IV infusion',key:'SLAMF7 targeting on myeloma cells and NK cells, enhances ADCC and NK cell activation'},
+      {name:'Pomalidomide',cls:'IMiD (3rd generation)',dose:'4 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'28 mg PO + 8 mg IV on elotuzumab days; 40 mg PO on non-elotuzumab weeks',route:'Oral/IV',key:'Anti-inflammatory, premedication for elotuzumab'}
+    ],
+    trials:'ELOQUENT-3 (phase 2): Elo-Pd vs Pd in RRMM (median 3 prior lines). Median PFS: 10.3 vs 4.7 months (HR 0.54, P=0.008). ORR: 53% vs 26%. Clinically meaningful PFS benefit in heavily pre-treated patients including those refractory to both lenalidomide and PI.',
+    sideEffects:'Infusion reactions (elotuzumab, ~10%), infections, neutropenia, fatigue, hyperglycaemia (from dexamethasone premedication). Elotuzumab does NOT interfere with Coombs test (unlike anti-CD38 antibodies). No significant cardiac toxicity.',
+    monitoring:'CBC each cycle; blood glucose (steroid premedication doses); SPEP/SIFE/FLC; infection surveillance; VTE prophylaxis (pomalidomide); HSV/VZV prophylaxis',
+    special:'Unique mechanism (anti-SLAMF7) distinct from anti-CD38 antibodies. Can be used after anti-CD38 failure. Does NOT interfere with blood bank testing (advantage over daratumumab/isatuximab). Elotuzumab has no single-agent activity; works synergistically with IMiDs. Listed after 2 prior therapies including lenalidomide and a PI.',
+    evidence:{e:3,s:3,q:3,c:3,a:1}
+  },
+  'Ixa-Pd': {
+    full:'Ixazomib + Pomalidomide + Dexamethasone',
+    abbr:'Ixa-Pd', setting:'Relapsed/refractory MM after 2 prior therapies including an IMiD and a PI, with disease progression on/within 60 days of completion of last therapy', category:'Category 2A',
+    drugs:[
+      {name:'Ixazomib',cls:'Proteasome inhibitor (oral, 2nd generation)',dose:'4 mg PO on days 1, 8, 15 of 28-day cycle',route:'Oral',key:'Reversible 20S proteasome inhibition, first oral PI'},
+      {name:'Pomalidomide',cls:'IMiD (3rd generation)',dose:'4 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO on days 1, 8, 15, 22 (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'ICERIA (phase 2): Ixa-Pd in RRMM (lenalidomide-refractory, median 3 prior lines). ORR: 48%. Median PFS: 7.3 months. All-oral regimen offers convenience. Specifically studied in patients with disease progression on or within 60 days of last therapy (rapidly relapsing disease).',
+    sideEffects:'Thrombocytopenia (most common haematological toxicity), GI toxicity (diarrhoea, nausea), rash, peripheral neuropathy (mild, less than bortezomib), fatigue. Generally well tolerated as all-oral regimen.',
+    monitoring:'CBC with platelets on days 1, 8, 15; renal function; neuropathy assessment; VTE prophylaxis (IMiD-based); HSV/VZV prophylaxis',
+    special:'Only all-oral triplet regimen in myeloma. Particularly useful when IV/SC access is challenging or patient prefers oral therapy. Specifically indicated for rapidly relapsing disease (progression within 60 days of last therapy). Ixazomib can substitute for bortezomib or carfilzomib in select patients for intolerance or logistical reasons.',
+    evidence:{e:3,s:3,q:3,c:3,a:2}
+  },
+  'Elo-Rd': {
+    full:'Elotuzumab + Lenalidomide + Dexamethasone',
+    abbr:'Elo-Rd', setting:'Relapsed/refractory MM (Other Recommended)', category:'Category 1',
+    drugs:[
+      {name:'Elotuzumab',cls:'Anti-SLAMF7 monoclonal antibody',dose:'10 mg/kg IV on days 1, 8, 15, 22 (cycles 1-2), then days 1, 15 (cycles 3+) of 28-day cycle',route:'IV infusion',key:'SLAMF7 targeting, NK cell activation, ADCC enhancement'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'28 mg PO + 8 mg IV on elotuzumab days; 40 mg PO on non-elotuzumab weeks',route:'Oral/IV',key:'Anti-inflammatory, premedication'}
+    ],
+    trials:'ELOQUENT-2 (phase 3): Elo-Rd vs Rd in RRMM (1-3 prior lines). Median PFS: 19.4 vs 14.9 months (HR 0.70, P<0.001). ORR: 79% vs 66%. 5-year OS: 29.8% vs 25.2%. Sustained benefit over long follow-up with no new safety signals.',
+    sideEffects:'Infusion reactions (~10%), infections, fatigue, diarrhoea, neutropenia. Well tolerated long-term. No interference with Coombs test.',
+    monitoring:'CBC; SPEP/SIFE/FLC; infection surveillance; blood glucose on infusion days; VTE prophylaxis; HSV/VZV prophylaxis',
+    special:'Category 1 based on ELOQUENT-2 data. Elotuzumab does not interfere with blood bank testing. No single-agent activity for elotuzumab. Now less commonly used first given preference for anti-CD38 based triplets, but remains an option for patients who cannot receive anti-CD38 antibodies.',
+    evidence:{e:3,s:4,q:4,c:4,a:1}
+  },
+  'Ixa-Rd': {
+    full:'Ixazomib + Lenalidomide + Dexamethasone',
+    abbr:'Ixa-Rd', setting:'Relapsed/refractory MM (Other Recommended)', category:'Category 1',
+    drugs:[
+      {name:'Ixazomib',cls:'Proteasome inhibitor (oral)',dose:'4 mg PO on days 1, 8, 15 of 28-day cycle',route:'Oral',key:'First oral proteasome inhibitor, reversible 20S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO on days 1, 8, 15, 22',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'TOURMALINE-MM1 (phase 3): Ixa-Rd vs placebo-Rd in RRMM (1-3 prior lines). Median PFS: 20.6 vs 14.7 months (HR 0.74, P=0.01). ORR: 78.3% vs 71.5%. All-oral triplet maintained quality of life. Benefit seen across subgroups including high-risk cytogenetics.',
+    sideEffects:'Thrombocytopenia (cyclical, nadir day 14-21), GI toxicity (diarrhoea, nausea, vomiting), rash, peripheral neuropathy (mild). Generally well tolerated. Fewer serious adverse events than IV-based PI regimens.',
+    monitoring:'CBC with platelets each cycle; renal function; neuropathy assessment (mild risk); VTE prophylaxis; HSV/VZV prophylaxis; SPEP/SIFE/FLC',
+    special:'Category 1 all-oral triplet. Particularly attractive for patients preferring oral therapy or with limited IV access. Ixazomib may substitute for bortezomib in maintenance settings. Less potent PI effect than carfilzomib or bortezomib but compensated by convenience and tolerability.',
+    evidence:{e:3,s:4,q:4,c:4,a:2}
+  },
+  'Linvoseltamab': {
+    full:'Linvoseltamab-gcpt',
+    abbr:'Linvoseltamab', setting:'Relapsed/refractory MM after \u22654 prior therapies including anti-CD38, PI, and IMiD (Preferred)', category:'Preferred (Bispecific Antibody)',
+    drugs:[
+      {name:'Linvoseltamab-gcpt',cls:'BCMA \u00d7 CD3 bispecific antibody',dose:'Step-up dosing: 50 mg SC day 1, 100 mg SC day 8, then 200 mg SC every 2 weeks from day 15. Hospitalisation recommended for first two doses.',route:'SC injection',key:'Redirects T cells to BCMA-expressing myeloma cells via bispecific engagement'}
+    ],
+    trials:'LINKER-MM1 (phase 1/2): Linvoseltamab 200 mg Q2W in RRMM (median 5 prior lines, 85% triple-class refractory). ORR: 71%. CR or better: 48%. Median DOR: not reached at median follow-up of 12.8 months. Rapid and deep responses observed. Approved by FDA in 2024.',
+    sideEffects:'Cytokine release syndrome (CRS: 45%, mostly grade 1-2), injection site reactions (28%), infections (59%), neutropenia, fatigue, musculoskeletal pain. ICANS less common than with some other BsAbs. Step-up dosing mitigates CRS.',
+    monitoring:'Hospitalisation for step-up doses (first two); CRS monitoring with tocilizumab availability; ICANS assessment; CBC weekly initially then each cycle; immunoglobulin levels; infection prophylaxis (antiviral, antibacterial, PJP); IVIG replacement if IgG <400 mg/dL',
+    special:'Every-2-week dosing offers potential convenience advantage. BCMA-targeted agent that can be sequenced after prior BCMA-directed therapy (CAR-T or other BsAb), though response rates may be lower. Prophylactic tocilizumab may be considered for first dose to reduce CRS risk. Evidence Block development is in progress.',
+    evidence:{e:4,s:3,q:3,c:3,a:1}
+  },
+  'Selinexor-d': {
+    full:'Selinexor + Dexamethasone',
+    abbr:'Selinexor-d', setting:'Relapsed/refractory MM after \u22654 prior therapies, penta-refractory (refractory to \u22652 PIs, \u22652 IMiDs, and anti-CD38 mAb)', category:'Other Recommended',
+    drugs:[
+      {name:'Selinexor',cls:'Selective inhibitor of nuclear export (SINE compound)',dose:'80 mg PO on days 1, 3 of each week (twice weekly)',route:'Oral',key:'XPO1 (CRM1) inhibition \u2014 blocks nuclear export of tumour suppressor proteins (p53, IkB, FOXO) and oncoprotein mRNAs, forcing nuclear accumulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO on days 1, 3 of each week (same days as selinexor)',route:'Oral',key:'Anti-inflammatory, synergistic with selinexor'}
+    ],
+    trials:'STORM trial (phase 2): Selinexor-d in penta-refractory RRMM (median 7 prior lines, refractory to bortezomib, carfilzomib, lenalidomide, pomalidomide, and daratumumab). ORR: 26%. Median PFS: 3.7 months. Median OS: 8.6 months. First agent to show meaningful activity in penta-refractory population. Led to accelerated FDA approval.',
+    sideEffects:'Thrombocytopenia (73% grade 3-4, most common toxicity), nausea (72%), fatigue (73%), decreased appetite (56%), weight loss, hyponatraemia (44%), neutropenia, infections. Proactive anti-nausea management with 5-HT3 antagonists is essential. Dose modifications frequently required.',
+    monitoring:'CBC twice weekly initially (thrombocytopenia can be severe); electrolytes especially sodium (hyponatraemia common); weight monitoring; nutritional assessment; anti-emetic prophylaxis with 5-HT3 antagonist is mandatory; SPEP/SIFE/FLC each cycle',
+    special:'Last-resort option for penta-refractory patients. Only used after \u22654 prior therapies and refractory to \u22652 PIs, \u22652 IMiDs, and anti-CD38. Requires proactive supportive care (anti-emetics, appetite stimulants, nutritional support). Selinexor can penetrate the blood-brain barrier but has not been tested in CNS myeloma. Dose reduction to 60 mg twice weekly may improve tolerability with maintained efficacy.',
+    evidence:{e:2,s:2,q:3,c:3,a:2}
+  },
+});
+
+var GENERIC_REGIMENS = {};
 
 // ─── NAV ITEMS ───
 var NAV = [
@@ -2178,13 +2331,13 @@ function formatSideEffects(text){
     else categories['Other'].push(item);
   });
 
-  var catIcons = {'Haematological':'\uD83E\uDE78','Cardiac':'\u2764\uFE0F','Infectious':'\uD83E\uDDA0','Neurological':'\uD83E\uDDE0','Gastrointestinal':'\uD83C\uDF7D\uFE0F','Dermatological':'\uD83D\uDC85','Lab Interference':'\uD83E\uDDEA','Warnings':'\u26A0\uFE0F','Other':'\uD83D\uDCCB'};
+  var catIconElements = {'Haematological':Ico(ICONS.droplet,{size:12}),'Cardiac':Ico(ICONS.heart,{size:12}),'Infectious':Ico(ICONS.virus,{size:12}),'Neurological':Ico(ICONS.brain,{size:12}),'Gastrointestinal':Ico(ICONS.activity,{size:12}),'Dermatological':Ico(ICONS.search,{size:12}),'Lab Interference':Ico(ICONS.info,{size:12}),'Warnings':Ico(ICONS.alert,{size:12}),'Other':Ico(ICONS.clipboard,{size:12})};
   var catColors = {'Haematological':'text-red-800','Cardiac':'text-rose-800','Infectious':'text-orange-800','Neurological':'text-violet-800','Gastrointestinal':'text-amber-800','Dermatological':'text-pink-800','Lab Interference':'text-blue-800','Warnings':'text-red-900','Other':'text-slate-800'};
 
   var rendered = Object.keys(categories).filter(function(k){return categories[k].length>0}).map(function(cat,i){
     return e('div',{key:i,className:'mb-3'},
       e('h4',{className:'font-bold text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1 '+catColors[cat]},
-        e('span',null,catIcons[cat]||''),' ',cat
+        catIconElements[cat]||Ico(ICONS.clipboard,{size:12}),' ',cat
       ),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},
         categories[cat].map(function(item,j){
@@ -2216,19 +2369,19 @@ function formatMonitoring(text){
   var sections = [];
   if(baseline.length > 0){
     sections.push(e('div',{key:'bl',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDCCB Baseline / Pre-Treatment'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},Ico(ICONS.clipboard,{size:12}),' Baseline / Pre-Treatment'),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},baseline.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
   if(ongoing.length > 0){
     sections.push(e('div',{key:'on',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDD04 Ongoing Monitoring'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},Ico(ICONS.activity,{size:12}),' Ongoing Monitoring'),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},ongoing.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
   if(special.length > 0){
     sections.push(e('div',{key:'sp',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDEE1\uFE0F Prophylaxis & Screening'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},Ico(ICONS.shield,{size:12}),' Prophylaxis & Screening'),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},special.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
@@ -2258,19 +2411,19 @@ function formatSpecial(text){
   var sections = [];
   if(pearls.length > 0){
     sections.push(e('div',{key:'p',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDCA1 Clinical Pearls'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},Ico(ICONS.star,{size:12}),' Clinical Pearls'),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-1'},pearls.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
   if(dosing.length > 0){
     sections.push(e('div',{key:'d',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDC8A Dosing Notes'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},Ico(ICONS.pill,{size:12}),' Dosing Notes'),
       e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-1'},dosing.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
   if(warnings.length > 0){
     sections.push(e('div',{key:'w',className:'mb-3'},
-      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-red-800 mb-1.5 flex items-center gap-1'},'\u26A0\uFE0F Important Warnings'),
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-red-800 mb-1.5 flex items-center gap-1'},Ico(ICONS.alert,{size:12}),' Important Warnings'),
       e('ul',{className:'list-disc ml-5 text-sm text-red-700 space-y-1'},warnings.map(function(i,j){return e('li',{key:j},i)}))
     ));
   }
@@ -2295,7 +2448,7 @@ function PageRegimenDetail(props){
       e('button',{className:'text-sm text-blue-600 hover:text-blue-800 font-medium mb-4 flex items-center gap-1 cursor-pointer',onClick:props.goBack},Ico(ICONS.chevLeft,{size:14}),' Back to Treatment Navigator'),
       e('div',{className:'mb-6'},
         e('div',{className:'flex items-center gap-3 mb-2'},
-          e('span',{className:'text-3xl'},'💊'),
+          Ico(ICONS.pill,{size:28,className:'text-blue-600'}),
           e('div',null,
             e('h1',{className:'text-xl font-extrabold text-slate-900'},g.full),
             e('div',{className:'flex gap-2 mt-1'},
@@ -2322,7 +2475,7 @@ function PageRegimenDetail(props){
     // Header
     e('div',{className:'card p-5 mb-4 border-l-4 border-l-blue-600'},
       e('div',{className:'flex items-start gap-3'},
-        e('span',{className:'text-3xl'},'💊'),
+        Ico(ICONS.pill,{size:28,className:'text-blue-600'}),
         e('div',{className:'flex-1'},
           e('h1',{className:'text-xl font-extrabold text-slate-900'},r.full),
           e('div',{className:'flex flex-wrap gap-2 mt-2'},
