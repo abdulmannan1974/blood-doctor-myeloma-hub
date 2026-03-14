@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blood🩸Doctor — Myeloma Management Hub | NCCN 2026</title>
-<meta name="description" content="Interactive NCCN 2026 Multiple Myeloma Guidelines — Evaluation, Management & Follow-up">
+<title>Blood Doctor — Myeloma Management Hub | NCCN 2026</title>
+<meta name="description" content="Comprehensive Interactive NCCN 2026 Multiple Myeloma Guidelines — Diagnosis, Staging, Treatment, Supportive Care & Related Disorders">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
@@ -21,951 +21,1654 @@ tailwind.config = {
 </script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
-.sidebar-item { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0.75rem; border-radius:0.5rem; cursor:pointer; font-size:0.875rem; font-weight:500; color:#64748b; transition:all 0.15s; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #0f172a; }
+.sidebar-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.75rem; border-radius:0.5rem; cursor:pointer; font-size:0.8rem; font-weight:500; color:#64748b; transition:all 0.15s; line-height:1.3; }
 .sidebar-item:hover { background:#f1f5f9; color:#1e293b; }
-.sidebar-item.active { background:#2563eb; color:white; }
-.card { background:white; border:1px solid #e2e8f0; border-radius:0.75rem; box-shadow:0 1px 3px rgb(0 0 0/0.06); }
-.card-hover:hover { box-shadow:0 4px 12px rgb(0 0 0/0.1); transform:translateY(-1px); transition:all 0.2s; }
-.badge { display:inline-flex; align-items:center; border-radius:9999px; padding:0.125rem 0.625rem; font-size:0.75rem; font-weight:600; }
-.btn { display:inline-flex; align-items:center; justify-content:center; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.875rem; font-weight:500; cursor:pointer; border:none; transition:all 0.15s; }
-.tab-trigger { padding:0.5rem 1rem; font-size:0.875rem; font-weight:500; color:#64748b; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-.tab-trigger:hover { color:#1e293b; }
-.tab-trigger.active { color:#2563eb; border-bottom-color:#2563eb; }
-.algorithm-node { border:2px solid #e2e8f0; border-radius:0.75rem; padding:1rem; background:white; cursor:pointer; transition:all 0.2s; }
-.algorithm-node:hover { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
-.algorithm-node.selected { border-color:#2563eb; background:rgba(37,99,235,0.03); }
-@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-.fade-in { animation:fadeIn 0.3s ease-out; }
-.checklist-item input[type="checkbox"] { accent-color:#2563eb; width:1rem; height:1rem; margin-top:0.2rem; cursor:pointer; }
-::-webkit-scrollbar { width:6px; }
+.sidebar-item.active { background:#1e40af; color:white; }
+.card { background:white; border:1px solid #e2e8f0; border-radius:0.75rem; box-shadow:0 1px 3px rgb(0 0 0/0.04); }
+.badge { display:inline-flex; align-items:center; border-radius:9999px; padding:0.125rem 0.625rem; font-size:0.7rem; font-weight:600; letter-spacing:0.02em; }
+.tab-btn { padding:0.4rem 0.85rem; font-size:0.8rem; font-weight:500; color:#64748b; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; white-space:nowrap; background:none; border-top:none; border-left:none; border-right:none; }
+.tab-btn:hover { color:#1e293b; }
+.tab-btn.active { color:#1e40af; border-bottom-color:#1e40af; font-weight:600; }
+.alert-amber { background:#fffbeb; border:1px solid #fbbf24; border-left:4px solid #f59e0b; border-radius:0.5rem; padding:0.75rem 1rem; }
+.alert-rose { background:#fff1f2; border:1px solid #fda4af; border-left:4px solid #f43f5e; border-radius:0.5rem; padding:0.75rem 1rem; }
+.alert-blue { background:#eff6ff; border:1px solid #93c5fd; border-left:4px solid #3b82f6; border-radius:0.5rem; padding:0.75rem 1rem; }
+.alert-green { background:#f0fdf4; border:1px solid #86efac; border-left:4px solid #22c55e; border-radius:0.5rem; padding:0.75rem 1rem; }
+.tbl { width:100%; border-collapse:collapse; font-size:0.8rem; }
+.tbl th { background:#f8fafc; font-weight:600; text-align:left; padding:0.5rem 0.75rem; border-bottom:2px solid #e2e8f0; color:#334155; }
+.tbl td { padding:0.5rem 0.75rem; border-bottom:1px solid #f1f5f9; vertical-align:top; }
+.tbl tr:hover td { background:#f8fafc; }
+.checklist-item input[type="checkbox"] { accent-color:#1e40af; width:1rem; height:1rem; cursor:pointer; flex-shrink:0; }
+::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
-@media(max-width:768px) { .sidebar-desktop{display:none!important;} }
+.collapsible-header { cursor:pointer; user-select:none; }
+.collapsible-header:hover { opacity:0.85; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation:fadeIn 0.25s ease-out; }
+@media(max-width:1024px) { .sidebar-desktop{display:none!important;} }
+.eb-bar { height:10px; border-radius:2px; }
+.calc-input { border:1px solid #d1d5db; border-radius:0.375rem; padding:0.375rem 0.5rem; font-size:0.8rem; width:100%; }
+.calc-input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,0.2); }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
 const e = React.createElement;
-const { useState, useEffect, useCallback, Fragment } = React;
+const { useState, useEffect, useCallback, useMemo, Fragment } = React;
 
-// ─── SVG Icons as components ───
-function IconSvg(paths, vb) {
-  return function(props) {
-    return e('svg', { xmlns:'http://www.w3.org/2000/svg', width:props?.size||18, height:props?.size||18, viewBox:vb||'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round', className:props?.className||'' },
-      ...paths.map(function(p,i){ return typeof p === 'string' ? e('path',{key:i,d:p}) : e(p.tag,{key:i,...p.attrs}) })
-    );
-  }
+// ─── ICONS ───
+function Ico(d,props){
+  var ps = props||{};
+  var paths = Array.isArray(d)?d:[d];
+  return e('svg',{xmlns:'http://www.w3.org/2000/svg',width:ps.size||16,height:ps.size||16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round',className:ps.className||''},
+    paths.map(function(p,i){return typeof p==='string'?e('path',{key:i,d:p}):e(p.t||'circle',Object.assign({key:i},p.a))})
+  );
+}
+var ICONS = {
+  home:['M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8','M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],
+  microscope:['M6 18h8','M3 22h18','M14 22a7 7 0 1 0 0-14h-1','M9 14h2','M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z','M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3'],
+  book:['M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20'],
+  layers:[{t:'polygon',a:{points:'12 2 2 7 12 12 22 7 12 2'}},{t:'polyline',a:{points:'2 17 12 22 22 17'}},{t:'polyline',a:{points:'2 12 12 17 22 12'}}],
+  map:['M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z',{t:'circle',a:{cx:12,cy:13,r:3}}],
+  zap:['M13 2 3 14h9l-1 8 10-12h-9l1-8z'],
+  activity:['M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2'],
+  calculator:[{t:'rect',a:{width:16,height:20,x:4,y:2,rx:2}},{t:'line',a:{x1:8,x2:16,y1:6,y2:6}},{t:'line',a:{x1:16,x2:16,y1:14,y2:18}},{t:'line',a:{x1:8,x2:8,y1:14,y2:18}}],
+  pill:['m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z','m8.5 8.5 7 7'],
+  clipboard:['M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2',{t:'rect',a:{width:8,height:4,x:8,y:2,rx:1}}],
+  heart:['M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'],
+  shield:['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'],
+  brain:['M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z','M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z'],
+  kidney:['M8 2c-1.5 0-3 .5-4 2s-1.5 4-.5 6c1 2 2 3 3 4s2 2 2 4v4','M16 2c1.5 0 3 .5 4 2s1.5 4 .5 6c-1 2-2 3-3 4s-2 2-2 4v4'],
+  virus:[{t:'circle',a:{cx:12,cy:12,r:6}},'M8 12h-6','M16 12h6','M12 8V2','M12 16v6','M7.8 7.8 4 4','M16.2 7.8 20 4','M7.8 16.2 4 20','M16.2 16.2 20 20'],
+  droplet:['M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z'],
+  bar:[{t:'line',a:{x1:12,x2:12,y1:20,y2:10}},{t:'line',a:{x1:18,x2:18,y1:20,y2:4}},{t:'line',a:{x1:6,x2:6,y1:20,y2:16}}],
+  link:['M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71','M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'],
+  chevDown:['m6 9 6 6 6-6'],
+  chevRight:['m9 18 6-6-6-6'],
+  chevLeft:['m15 18-6-6 6-6'],
+  check:['M20 6 9 17l-5-5'],
+  menu:[{t:'line',a:{x1:4,x2:20,y1:12,y2:12}},{t:'line',a:{x1:4,x2:20,y1:6,y2:6}},{t:'line',a:{x1:4,x2:20,y1:18,y2:18}}],
+  x:['M18 6 6 18','m6 6 12 12'],
+  alert:['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3','M12 9v4','M12 17h.01'],
+  info:[{t:'circle',a:{cx:12,cy:12,r:10}},'M12 16v-4','M12 8h.01'],
+  search:[{t:'circle',a:{cx:11,cy:11,r:8}},'m21 21-4.3-4.3'],
+  star:['m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'],
+  grid:[{t:'rect',a:{width:7,height:7,x:3,y:3,rx:1}},{t:'rect',a:{width:7,height:7,x:14,y:3,rx:1}},{t:'rect',a:{width:7,height:7,x:14,y:14,rx:1}},{t:'rect',a:{width:7,height:7,x:3,y:14,rx:1}}],
+};
+
+// ─── NAV ITEMS ───
+var NAV = [
+  {id:'dashboard',label:'Dashboard',icon:'home',code:''},
+  {id:'workup',label:'Diagnostic Workup',icon:'microscope',code:'MYEL-1'},
+  {id:'definitions',label:'Definitions & Classification',icon:'book',code:'MYEL-A'},
+  {id:'pathway',label:'Clinical Pathway',icon:'activity',code:'MYEL-1\u20136'},
+  {id:'staging',label:'Staging & Risk',icon:'layers',code:'MYEL-B'},
+  {id:'imaging',label:'Imaging Principles',icon:'map',code:'MYEL-C'},
+  {id:'radiation',label:'Radiation Therapy',icon:'zap',code:'MYEL-D'},
+  {id:'calculators',label:'Risk Calculators',icon:'calculator',code:'IMPEDE/SAVED'},
+  {id:'treatment',label:'Treatment Navigator',icon:'pill',code:'MYEL-G'},
+  {id:'therapy',label:'Therapy Considerations',icon:'clipboard',code:'MYEL-F'},
+  {id:'response',label:'Response Criteria',icon:'check',code:'MYEL-E'},
+  {id:'supportive',label:'Supportive Care',icon:'heart',code:'MYEL-I'},
+  {id:'infection',label:'Infection Management',icon:'virus',code:'MYEL-J'},
+  {id:'vte',label:'VTE Management',icon:'droplet',code:'MYEL-K'},
+  {id:'renal',label:'Renal Management',icon:'kidney',code:'MYEL-L'},
+  {id:'cns',label:'CNS Disease',icon:'brain',code:'CNSM-1/H'},
+  {id:'related',label:'Related Disorders',icon:'link',code:'MGRS/MIDD/MGNS/POEMS'},
+  {id:'evidence',label:'Evidence Blocks',icon:'bar',code:'EB-1\u20136'},
+];
+
+// ─── Utility Components ───
+function Badge(props){
+  var colors = {preferred:'bg-emerald-100 text-emerald-800',cat1:'bg-blue-100 text-blue-800',other:'bg-amber-100 text-amber-800',useful:'bg-slate-100 text-slate-600','2b':'bg-purple-100 text-purple-700',essential:'bg-blue-100 text-blue-800',high:'bg-red-100 text-red-700',low:'bg-green-100 text-green-700',mid:'bg-yellow-100 text-yellow-800'};
+  return e('span',{className:'badge '+(colors[props.type]||colors.other)},props.children);
 }
 
-const IcoHome = IconSvg(['M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8','M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z']);
-const IcoMicroscope = IconSvg(['M6 18h8','M3 22h18','M14 22a7 7 0 1 0 0-14h-1','M9 14h2','M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z','M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3']);
-const IcoActivity = IconSvg(['M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2']);
-const IcoBarChart = IconSvg([{tag:'line',attrs:{x1:12,x2:12,y1:20,y2:10}},{tag:'line',attrs:{x1:18,x2:18,y1:20,y2:4}},{tag:'line',attrs:{x1:6,x2:6,y1:20,y2:16}}]);
-const IcoCalculator = IconSvg([{tag:'rect',attrs:{width:16,height:20,x:4,y:2,rx:2}},{tag:'line',attrs:{x1:8,x2:16,y1:6,y2:6}},{tag:'line',attrs:{x1:16,x2:16,y1:14,y2:18}}]);
-const IcoPill = IconSvg(['m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z','m8.5 8.5 7 7']);
-const IcoClipboard = IconSvg([{tag:'rect',attrs:{width:8,height:4,x:8,y:2,rx:1,ry:1}},'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2','m9 14 2 2 4-4']);
-const IcoHeart = IconSvg(['M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z']);
-const IcoShield = IconSvg(['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z']);
-const IcoBrain = IconSvg(['M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z','M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z','M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4']);
-const IcoChevron = IconSvg(['m9 18 6-6-6-6']);
-const IcoArrowDown = IconSvg(['M12 5v14','m19 12-7 7-7-7']);
-const IcoCheck = IconSvg(['M20 6 9 17l-5-5']);
-const IcoMenu = IconSvg([{tag:'line',attrs:{x1:4,x2:20,y1:12,y2:12}},{tag:'line',attrs:{x1:4,x2:20,y1:6,y2:6}},{tag:'line',attrs:{x1:4,x2:20,y1:18,y2:18}}]);
-const IcoX = IconSvg(['M18 6 6 18','m6 6 12 12']);
-const IcoAlert = IconSvg(['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3','M12 9v4','M12 17h.01']);
-const IcoInfo = IconSvg([{tag:'circle',attrs:{cx:12,cy:12,r:10}},'M12 16v-4','M12 8h.01']);
-
-// ─── DATA ───
-var WORKUP_ESSENTIAL = [
-  {id:'hp', label:'History and physical (H&P) exam', cat:'Clinical'},
-  {id:'cbc', label:'CBC, differential, and platelet count', cat:'Blood'},
-  {id:'smear', label:'Peripheral blood smear', cat:'Blood'},
-  {id:'chem', label:'Serum BUN/creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, beta-2 microglobulin', cat:'Chemistry'},
-  {id:'crcl', label:'Creatinine clearance (calculated or measured)', cat:'Chemistry'},
-  {id:'spep', label:'Serum quantitative immunoglobulins, SPEP, and SIFE', cat:'Protein'},
-  {id:'urine', label:'24-h urine for total protein, UPEP, and UIFE', cat:'Protein'},
-  {id:'flc', label:'Serum free light chain (FLC) assay', cat:'Protein'},
-  {id:'pet', label:'Whole-body FDG-PET/CT (preferred) or low-dose CT', cat:'Imaging'},
-  {id:'bm', label:'Bone marrow aspirate and biopsy with IHC and/or multiparameter flow cytometry', cat:'Pathology'},
-  {id:'fish', label:'FISH panel: del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amp, 1p deletion', cat:'Genetics'},
-  {id:'ngs', label:'NGS to assess for TP53 mutation', cat:'Genetics'},
-  {id:'bnp', label:'NT-proBNP/BNP', cat:'Cardiac'},
-];
-
-var WORKUP_USEFUL = [
-  {id:'mri', label:'Whole-body MRI without contrast (if PET/CT negative)', cat:'Imaging'},
-  {id:'biopsy', label:'Tissue biopsy to confirm suspected plasmacytoma', cat:'Pathology'},
-  {id:'echo', label:'Echocardiogram', cat:'Cardiac'},
-  {id:'amyloid', label:'Evaluation for light chain amyloidosis', cat:'Special'},
-  {id:'mrd', label:'Baseline clonotype identification or store aspirate for future MRD testing', cat:'Genetics'},
-  {id:'visc', label:'Serum viscosity', cat:'Special'},
-  {id:'hep', label:'Hepatitis B/C testing and HIV screening', cat:'Viral'},
-  {id:'cpc', label:'Assess for circulating plasma cells', cat:'Blood'},
-  {id:'renal', label:'Renal biopsy if albuminuria or abnormal renal function', cat:'Renal'},
-];
-
-var IMPEDE_FACTORS = [
-  {factor:'Central venous catheter/tunneled line', points:2},
-  {factor:'Pelvic, hip, or femur fracture', points:4},
-  {factor:'Obesity (BMI ≥25)', points:1},
-  {factor:'Previous VTE', points:5},
-  {factor:'Immunomodulatory drug (IMiD)', points:4},
-  {factor:'Erythropoiesis-stimulating agent', points:1},
-  {factor:'Dexamethasone ≤160 mg/month', points:2},
-  {factor:'Dexamethasone >160 mg/month', points:4},
-  {factor:'Doxorubicin or multiagent chemo', points:3},
-  {factor:'Asian/Pacific Islander', points:-3},
-  {factor:'Prophylactic LMWH or aspirin', points:-3},
-  {factor:'Therapeutic LMWH or warfarin', points:-4},
-];
-
-var RESPONSE_CRITERIA = [
-  {cat:'Sustained MRD-negative', def:'MRD negativity confirmed ≥1 year apart by NGF, NGS, or both, and by imaging', depth:'mrd'},
-  {cat:'Flow MRD-negative', def:'Absence of aberrant clonal plasma cells by NGF (EuroFlow, sensitivity 1 in 10⁵)', depth:'mrd'},
-  {cat:'Sequencing MRD-negative', def:'Absence of clonal plasma cells by NGS (sensitivity 1 in 10⁵ or higher)', depth:'mrd'},
-  {cat:'Stringent CR (sCR)', def:'CR + normal FLC ratio + absence of clonal cells by IHC (κ/λ ≤4:1 or ≥1:2)', depth:'cr'},
-  {cat:'Complete Response (CR)', def:'Negative immunofixation serum and urine, disappearance of soft tissue plasmacytomas, <5% BMPCs', depth:'cr'},
-  {cat:'Very Good PR (VGPR)', def:'M-protein detectable by immunofixation but not electrophoresis, OR ≥90% reduction serum M-protein + urine <100 mg/24h', depth:'pr'},
-  {cat:'Partial Response (PR)', def:'≥50% reduction serum M-protein + ≥90% reduction 24-h urinary M-protein or to <200 mg/24h', depth:'pr'},
-  {cat:'Minimal Response (MR)', def:'≥25% but ≤49% reduction serum M-protein + 50-89% reduction urine M-protein', depth:'mr'},
-  {cat:'Stable Disease (SD)', def:'Not meeting criteria for any response category or progressive disease', depth:'sd'},
-  {cat:'Progressive Disease (PD)', def:'25% increase from lowest confirmed response + absolute increase criteria met', depth:'pd'},
-];
-
-var SUPPORTIVE = [
-  {title:'Bone Disease', emoji:'🦴', items:['Bisphosphonates (category 1) or denosumab for ALL patients','Baseline dental exam strongly recommended','Assess vitamin D status','Monitor for osteonecrosis of the jaw','Continue bone-targeting treatment up to 2 years','DEXA scans NOT useful for myeloma bone disease','Vertebroplasty/kyphoplasty for compression fractures']},
-  {title:'Hypercalcemia', emoji:'⚡', items:['Hydration','Bisphosphonates (zoledronic acid preferred)','Denosumab','Steroids and/or calcitonin']},
-  {title:'Infections', emoji:'🦠', items:['Levofloxacin 500mg PO daily (consider 12 weeks post-dx)','Acyclovir 400-800mg PO BID for HSV/VZV','IgG replacement if <400 mg/dL','PJP prophylaxis with TMP-SMX','Pneumococcal vaccination (PCV20 or PCV15+PPSV23)','Fluconazole for yeast when ANC <500']},
-  {title:'VTE Prophylaxis', emoji:'🩸', items:['Use IMPEDE or SAVED score for stratification','Low risk (≤3 IMPEDE): Aspirin 81-325 mg daily','High risk (≥4 IMPEDE): LMWH, rivaroxaban, apixaban, fondaparinux, or warfarin','Indefinite while on myeloma therapy']},
-  {title:'Renal Management', emoji:'🫘', items:['Hydration (goal urine output 100-150 cc/h)','Bortezomib-based regimens preferred','Lenalidomide dose adjustment by CrCL','Discontinue nephrotoxic medications','Dialysis for refractory electrolyte issues']},
-  {title:'Anemia', emoji:'💉', items:['Consider erythropoietin for anemic patients','Monitor for VTE risk with ESA use']},
-];
-
-// ─── PAGES ───
-
-function Dashboard(props) {
-  var setPage = props.setPage;
-  var cards = [
-    {title:'Diagnostic Workup', desc:'13 essential + 9 useful tests', color:'bg-blue-50 text-blue-700', ico:IcoMicroscope, pg:'workup'},
-    {title:'Clinical Pathway', desc:'MYEL-1 → MYEL-6 interactive algorithm', color:'bg-emerald-50 text-emerald-700', ico:IcoActivity, pg:'algorithm'},
-    {title:'Staging & Risk', desc:'ISS, R-ISS, R2-ISS, IMS-IMWG', color:'bg-purple-50 text-purple-700', ico:IcoBarChart, pg:'staging'},
-    {title:'Risk Calculators', desc:'IMPEDE & SAVED VTE scores', color:'bg-amber-50 text-amber-700', ico:IcoCalculator, pg:'calculator'},
-    {title:'Treatment Navigator', desc:'HCT, non-HCT, relapsed, CAR-T', color:'bg-rose-50 text-rose-700', ico:IcoPill, pg:'treatment'},
-    {title:'Response Assessment', desc:'IMWG criteria including MRD', color:'bg-cyan-50 text-cyan-700', ico:IcoClipboard, pg:'response'},
-    {title:'Supportive Care', desc:'Bone, infections, VTE, renal', color:'bg-pink-50 text-pink-700', ico:IcoHeart, pg:'supportive'},
-    {title:'Evidence Blocks', desc:'Efficacy, safety, quality ratings', color:'bg-indigo-50 text-indigo-700', ico:IcoShield, pg:'evidence'},
-  ];
-
-  var stats = [
-    {label:'Preferred Regimens (HCT)', value:'2', sub:'Dara-VRd, Isa-VRd', cl:'text-blue-600'},
-    {label:'CAR-T Products', value:'2', sub:'Cilta-cel, Ide-cel', cl:'text-emerald-600'},
-    {label:'Bispecific Abs', value:'4', sub:'After ≥4 prior lines', cl:'text-purple-600'},
-    {label:'Risk Scores', value:'5', sub:'ISS, R-ISS, R2-ISS, IMPEDE, SAVED', cl:'text-amber-600'},
-  ];
-
-  return e('div', null,
-    e('div', {className:'mb-6'},
-      e('h1', {className:'text-2xl font-bold'}, 'Multiple Myeloma Management Hub'),
-      e('p', {className:'text-slate-500 text-sm mt-1'}, 'NCCN Clinical Practice Guidelines v2.2026 — Interactive Clinical Decision Support')
-    ),
-    e('div', {className:'grid grid-cols-2 md:grid-cols-4 gap-3 mb-6'},
-      stats.map(function(s,i) {
-        return e('div', {key:i, className:'card p-4'},
-          e('p', {className:'text-xs text-slate-500 font-medium'}, s.label),
-          e('p', {className:'text-2xl font-bold mt-1 '+s.cl}, s.value),
-          e('p', {className:'text-xs text-slate-400 mt-0.5'}, s.sub)
-        );
-      })
-    ),
-    e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6'},
-      cards.map(function(c,i) {
-        return e('div', {key:i, className:'card card-hover p-5 cursor-pointer', onClick:function(){setPage(c.pg)}},
-          e('div', {className:'w-10 h-10 rounded-lg flex items-center justify-center mb-3 '+c.color}, e(c.ico)),
-          e('h3', {className:'font-semibold text-sm'}, c.title),
-          e('p', {className:'text-xs text-slate-500 mt-1'}, c.desc),
-          e('div', {className:'flex items-center gap-1 mt-3 text-blue-600 text-xs font-medium'},
-            e('span', null, 'Open'), e(IcoChevron, {size:14})
-          )
-        );
-      })
-    ),
-    e('div', {className:'card p-5'},
-      e('h3', {className:'font-semibold mb-4'}, 'Clinical Pathway Overview'),
-      e('div', {className:'flex flex-wrap gap-2 items-center text-xs'},
-        ['MYEL-1: Workup','→','Classify','→','Solitary (MYEL-2) | Smoldering (MYEL-3) | Active MM (MYEL-4)','→','Treat','→','Response (MYEL-5)','→','Relapse (MYEL-6)'].map(function(s,i) {
-          return s === '→' ? e('span', {key:i, className:'text-slate-400 font-bold'}, '→') :
-            e('span', {key:i, className:'badge bg-slate-100 text-slate-700 py-1 px-2'}, s);
-        })
-      )
-    ),
-    e('p', {className:'mt-4 text-center text-xs text-slate-400'}, '© 2025 NCCN® — For educational reference only. Not a substitute for clinical judgment. ', e('span',{className:'font-semibold text-blue-600'},'#BloodDoctor'))
+function SectionTitle(props){
+  return e('div',{className:'flex items-center gap-2 mb-4'},
+    props.code?e('span',{className:'badge bg-slate-800 text-white text-xs'},props.code):null,
+    e('h2',{className:'text-xl font-bold text-slate-900'},props.children)
   );
 }
 
-function WorkupPage() {
-  var _s = useState({}); var checked = _s[0]; var setChecked = _s[1];
-  function toggle(id) { setChecked(function(p) { var n = Object.assign({},p); n[id] = !n[id]; return n; }); }
-  var done = WORKUP_ESSENTIAL.filter(function(i){return checked[i.id]}).length;
-  var total = WORKUP_ESSENTIAL.length;
-  var pct = Math.round((done/total)*100);
+function SubSection(props){
+  return e('div',{className:'mb-6'},
+    e('h3',{className:'text-sm font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2'},
+      props.icon?Ico(ICONS[props.icon],{size:14}):null,props.children)
+  );
+}
 
-  function renderList(items, label, badgeClass) {
-    return e('div', {className:'card p-5'},
-      e('h3', {className:'font-semibold mb-3 flex items-center gap-2'},
-        e('span', {className:'badge '+badgeClass}, label),
-        ' Investigations'
-      ),
-      e('div', {className:'space-y-1'},
-        items.map(function(item) {
-          return e('label', {key:item.id, className:'flex items-start gap-2 py-1 cursor-pointer'},
-            e('input', {type:'checkbox', checked:!!checked[item.id], onChange:function(){toggle(item.id)}, className:'checklist-item mt-1'}),
-            e('div', null,
-              e('span', {className:'text-sm '+(checked[item.id]?'line-through text-slate-400':'')}, item.label),
-              e('span', {className:'ml-2 badge bg-slate-100 text-slate-500 text-[10px]'}, item.cat)
-            )
-          );
-        })
-      )
-    );
-  }
+function Card(props){
+  return e('div',{className:'card p-4 mb-4 '+(props.className||'')},props.children);
+}
 
-  return e('div', null,
-    e('div', {className:'flex items-center justify-between mb-6'},
-      e('div', null,
-        e('h2', {className:'text-xl font-bold'}, 'MYEL-1: Initial Diagnostic Workup'),
-        e('p', {className:'text-sm text-slate-500'}, 'Complete workup checklist for suspected myeloma')
-      ),
-      e('div', {className:'card p-3 text-center'},
-        e('p', {className:'text-2xl font-bold text-blue-600'}, pct+'%'),
-        e('p', {className:'text-xs text-slate-500'}, 'Complete')
+function AlertBox(props){
+  var cls = props.type==='warning'?'alert-amber':props.type==='danger'?'alert-rose':props.type==='success'?'alert-green':'alert-blue';
+  var icon = props.type==='warning'?'alert':props.type==='danger'?'alert':'info';
+  return e('div',{className:cls+' mb-3 text-sm flex gap-2'},
+    e('div',{className:'flex-shrink-0 mt-0.5'},Ico(ICONS[icon],{size:14})),
+    e('div',null,props.title?e('span',{className:'font-semibold'},props.title,' '):null,props.children)
+  );
+}
+
+function Collapsible(props){
+  var st=useState(props.defaultOpen||false);var open=st[0];var setOpen=st[1];
+  return e('div',{className:'border border-slate-200 rounded-lg mb-2 overflow-hidden'},
+    e('div',{className:'collapsible-header flex items-center justify-between px-4 py-2.5 bg-slate-50 hover:bg-slate-100 transition-colors',onClick:function(){setOpen(!open)}},
+      e('span',{className:'font-semibold text-sm text-slate-800'},props.title),
+      e('span',{className:'transform transition-transform '+(open?'rotate-180':'')},Ico(ICONS.chevDown,{size:14}))
+    ),
+    open?e('div',{className:'px-4 py-3 text-sm fade-in'},props.children):null
+  );
+}
+
+function DataTable(props){
+  return e('div',{className:'overflow-x-auto rounded-lg border border-slate-200 mb-3'},
+    e('table',{className:'tbl'},
+      e('thead',null,e('tr',null,props.headers.map(function(h,i){return e('th',{key:i,className:props.headerClass||''},h)}))),
+      e('tbody',null,props.rows.map(function(row,i){
+        return e('tr',{key:i},row.map(function(cell,j){
+          return e('td',{key:j,className:typeof cell==='object'&&cell.cls?cell.cls:''},typeof cell==='object'&&cell.v!==undefined?cell.v:cell);
+        }));
+      }))
+    )
+  );
+}
+
+function TabGroup(props){
+  var st=useState(props.defaultTab||0);var active=st[0];var setActive=st[1];
+  return e('div',null,
+    e('div',{className:'flex border-b border-slate-200 mb-4 overflow-x-auto gap-1'},
+      props.tabs.map(function(t,i){return e('button',{key:i,className:'tab-btn'+(active===i?' active':''),onClick:function(){setActive(i)}},t)})
+    ),
+    e('div',{className:'fade-in'},props.children[active])
+  );
+}
+
+function StatCard(props){
+  return e('div',{className:'card p-4 flex items-start gap-3'},
+    e('div',{className:'w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0',style:{background:props.bg||'#eff6ff'}},
+      Ico(ICONS[props.icon]||ICONS.star,{size:18,className:props.iconColor||'text-blue-600'})
+    ),
+    e('div',null,
+      e('div',{className:'text-2xl font-bold text-slate-900'},props.value),
+      e('div',{className:'text-xs text-slate-500 mt-0.5'},props.label)
+    )
+  );
+}
+
+// ─── PAGE COMPONENTS ───
+
+// === DASHBOARD ===
+function PageDashboard(props){
+  return e('div',{className:'fade-in'},
+    e('div',{className:'mb-6'},
+      e('h1',{className:'text-2xl font-extrabold text-slate-900'},'NCCN Myeloma Guidelines 2026'),
+      e('p',{className:'text-sm text-slate-500 mt-1'},'Version 2.2026 \u2014 Comprehensive Interactive Reference for Haematologists')
+    ),
+    e('div',{className:'grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6'},
+      e(StatCard,{value:'18',label:'Sections',icon:'grid',bg:'#eff6ff',iconColor:'text-blue-600'}),
+      e(StatCard,{value:'60+',label:'Treatment Regimens',icon:'pill',bg:'#f0fdf4',iconColor:'text-green-600'}),
+      e(StatCard,{value:'4',label:'Staging Systems',icon:'layers',bg:'#fef3c7',iconColor:'text-amber-600'}),
+      e(StatCard,{value:'5',label:'Related Disorders',icon:'link',bg:'#fce7f3',iconColor:'text-pink-600'})
+    ),
+    e(AlertBox,{type:'info',title:'About this tool:'},'An interactive reference covering NCCN Clinical Practice Guidelines in Oncology for Multiple Myeloma v2.2026. Includes diagnostic workup, full IMWG definitions, ISS/R-ISS/R2-ISS staging, all treatment regimens with NCCN categories, response criteria, VTE/renal/infection management, CNS disease, and related plasma cell disorders (MGRS, MIDD, MGNS, POEMS). Evidence Blocks for all regimens included.'),
+    e('div',{className:'grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4'},
+      NAV.slice(1).map(function(n){
+        return e('div',{key:n.id,className:'card p-3 cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all',onClick:function(){props.nav(n.id)}},
+          e('div',{className:'flex items-center gap-2 mb-1'},
+            Ico(ICONS[n.icon],{size:14,className:'text-blue-600'}),
+            e('span',{className:'font-semibold text-sm text-slate-900'},n.label)
+          ),
+          n.code?e('span',{className:'badge bg-slate-100 text-slate-600 text-xs'},n.code):null
+        );
+      })
+    )
+  );
+}
+
+// === DIAGNOSTIC WORKUP ===
+function PageWorkup(){
+  var chk=useState({});var checked=chk[0];var setChecked=chk[1];
+  function toggle(id){setChecked(function(p){var n=Object.assign({},p);n[id]=!n[id];return n;});}
+  var essential=[
+    {id:'hp',label:'History and physical (H&P) exam',cat:'Clinical',note:'Include performance status assessment. For older adults (>65 yrs), perform frailty assessment using Myeloma Frailty Score Calculator.'},
+    {id:'cbc',label:'CBC, differential, and platelet count',cat:'Blood',note:'Baseline for monitoring cytopenias and disease burden.'},
+    {id:'smear',label:'Peripheral blood smear',cat:'Blood',note:'Assess for rouleaux, circulating plasma cells. Presence of \u22655% circulating plasma cells = plasma cell leukaemia.'},
+    {id:'chem',label:'Serum BUN/creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, beta-2 microglobulin',cat:'Chemistry',note:'LDH and beta-2 microglobulin are essential for ISS, R-ISS, and R2-ISS staging. Calcium: correct for albumin level.'},
+    {id:'crcl',label:'Creatinine clearance (calculated or measured)',cat:'Chemistry',note:'CrCl <40 mL/min is a CRAB criterion (renal). Required for lenalidomide dose adjustment.'},
+    {id:'spep',label:'Serum quantitative immunoglobulins, SPEP, and SIFE',cat:'Protein',note:'Quantify M-protein for response monitoring. SIFE more sensitive than SPEP. Type and screen BEFORE starting daratumumab/isatuximab (false positive SIFE if IgG kappa).'},
+    {id:'urine',label:'24-h urine for total protein, UPEP, and UIFE',cat:'Protein',note:'BJP \u2265500 mg/24h = smoldering myeloma criterion. Essential for light-chain-only disease.'},
+    {id:'flc',label:'Serum free light chain (FLC) assay',cat:'Protein',note:'Involved:uninvolved FLC ratio \u2265100 = SLiM biomarker (myeloma-defining event). Normal ratio 0.26\u20131.65 (for CR determination).'},
+    {id:'pet',label:'Whole-body FDG-PET/CT (preferred) or low-dose CT',cat:'Imaging',note:'Preferred over skeletal survey. If negative, consider WB MRI to distinguish smoldering from active MM (SLiM: >1 focal MRI lesion).'},
+    {id:'bm',label:'Bone marrow aspirate and biopsy with IHC and/or multiparameter flow cytometry',cat:'Pathology',note:'BMPCs \u226510% or biopsy-proven plasmacytoma required for active MM. BMPCs \u226560% = SLiM biomarker. CD138+ selection recommended for FISH.'},
+    {id:'fish',label:'FISH panel: del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amplification, 1p deletion',cat:'Genetics',note:'Perform on CD138-selected plasma cells. 1q21 amplification = \u22654 copies; 1q21 gain = 3 copies. del(17p) >20% of plasma cells = high-risk per IMS-IMWG 2025.'},
+    {id:'ngs',label:'NGS to assess for TP53 mutation',cat:'Genetics',note:'TP53 mutation is high-risk regardless of del(17p) status per IMS-IMWG 2025. Consider storing aspirate for future MRD testing by NGS.'},
+    {id:'bnp',label:'NT-proBNP / BNP',cat:'Cardiac',note:'Screen for cardiac amyloidosis. NT-proBNP preferred over BNP (longer half-life, not affected by neprilysin inhibitors). Elevated levels warrant echocardiogram and amyloidosis workup.'},
+  ];
+  var useful=[
+    {id:'mri',label:'Whole-body MRI without contrast',cat:'Imaging',note:'When PET/CT or low-dose CT is negative \u2014 to distinguish smoldering from active MM. >1 focal MRI lesion = myeloma-defining event (SLiM criteria).'},
+    {id:'biopsy',label:'Tissue biopsy to confirm suspected plasmacytoma',cat:'Pathology',note:'Essential for solitary plasmacytoma diagnosis. Must demonstrate clonal plasma cells.'},
+    {id:'echo',label:'Echocardiogram',cat:'Cardiac',note:'If cardiac amyloidosis suspected, or before carfilzomib (cardiac toxicity risk). Baseline recommended.'},
+    {id:'amyloid',label:'Evaluation for light chain amyloidosis, if appropriate',cat:'Special',note:'Consider if disproportionate organ dysfunction. Fat pad aspirate, Congo red staining, or tissue biopsy.'},
+    {id:'mrd',label:'Baseline clonotype identification or store aspirate for future MRD testing by NGS',cat:'Molecular',note:'Enables subsequent MRD monitoring. Obtain at diagnosis.'},
+    {id:'viscosity',label:'Serum viscosity',cat:'Chemistry',note:'For IgA/IgG3 myeloma or symptoms of hyperviscosity (visual changes, headache, mucosal bleeding).'},
+    {id:'hep',label:'Hepatitis B, hepatitis C testing and HIV screening',cat:'Infectious',note:'Required before anti-CD38 antibodies and CAR-T. HBV reactivation risk with immunosuppressive therapy.'},
+    {id:'cpc',label:'Assess for circulating plasma cells as clinically indicated',cat:'Blood',note:'Presence of \u22655% circulating plasma cells = plasma cell leukaemia. Adverse prognostic factor.'},
+    {id:'renal',label:'Renal biopsy if albuminuria or abnormal renal function',cat:'Renal',note:'Per Dimopoulos criteria: consider when AKI stage 3, eGFR <60 with >2 mL/min/yr decline, proteinuria >1 g/day, Fanconi syndrome, or evidence of light chain proteinuria.'},
+  ];
+  var count=0;essential.concat(useful).forEach(function(it){if(checked[it.id])count++;});
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-1'},'Initial Diagnostic Workup'),
+    e('div',{className:'flex items-center gap-3 mb-4'},
+      e('div',{className:'text-sm text-slate-600'},count+'/'+(essential.length+useful.length)+' completed'),
+      e('div',{className:'flex-1 h-2 bg-slate-100 rounded-full overflow-hidden'},
+        e('div',{className:'h-full bg-blue-600 rounded-full transition-all',style:{width:Math.round(count/(essential.length+useful.length)*100)+'%'}})
       )
     ),
-    e('div', {className:'card p-4 mb-4'},
-      e('div', {className:'flex items-center justify-between mb-2'},
-        e('span', {className:'text-sm font-medium'}, 'Essential Investigations'),
-        e('span', {className:'text-sm text-slate-500'}, done+'/'+total)
-      ),
-      e('div', {className:'w-full bg-slate-200 rounded-full h-2.5'},
-        e('div', {className:'bg-blue-600 rounded-full h-2.5 transition-all', style:{width:pct+'%'}})
-      )
-    ),
-    e('div', {className:'grid grid-cols-1 lg:grid-cols-2 gap-4'},
-      renderList(WORKUP_ESSENTIAL, 'Essential', 'bg-blue-600 text-white'),
-      e('div', null,
-        renderList(WORKUP_USEFUL, 'Useful in Certain Circumstances', 'bg-amber-100 text-amber-700'),
-        e('div', {className:'mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg'},
-          e('p', {className:'text-xs font-medium text-amber-800 flex items-center gap-1'}, e(IcoAlert,{size:14}), ' Important Notes'),
-          e('ul', {className:'text-xs text-amber-700 mt-1 space-y-1'},
-            e('li', null, '• Frailty assessment for older adults'),
-            e('li', null, '• CD138-positive selected sample recommended for optimized FISH yield'),
-            e('li', null, '• 1q21 amplification = ≥4 copies by FISH; gain = 3 copies')
+    e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis. Standard cytogenetics on unselected samples have low sensitivity due to low plasma cell proliferative index.'),
+    e('h3',{className:'font-bold text-sm text-slate-800 mb-3 mt-4'},'Essential Investigations ('+essential.length+')'),
+    essential.map(function(it){
+      return e('div',{key:it.id,className:'card p-3 mb-2'},
+        e('label',{className:'flex gap-3 cursor-pointer'},
+          e('input',{type:'checkbox',checked:!!checked[it.id],onChange:function(){toggle(it.id)},className:'mt-1 accent-blue-700 w-4 h-4 flex-shrink-0'}),
+          e('div',{className:'flex-1'},
+            e('div',{className:'flex items-center gap-2 flex-wrap'},
+              e('span',{className:'font-medium text-sm text-slate-900'},it.label),
+              e(Badge,{type:'essential'},it.cat)
+            ),
+            e('p',{className:'text-xs text-slate-500 mt-1'},it.note)
           )
         )
+      );
+    }),
+    e('h3',{className:'font-bold text-sm text-slate-800 mb-3 mt-5'},'Useful in Certain Circumstances ('+useful.length+')'),
+    useful.map(function(it){
+      return e('div',{key:it.id,className:'card p-3 mb-2'},
+        e('label',{className:'flex gap-3 cursor-pointer'},
+          e('input',{type:'checkbox',checked:!!checked[it.id],onChange:function(){toggle(it.id)},className:'mt-1 accent-blue-700 w-4 h-4 flex-shrink-0'}),
+          e('div',{className:'flex-1'},
+            e('div',{className:'flex items-center gap-2 flex-wrap'},
+              e('span',{className:'font-medium text-sm text-slate-900'},it.label),
+              e(Badge,{type:'other'},it.cat)
+            ),
+            e('p',{className:'text-xs text-slate-500 mt-1'},it.note)
+          )
+        )
+      );
+    }),
+    e(AlertBox,{type:'warning',title:'Important Footnotes:'},
+      e('ul',{className:'list-disc ml-4 space-y-1 mt-1'},
+        e('li',null,'1q21 amplification (\u22654 copies) vs gain (3 copies) \u2014 amplification carries worse prognosis.'),
+        e('li',null,'FISH should be performed on CD138-selected plasma cells for optimal sensitivity.'),
+        e('li',null,'NT-proBNP preferred over BNP; not affected by neprilysin inhibitors (sacubitril/valsartan).'),
+        e('li',null,'Renal biopsy criteria per Dimopoulos: AKI stage 3, eGFR <60 with progressive decline, proteinuria, Fanconi syndrome.')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-sm text-slate-800 mb-2'},'Clinical Findings \u2192 Pathway Routing'),
+      e('div',{className:'grid grid-cols-1 sm:grid-cols-2 gap-2'},
+        [{label:'Solitary Plasmacytoma',dest:'MYEL-2',color:'bg-violet-50 border-violet-200'},
+         {label:'Smoldering Myeloma (Asymptomatic)',dest:'MYEL-3',color:'bg-amber-50 border-amber-200'},
+         {label:'Multiple Myeloma (Symptomatic)',dest:'MYEL-4',color:'bg-red-50 border-red-200'},
+         {label:'MGRS / MIDD / MGNS',dest:'MGRS-1 / MIDD-1 / MGNS-1',color:'bg-blue-50 border-blue-200'},
+         {label:'POEMS Syndrome',dest:'POEMS-1',color:'bg-green-50 border-green-200'}
+        ].map(function(r){
+          return e('div',{key:r.label,className:'border rounded-lg p-3 '+r.color},
+            e('div',{className:'font-medium text-sm'},r.label),
+            e('div',{className:'text-xs text-slate-500 mt-1'},'\u2192 '+r.dest)
+          );
+        })
       )
     )
   );
 }
 
-function AlgorithmPage(props) {
-  var _s = useState('workup'); var step = _s[0]; var setStep = _s[1];
-  var setPage = props.setPage;
+// === DEFINITIONS ===
+function PageDefinitions(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-A'},'Definitions of Myeloma and Related Plasma Cell Disorders'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Smoldering Myeloma (Asymptomatic)'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,'Serum monoclonal protein ',e('strong',null,'\u22653 g/dL'),', or'),
+        e('li',null,'Bence-Jones protein ',e('strong',null,'\u2265500 mg/24h'),', and/or'),
+        e('li',null,'Clonal bone marrow plasma cells (BMPCs) ',e('strong',null,'10\u201359%')),
+        e('li',null,e('strong',null,'AND'),' absence of myeloma-defining events or amyloidosis')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Active Multiple Myeloma (Symptomatic)'),
+      e('p',{className:'text-sm text-slate-700 mb-3'},'Clonal BMPCs ',e('strong',null,'\u226510%'),' or biopsy-proven bony or extramedullary plasmacytoma ',e('strong',null,'PLUS'),' any one or more myeloma-defining events:'),
+      e('h4',{className:'font-semibold text-sm text-red-800 mt-3 mb-2'},'End-Organ Damage \u2014 CRAB Criteria'),
+      e(DataTable,{headers:['Criterion','Definition','Threshold'],rows:[
+        [e('strong',null,'C \u2014 Calcium'),'Serum calcium elevated','> 0.25 mmol/L (>1 mg/dL) above ULN or >2.75 mmol/L (>11 mg/dL)'],
+        [e('strong',null,'R \u2014 Renal'),'Renal insufficiency','CrCl <40 mL/min or serum creatinine >177 \u00b5mol/L (>2 mg/dL)'],
+        [e('strong',null,'A \u2014 Anaemia'),'Haemoglobin decreased','Hb >20 g/L below LLN or <100 g/L'],
+        [e('strong',null,'B \u2014 Bone'),'Osteolytic bone lesions','\u22651 lesion on skeletal radiography, CT, or PET-CT'],
+      ]}),
+      e('h4',{className:'font-semibold text-sm text-blue-800 mt-4 mb-2'},'Biomarkers of Malignancy \u2014 SLiM Criteria'),
+      e(DataTable,{headers:['Biomarker','Criterion'],rows:[
+        [e('strong',null,'S (Sixty)'),'Clonal BMPCs \u226560%'],
+        [e('strong',null,'Li (Light chain)'),'Involved:uninvolved serum FLC ratio \u2265100 (involved FLC must be \u2265100 mg/L)'],
+        [e('strong',null,'M (MRI)'),'>1 focal lesion on MRI studies (\u22655 mm each)'],
+      ]}),
+      e(AlertBox,{type:'info',title:'Key Point:'},'SLiM criteria allow diagnosis of active MM in absence of CRAB features. These patients are at \u226580% risk of progression to end-organ damage within 2 years.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Solitary Plasmacytoma'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Biopsy-proven solitary lesion with clonal plasma cells'),
+        e('li',null,'Normal skeletal survey and MRI (or CT) of spine and pelvis'),
+        e('li',null,'Absence of myeloma-defining events'),
+        e('li',null,'Normal bone marrow with no evidence of clonal plasma cells')
+      ),
+      e(AlertBox,{type:'warning',title:'With Minimal Marrow Involvement:'},'Solitary plasmacytoma with \u226510% clonal BMPCs = active multiple myeloma, not solitary plasmacytoma.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Plasma Cell Leukaemia'),
+      e('p',{className:'text-sm text-slate-700'},'Presence of ',e('strong',null,'\u22655%'),' plasma cells in peripheral blood circulation.'),
+      e(AlertBox,{type:'danger'},'Plasma cell leukaemia is an aggressive variant with poor prognosis. Consider intensive therapy including VTD-PACE and early transplant referral.')
+    )
+  );
+}
 
-  var nodes = {
-    workup: {title:'MYEL-1: Initial Workup', desc:'Complete diagnostic evaluation', next:['solitary','smoldering','active']},
-    solitary: {title:'MYEL-2: Solitary Plasmacytoma', desc:'RT ± surgery → Follow q3-6mo → If progressive → restage', next:['active']},
-    smoldering: {title:'MYEL-3: Smoldering Myeloma', desc:'Low risk: observe q3-6mo | High risk: clinical trial (preferred) or Dara (cat 1) or Len (cat 2B)', next:['active']},
-    active: {title:'MYEL-4: Active (Symptomatic) MM', desc:'Initiate myeloma therapy + bone-targeting + assess HCT candidacy + supportive care', next:['response']},
-    response: {title:'MYEL-5: Response After Primary Therapy', desc:'Auto HCT (cat 1) → Maintenance (cat 1) | Continuous therapy | Tandem HCT for high-risk', next:['relapse']},
-    relapse: {title:'MYEL-6: Relapse/Progressive Disease', desc:'Clinical trial | Therapy for previously treated MM | CAR-T | Bispecific Abs | Allogeneic HCT | Palliative care', next:[]},
+// === STAGING ===
+function PageStaging(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-B'},'Disease Staging and Risk Stratification'),
+    e(TabGroup,{tabs:['ISS','R-ISS','R2-ISS','IMS-IMWG 2025','High-Risk Factors'],defaultTab:0},[
+      // ISS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'International Staging System (ISS)'),
+          e('p',{className:'text-xs text-slate-500 mb-3'},'Greipp et al., J Clin Oncol 2005'),
+          e(DataTable,{headers:['Stage','Criteria','Median OS'],rows:[
+            [e('span',{className:'font-bold text-green-700'},'ISS I'),'Serum \u03B22-microglobulin <3.5 mg/L AND serum albumin \u22653.5 g/dL','62 months'],
+            [e('span',{className:'font-bold text-amber-700'},'ISS II'),'Not ISS stage I or III','44 months'],
+            [e('span',{className:'font-bold text-red-700'},'ISS III'),'Serum \u03B22-microglobulin \u22655.5 mg/L','29 months'],
+          ]})
+        )
+      ),
+      // R-ISS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'Revised ISS (R-ISS)'),
+          e('p',{className:'text-xs text-slate-500 mb-3'},'Palumbo et al., J Clin Oncol 2015'),
+          e(DataTable,{headers:['Stage','Criteria'],rows:[
+            [e('span',{className:'font-bold text-green-700'},'R-ISS I'),'ISS stage I AND standard-risk cytogenetics by FISH AND serum LDH \u2264 ULN'],
+            [e('span',{className:'font-bold text-amber-700'},'R-ISS II'),'Not R-ISS stage I or III'],
+            [e('span',{className:'font-bold text-red-700'},'R-ISS III'),'ISS stage III AND either high-risk cytogenetics [del(17p) or t(4;14) or t(14;16)] by FISH OR serum LDH > ULN'],
+          ]}),
+          e(AlertBox,{type:'info'},'R-ISS high-risk cytogenetics: del(17p), t(4;14), t(14;16). Does NOT include 1q abnormalities or t(14;20).')
+        )
+      ),
+      // R2-ISS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'R2-ISS (Second Revision ISS)'),
+          e('p',{className:'text-xs text-slate-500 mb-3'},"D'Agostino et al., J Clin Oncol 2022"),
+          e('h4',{className:'font-semibold text-sm mb-2'},'Point Assignments:'),
+          e(DataTable,{headers:['Factor','Points'],rows:[
+            ['ISS Stage III','1.5'],
+            ['ISS Stage II','1.0'],
+            ['del(17p)','1.0'],
+            ['t(4;14)','1.0'],
+            ['1q21 gain/amplification (1q+)','0.5'],
+            ['LDH > ULN','1.0'],
+          ]}),
+          e('h4',{className:'font-semibold text-sm mt-4 mb-2'},'Risk Groups:'),
+          e(DataTable,{headers:['Risk Group','Total Points','5-yr OS (approx)'],rows:[
+            [e('span',{className:'font-bold text-green-700'},'Low-risk'),'0 points','~80%'],
+            [e('span',{className:'font-bold text-blue-700'},'Low-intermediate'),'0.5\u20131.0 points','~65%'],
+            [e('span',{className:'font-bold text-amber-700'},'Intermediate-high'),'1.5\u20132.5 points','~50%'],
+            [e('span',{className:'font-bold text-red-700'},'High-risk'),'3.0\u20135.0 points','~30%'],
+          ]}),
+          e(AlertBox,{type:'info'},'R2-ISS incorporates 1q+ (0.5 points) which is not captured by R-ISS. This better separates intermediate-risk patients.')
+        )
+      ),
+      // IMS-IMWG 2025
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'IMS-IMWG 2025 High-Risk Definition'),
+          e('p',{className:'text-xs text-slate-500 mb-3'},'Avet-Loiseau et al., 2025'),
+          e(AlertBox,{type:'danger',title:'High-risk defined as ANY of the following 4 criteria:'},null),
+          e('ol',{className:'list-decimal ml-5 text-sm space-y-2 text-slate-700 mt-3'},
+            e('li',null,e('strong',null,'Del(17p)'),' (>20% of plasma cells) ',e('strong',null,'and/or TP53 mutation')),
+            e('li',null,'Any of these translocations ',e('strong',null,'co-occurring with 1q+ and/or del(1p32)'),': t(4;14), t(14;16), t(14;20)'),
+            e('li',null,e('strong',null,'Monoallelic del(1p32)'),' along with 1q+, ',e('strong',null,'OR biallelic del(1p32)')),
+            e('li',null,e('strong',null,'High \u03B22-microglobulin'),' (>5.5 mg/dL) with ',e('strong',null,'normal creatinine'),' (<1.2 mg/dL)')
+          ),
+          e(AlertBox,{type:'warning',title:'Note:'},'Criterion 4 uses high \u03B22M with normal creatinine \u2014 this specifically identifies tumour-driven \u03B22M elevation rather than renal impairment.')
+        )
+      ),
+      // High-Risk Factors
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'High-Risk Factors for Progression/Relapse'),
+          e('div',{className:'grid md:grid-cols-2 gap-4'},
+            e('div',null,
+              e('h4',{className:'font-semibold text-sm text-blue-800 mb-2'},'Newly Diagnosed MM'),
+              e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+                e('li',null,'R-ISS III'),
+                e('li',null,'Extramedullary disease'),
+                e('li',null,'Circulating plasma cells'),
+                e('li',null,'del(1p32), t(4;14), t(14;16), t(14;20)'),
+                e('li',null,'del(17p) / monosomy 17 / TP53 mutation'),
+                e('li',null,'1q21 gain/amplification'),
+                e('li',null,'MYC translocation'),
+                e('li',null,'High-risk gene expression profile'),
+                e('li',null,'Markers of high proliferation rate')
+              )
+            ),
+            e('div',null,
+              e('h4',{className:'font-semibold text-sm text-red-800 mb-2'},'Relapsed MM'),
+              e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+                e('li',null,'Relapse within 2 years of initial therapy (with transplant + maintenance)'),
+                e('li',null,'Relapse within 18 months (non-transplant treatment)'),
+                e('li',null,'Acquisition of 1q gain/amplification and/or del(17p)/TP53 mutation at relapse'),
+                e('li',null,'Extramedullary disease at relapse'),
+                e('li',null,'Circulating plasma cells at relapse')
+              ),
+              e(AlertBox,{type:'danger',title:'Early relapse'},'is the strongest predictor of poor outcome in relapsed MM and should trigger consideration of novel approaches (CAR-T, bispecifics).')
+            )
+          )
+        )
+      ),
+    ])
+  );
+}
+
+// === IMAGING ===
+function PageImaging(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-C'},'Principles of Imaging'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Initial Diagnostic Workup'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,e('strong',null,'Whole-body FDG-PET/CT (preferred)'),' or whole-body low-dose CT recommended'),
+        e('li',null,'Skeletal survey acceptable in certain circumstances (limited sensitivity for lytic lesions < 1 cm)'),
+        e('li',null,'If PET/CT or low-dose CT is ',e('strong',null,'negative'),': consider whole-body MRI without contrast to discern smoldering from active MM')
+      ),
+      e(AlertBox,{type:'info',title:'SLiM MRI Criterion:'},'>1 focal lesion (\u22655 mm each) on MRI = myeloma-defining event, qualifying as active MM even without CRAB features.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Solitary Plasmacytoma Imaging'),
+      e(DataTable,{headers:['Type','First-Choice Imaging','Notes'],rows:[
+        ['Extraosseous plasmacytoma','FDG-PET/CT','For initial and continued evaluation'],
+        ['Osseous plasmacytoma','Whole-body MRI (or FDG-PET/CT if MRI unavailable)','Better soft tissue characterisation with MRI'],
+      ]}),
+      e(AlertBox,{type:'warning',title:'Progression Risk:'},'14\u201338% progression within first 3 years of diagnosis. Annual imaging required for at least 5 years.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Smoldering Myeloma Follow-up'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Advanced whole-body imaging recommended ',e('strong',null,'annually'),' or as clinically indicated'),
+        e('li',null,'If imaging findings suggest treatment initiation but are doubtful, repeat same technique after 3\u20136 months')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Active MM Follow-up'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Advanced whole-body imaging as needed'),
+        e('li',null,'Residual focal lesions on FDG-PET/CT or MRI have ',e('strong',null,'adverse prognostic significance'))
+      ),
+      e(AlertBox,{type:'info'},'References: Paiva 2014 (MRD + PET); Walker 2007 (MRI patterns); Bartel 2009 (PET pre/post transplant); Zamagni 2015 (imaging-based response); Moreau 2017 (PET in treatment response).')
+    )
+  );
+}
+
+// === RADIATION ===
+function PageRadiation(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-D'},'Principles of Radiation Therapy'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Solitary Plasmacytoma \u2014 Definitive RT'),
+      e(AlertBox,{type:'info',title:'RT is the intervention of choice for solitary plasmacytoma.'},null),
+      e(DataTable,{headers:['Parameter','Recommendation'],rows:[
+        ['Standard dose','40\u201350 Gy in 1.8\u20132.0 Gy fractions (20\u201325 total fractions)'],
+        ['Small plasmacytomas (<5 cm)','35\u201340 Gy acceptable'],
+        ['Treatment volumes','GTV \u2192 CTV (0.5 cm microscopic margin) \u2192 PTV (institutional setup margin)'],
+        ['Long bone margins','CTV: 2\u20133 cm along long bone axis'],
+        ['Technique','IMRT, VMAT, or protons for OAR sparing; ISRT principles'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Multiple Myeloma \u2014 Palliative RT'),
+      e(AlertBox,{type:'warning',title:'Key Principle:'},'Systemic therapy should NOT be delayed for RT. RT is primarily palliative in active MM.'),
+      e(DataTable,{headers:['Regimen','Dose/Fractionation','Indication'],rows:[
+        ['Single fraction','8 Gy \u00d7 1 fraction','Pain palliation'],
+        ['Short course','20\u201330 Gy in 5\u201315 fractions','Pain, soft tissue mass'],
+        [e('strong',null,'Preferred'),'20\u201325 Gy in 8\u201310 fractions','Generally preferred for most palliative indications'],
+      ]}),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700 mt-3'},
+        e('li',null,'Concurrent systemic therapy is safe but monitor for overlapping toxicities'),
+        e('li',null,e('strong',null,'RT is NOT indicated'),' for impending fracture if surgical intervention is possible'),
+        e('li',null,'Treatment recommendations should involve multidisciplinary team')
+      )
+    )
+  );
+}
+
+// === CLINICAL PATHWAY ===
+function PagePathway(){
+  var steps=[
+    {id:'myel1',title:'MYEL-1: Diagnostic Workup',desc:'H&P, bloods, protein studies, imaging, BM biopsy with FISH/NGS',color:'bg-blue-600'},
+    {id:'myel2',title:'MYEL-2: Solitary Plasmacytoma',desc:'RT \u00b1 surgery or clinical trial. Follow-up q3\u20136mo. Image yearly \u22655 years.',color:'bg-violet-600'},
+    {id:'myel3',title:'MYEL-3: Smoldering Myeloma',desc:'Low risk: observe q3\u20136mo (Cat 1). High risk: clinical trial (preferred), or daratumumab (Cat 1) / lenalidomide (Cat 2B).',color:'bg-amber-600'},
+    {id:'myel4',title:'MYEL-4: Active MM \u2014 Primary Therapy',desc:'Initiate myeloma therapy + bone-targeting. Assess HCT candidacy. Harvest stem cells within 6 cycles.',color:'bg-red-600'},
+    {id:'myel5',title:'MYEL-5: Response After Primary Therapy',desc:'Auto-HCT (Cat 1) \u2192 Maintenance (Cat 1). Or continuous therapy. High-risk: consider tandem auto or allo-HCT.',color:'bg-green-600'},
+    {id:'myel6',title:'MYEL-6: Relapse/Progression',desc:'Clinical trial, previously treated MM regimens (MYEL-G), auto/allo-HCT. Consider CAR-T and palliative care referral.',color:'bg-slate-700'},
+  ];
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-1\u20136'},'Clinical Pathway'),
+    e('div',{className:'space-y-3'},steps.map(function(s,i){
+      return e('div',{key:s.id,className:'card p-0 overflow-hidden'},
+        e('div',{className:'flex'},
+          e('div',{className:s.color+' w-1.5 flex-shrink-0'}),
+          e('div',{className:'p-4 flex-1'},
+            e('div',{className:'flex items-center gap-2 mb-1'},
+              e('span',{className:'text-white text-xs font-bold px-2 py-0.5 rounded '+s.color},s.id.toUpperCase().replace('MYEL','MYEL-')),
+              i<steps.length-1?e('span',{className:'text-slate-400'},'\u2192'):null
+            ),
+            e('h3',{className:'font-bold text-sm text-slate-900'},s.title),
+            e('p',{className:'text-xs text-slate-600 mt-1'},s.desc)
+          )
+        )
+      );
+    })),
+    e(Card,{className:'mt-4'},
+      e('h3',{className:'font-bold text-sm text-slate-800 mb-2'},'Follow-up/Surveillance (All Stages)'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'CBC with differential, metabolic panel'),
+        e('li',null,'Serum quantitative immunoglobulins, SPEP, and SIFE'),
+        e('li',null,'24-h urine for total protein, UPEP, and UIFE as clinically indicated'),
+        e('li',null,'Serum FLC assay'),
+        e('li',null,'WB MRI / low-dose CT / FDG-PET/CT annually or as indicated'),
+        e('li',null,'BM aspirate and biopsy at relapse with FISH as indicated'),
+        e('li',null,'Consider MRD testing for prognostication after shared decision with patient')
+      )
+    )
+  );
+}
+
+// === CALCULATORS ===
+function PageCalculators(){
+  // IMPEDE VTE Calculator
+  var imp=useState({cvc:false,fracture:false,obesity:false,prevVTE:false,imid:false,esa:false,dexLow:false,dexHigh:false,dox:false,asian:false,prophLMWH:false,therapLMWH:false});
+  var impVals=imp[0];var setImpVals=imp[1];
+  var impedeScore=(impVals.cvc?2:0)+(impVals.fracture?4:0)+(impVals.obesity?1:0)+(impVals.prevVTE?5:0)+(impVals.imid?4:0)+(impVals.esa?1:0)+(impVals.dexLow?2:0)+(impVals.dexHigh?4:0)+(impVals.dox?3:0)+(impVals.asian?-3:0)+(impVals.prophLMWH?-3:0)+(impVals.therapLMWH?-4:0);
+  // SAVED
+  var sav=useState({surgery:false,asian:false,vte:false,age80:false,dexStd:false,dexHigh:false});
+  var savVals=sav[0];var setSavVals=sav[1];
+  var savedScore=(savVals.surgery?2:0)+(savVals.asian?-3:0)+(savVals.vte?3:0)+(savVals.age80?1:0)+(savVals.dexStd?1:0)+(savVals.dexHigh?2:0);
+
+  function CheckItem(props){
+    return e('label',{className:'flex items-center gap-2 text-sm cursor-pointer py-1'},
+      e('input',{type:'checkbox',checked:props.checked,onChange:function(){props.onChange()},className:'accent-blue-700 w-4 h-4'}),
+      e('span',{className:'flex-1'},props.label),
+      e('span',{className:'font-mono font-bold text-xs '+(props.points>0?'text-red-600':props.points<0?'text-green-600':'text-slate-400')},props.points>0?'+'+props.points:props.points)
+    );
+  }
+
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-K'},'VTE Risk Calculators'),
+    e('div',{className:'grid lg:grid-cols-2 gap-4'},
+      // IMPEDE
+      e(Card,null,
+        e('h3',{className:'font-bold text-slate-800 mb-1'},'IMPEDE VTE Score'),
+        e('p',{className:'text-xs text-slate-500 mb-3'},'IMiD, BMI, Pathologic fracture, ESA, Dexamethasone/Doxorubicin, Ethnicity'),
+        e(CheckItem,{label:'Central venous catheter / tunneled line',points:2,checked:impVals.cvc,onChange:function(){setImpVals(function(p){return Object.assign({},p,{cvc:!p.cvc})})}}),
+        e(CheckItem,{label:'Pelvic, hip, or femur fracture',points:4,checked:impVals.fracture,onChange:function(){setImpVals(function(p){return Object.assign({},p,{fracture:!p.fracture})})}}),
+        e(CheckItem,{label:'Obesity (BMI \u226525)',points:1,checked:impVals.obesity,onChange:function(){setImpVals(function(p){return Object.assign({},p,{obesity:!p.obesity})})}}),
+        e(CheckItem,{label:'Previous VTE',points:5,checked:impVals.prevVTE,onChange:function(){setImpVals(function(p){return Object.assign({},p,{prevVTE:!p.prevVTE})})}}),
+        e(CheckItem,{label:'Immunomodulatory drug (IMiD)',points:4,checked:impVals.imid,onChange:function(){setImpVals(function(p){return Object.assign({},p,{imid:!p.imid})})}}),
+        e(CheckItem,{label:'Erythropoiesis-stimulating agent',points:1,checked:impVals.esa,onChange:function(){setImpVals(function(p){return Object.assign({},p,{esa:!p.esa})})}}),
+        e(CheckItem,{label:'Dexamethasone \u2264160 mg/month',points:2,checked:impVals.dexLow,onChange:function(){setImpVals(function(p){return Object.assign({},p,{dexLow:!p.dexLow,dexHigh:false})})}}),
+        e(CheckItem,{label:'Dexamethasone >160 mg/month',points:4,checked:impVals.dexHigh,onChange:function(){setImpVals(function(p){return Object.assign({},p,{dexHigh:!p.dexHigh,dexLow:false})})}}),
+        e(CheckItem,{label:'Doxorubicin or multiagent chemo',points:3,checked:impVals.dox,onChange:function(){setImpVals(function(p){return Object.assign({},p,{dox:!p.dox})})}}),
+        e(CheckItem,{label:'Asian / Pacific Islander',points:-3,checked:impVals.asian,onChange:function(){setImpVals(function(p){return Object.assign({},p,{asian:!p.asian})})}}),
+        e(CheckItem,{label:'Existing prophylactic LMWH / aspirin',points:-3,checked:impVals.prophLMWH,onChange:function(){setImpVals(function(p){return Object.assign({},p,{prophLMWH:!p.prophLMWH})})}}),
+        e(CheckItem,{label:'Existing therapeutic LMWH / warfarin',points:-4,checked:impVals.therapLMWH,onChange:function(){setImpVals(function(p){return Object.assign({},p,{therapLMWH:!p.therapLMWH})})}}),
+        e('div',{className:'mt-4 p-3 rounded-lg '+(impedeScore>=4?'bg-red-50 border border-red-200':'bg-green-50 border border-green-200')},
+          e('div',{className:'text-center'},
+            e('div',{className:'text-3xl font-bold '+(impedeScore>=4?'text-red-700':'text-green-700')},impedeScore),
+            e('div',{className:'text-sm font-medium '+(impedeScore>=4?'text-red-600':'text-green-600')},impedeScore>=4?'HIGH RISK (\u22654)':'LOW RISK (\u22643)'),
+            e('div',{className:'text-xs text-slate-600 mt-1'},impedeScore>=4?'Recommend: LMWH, rivaroxaban 10mg, apixaban 2.5mg BID, fondaparinux 2.5mg, or warfarin (INR 2\u20133)':'Recommend: Aspirin 81\u2013325 mg daily')
+          )
+        )
+      ),
+      // SAVED
+      e(Card,null,
+        e('h3',{className:'font-bold text-slate-800 mb-1'},'SAVED VTE Score'),
+        e('p',{className:'text-xs text-slate-500 mb-3'},'Surgery, Asian race, VTE history, Eighty (age), Dexamethasone'),
+        e(CheckItem,{label:'Surgery within 90 days',points:2,checked:savVals.surgery,onChange:function(){setSavVals(function(p){return Object.assign({},p,{surgery:!p.surgery})})}}),
+        e(CheckItem,{label:'Asian race',points:-3,checked:savVals.asian,onChange:function(){setSavVals(function(p){return Object.assign({},p,{asian:!p.asian})})}}),
+        e(CheckItem,{label:'VTE history',points:3,checked:savVals.vte,onChange:function(){setSavVals(function(p){return Object.assign({},p,{vte:!p.vte})})}}),
+        e(CheckItem,{label:'Age \u226580 years',points:1,checked:savVals.age80,onChange:function(){setSavVals(function(p){return Object.assign({},p,{age80:!p.age80})})}}),
+        e(CheckItem,{label:'Dexamethasone standard dose (120\u2013160 mg/cycle)',points:1,checked:savVals.dexStd,onChange:function(){setSavVals(function(p){return Object.assign({},p,{dexStd:!p.dexStd,dexHigh:false})})}}),
+        e(CheckItem,{label:'Dexamethasone high dose (>160 mg/cycle)',points:2,checked:savVals.dexHigh,onChange:function(){setSavVals(function(p){return Object.assign({},p,{dexHigh:!p.dexHigh,dexStd:false})})}}),
+        e('div',{className:'mt-4 p-3 rounded-lg '+(savedScore>=2?'bg-red-50 border border-red-200':'bg-green-50 border border-green-200')},
+          e('div',{className:'text-center'},
+            e('div',{className:'text-3xl font-bold '+(savedScore>=2?'text-red-700':'text-green-700')},savedScore),
+            e('div',{className:'text-sm font-medium '+(savedScore>=2?'text-red-600':'text-green-600')},savedScore>=2?'HIGH RISK (\u22652)':'LOW RISK (<2)'),
+            e('div',{className:'text-xs text-slate-600 mt-1'},savedScore>=2?'Recommend: Anticoagulant prophylaxis':'Recommend: Aspirin 81\u2013325 mg daily')
+          )
+        )
+      )
+    ),
+    e(Card,{className:'mt-4'},
+      e('h3',{className:'font-bold text-sm text-slate-800 mb-2'},'VTE Prophylaxis Duration & General Principles'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,e('strong',null,'Duration:'),' Indefinite while on myeloma therapy, then 3\u20136 months followed by aspirin'),
+        e('li',null,'Highest VTE risk in the ',e('strong',null,'first 6 months'),' of myeloma treatment'),
+        e('li',null,'Warfarin INR 2\u20133 is not directly comparable to DOAC efficacy data'),
+        e('li',null,e('strong',null,'Carfilzomib + IMiD'),' therapy may carry additional VTE risk; consider anticoagulant prophylaxis'),
+        e('li',null,'Factors for optimal agent choice: renal function, platelet count, bleeding risk, drug interactions, patient preference, cost, compliance, concurrent medications')
+      ),
+      e('p',{className:'text-xs text-slate-500 mt-2'},'References: Carrier 2019, Khorana 2019')
+    )
+  );
+}
+
+// === TREATMENT ===
+function PageTreatment(){
+  var regCat = function(cat){
+    if(cat==='Cat 1')return e(Badge,{type:'cat1'},'Category 1');
+    if(cat==='Cat 2B')return e(Badge,{type:'2b'},'Category 2B');
+    return null;
   };
 
-  var current = nodes[step];
-  var stepKeys = Object.keys(nodes);
+  function RegimenCard(props){
+    return e('div',{className:'border border-slate-200 rounded-lg p-3 mb-2 hover:border-blue-300 transition-colors'},
+      e('div',{className:'flex items-start justify-between gap-2 flex-wrap'},
+        e('span',{className:'font-medium text-sm text-slate-900'},props.name),
+        e('div',{className:'flex gap-1 flex-wrap'},props.cat?regCat(props.cat):null,props.note?e('span',{className:'text-xs text-slate-500'},props.note):null)
+      )
+    );
+  }
 
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'Clinical Pathway Navigator'),
-    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Interactive NCCN algorithm — click nodes to navigate'),
-    e('div', {className:'grid grid-cols-1 lg:grid-cols-3 gap-6'},
-      e('div', {className:'lg:col-span-2'},
-        e('div', {className:'card p-5'},
-          e('div', {className:'algorithm-node selected'},
-            e('div', {className:'flex items-center gap-2 mb-2'},
-              e('span', {className:'badge bg-blue-600 text-white text-xs'}, 'Current'),
-              e('h3', {className:'font-semibold'}, current.title)
-            ),
-            e('p', {className:'text-sm text-slate-500'}, current.desc)
-          ),
-          current.next.length > 0 ? e(Fragment, null,
-            e('div', {className:'flex justify-center py-2 text-slate-400'}, e(IcoArrowDown)),
-            e('div', {className:'grid grid-cols-1 sm:grid-cols-'+Math.min(current.next.length,2)+' gap-3'},
-              current.next.map(function(n) {
-                return e('div', {key:n, className:'algorithm-node', onClick:function(){setStep(n)}},
-                  e('h4', {className:'font-medium text-sm'}, nodes[n].title),
-                  e('p', {className:'text-xs text-slate-500 mt-1'}, nodes[n].desc),
-                  e('div', {className:'flex items-center gap-1 mt-2 text-blue-600 text-xs'}, 'Navigate →')
-                );
-              })
-            )
-          ) : null
-        ),
-        step === 'active' ? e('div', {className:'card p-5 mt-4'},
-          e('h3', {className:'font-semibold mb-3'}, 'MYEL-4: Primary Treatment Approach'),
-          e('div', {className:'grid grid-cols-1 sm:grid-cols-2 gap-3'},
-            [{t:'1. Initiate Myeloma Therapy',s:'See MYEL-G for regimen selection',c:'bg-blue-50 border-blue-200 text-blue-800'},
-             {t:'2. Bone-Targeting Treatment',s:'Bisphosphonates or denosumab',c:'bg-blue-50 border-blue-200 text-blue-800'},
-             {t:'3. Supportive Care',s:'Symptom management (MYEL-I)',c:'bg-blue-50 border-blue-200 text-blue-800'},
-             {t:'4. Assess HCT Candidacy',s:'Refer to HCT center, harvest stem cells',c:'bg-emerald-50 border-emerald-200 text-emerald-800'}
-            ].map(function(b,i) {
-              return e('div', {key:i, className:'p-3 rounded-lg border '+b.c},
-                e('p', {className:'font-medium text-sm'}, b.t),
-                e('p', {className:'text-xs mt-1 opacity-80'}, b.s)
-              );
-            })
-          ),
-          e('button', {className:'btn bg-blue-600 text-white mt-4 text-sm', onClick:function(){setPage('treatment')}}, 'View Treatment Options →')
-        ) : null,
-        step === 'relapse' ? e('div', {className:'card p-5 mt-4'},
-          e('h3', {className:'font-semibold mb-3'}, 'MYEL-6: Treatment at Relapse/Progression'),
-          e('div', {className:'space-y-2'},
-            [{t:'Consider CAR T-cell therapy referral',s:'Cilta-cel (after 1 prior) or Ide-cel (after 2 prior)',b:'bg-emerald-100 text-emerald-700',bl:'Category 1'},
-             {t:'Bispecific antibodies (≥4 prior lines)',s:'Elranatamab, Linvoseltamab, Talquetamab, Teclistamab',b:'bg-blue-100 text-blue-700',bl:'Preferred'},
-             {t:'Palliative + supportive care',s:'Discuss goals; consider hospice if refractory',b:'bg-amber-100 text-amber-700',bl:'Always'}
-            ].map(function(r,i) {
-              return e('div', {key:i, className:'p-3 bg-slate-50 rounded-lg flex items-center justify-between'},
-                e('div', null,
-                  e('p', {className:'font-medium text-sm'}, r.t),
-                  e('p', {className:'text-xs text-slate-500'}, r.s)
-                ),
-                e('span', {className:'badge '+r.b}, r.bl)
-              );
-            })
-          )
-        ) : null
+  function RegimenSection(props){
+    return e('div',{className:'mb-4'},
+      e('h4',{className:'text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2 '+(props.color||'text-slate-600')},
+        props.badge?e(Badge,{type:props.badgeType||'preferred'},props.badge):null,
+        props.title
       ),
-      e('div', {className:'card p-4 h-fit'},
-        e('h3', {className:'font-semibold text-sm mb-3'}, 'Algorithm Steps'),
-        e('div', {className:'space-y-1'},
-          stepKeys.map(function(key) {
-            return e('div', {key:key, className:'sidebar-item text-xs '+(step===key?'active':''), onClick:function(){setStep(key)}},
-              nodes[key].title
-            );
-          })
+      props.children
+    );
+  }
+
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-G'},'Treatment Navigator'),
+    e(TabGroup,{tabs:['HCT Candidates','Non-HCT/Deferred','Maintenance','Relapsed 1\u20133 Prior','Late-Line (\u22653 Prior)'],defaultTab:0},[
+      // HCT Candidates
+      e('div',null,
+        e(RegimenSection,{title:'Preferred Regimens',badge:'Preferred',badgeType:'preferred',color:'text-emerald-700'},
+          e(RegimenCard,{name:'Daratumumab / Lenalidomide / Bortezomib / Dexamethasone (Dara-VRd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Bortezomib / Lenalidomide / Dexamethasone (Isa-VRd)',cat:'Cat 1'})
         ),
-        e('button', {className:'btn bg-white border border-slate-200 text-slate-700 w-full mt-4 text-xs', onClick:function(){setStep('workup')}}, 'Reset to Start')
+        e(RegimenSection,{title:'Other Recommended',badge:'Other Recommended',badgeType:'other',color:'text-amber-700'},
+          e(RegimenCard,{name:'Bortezomib / Lenalidomide / Dexamethasone (VRd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Carfilzomib / Lenalidomide / Dexamethasone (KRd)'}),
+          e(RegimenCard,{name:'Daratumumab / Carfilzomib / Lenalidomide / Dexamethasone (Dara-KRd)'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Carfilzomib / Lenalidomide / Dexamethasone (Isa-KRd)'})
+        ),
+        e(RegimenSection,{title:'Useful in Certain Circumstances',badge:'Useful',badgeType:'useful',color:'text-slate-600'},
+          e(RegimenCard,{name:'Bortezomib / Cyclophosphamide / Dexamethasone (VCd)'}),
+          e(RegimenCard,{name:'Carfilzomib / Cyclophosphamide / Dexamethasone (KCd)'}),
+          e(RegimenCard,{name:'Daratumumab / Bortezomib / Cyclophosphamide / Dexamethasone (Dara-VCd)'}),
+          e(RegimenCard,{name:'VTD-PACE (Bortezomib/Thalidomide/Dexamethasone/Cisplatin/Doxorubicin/Cyclophosphamide/Etoposide)',note:'For aggressive/PCL'})
+        ),
+        e(AlertBox,{type:'info',title:'HCT Principles:'},'Limit myelotoxic agents before harvest. Harvest within first 6 cycles before prolonged lenalidomide/daratumumab exposure. Collect for 2 transplants if appropriate.')
+      ),
+      // Non-HCT
+      e('div',null,
+        e(RegimenSection,{title:'Preferred Regimens',badge:'Preferred',badgeType:'preferred',color:'text-emerald-700'},
+          e(RegimenCard,{name:'Daratumumab / Lenalidomide / Dexamethasone (Dara-Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Daratumumab / Bortezomib / Lenalidomide / Dexamethasone (Dara-VRd)',cat:'Cat 1',note:'Patients <80 yrs, not frail'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Bortezomib / Lenalidomide / Dexamethasone (Isa-VRd)',cat:'Cat 1',note:'Patients <80 yrs, not frail'})
+        ),
+        e(RegimenSection,{title:'Other Recommended',badge:'Other Recommended',badgeType:'other',color:'text-amber-700'},
+          e(RegimenCard,{name:'Carfilzomib / Lenalidomide / Dexamethasone (KRd)'}),
+          e(RegimenCard,{name:'Bortezomib / Lenalidomide / Dexamethasone (VRd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Lenalidomide / Dexamethasone (Isa-Rd)'})
+        ),
+        e(RegimenSection,{title:'Useful in Certain Circumstances',badge:'Useful',badgeType:'useful',color:'text-slate-600'},
+          e(RegimenCard,{name:'Lenalidomide / Low-Dose Dexamethasone (Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Bortezomib / Cyclophosphamide / Dexamethasone (VCd)'}),
+          e(RegimenCard,{name:'Bortezomib / Dexamethasone (Vd)'}),
+          e(RegimenCard,{name:'VRd-lite (dose-reduced VRd)',note:'For frail patients'}),
+          e(RegimenCard,{name:'Carfilzomib / Cyclophosphamide / Dexamethasone (KCd)'}),
+          e(RegimenCard,{name:'Daratumumab / Bortezomib / Cyclophosphamide / Dexamethasone (Dara-VCd)'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Carfilzomib / Lenalidomide / Dexamethasone (Isa-KRd)',cat:'Cat 2B'}),
+          e(RegimenCard,{name:'Ixazomib / Lenalidomide / Dexamethasone (Ixa-Rd)'}),
+          e(RegimenCard,{name:'Lenalidomide / Cyclophosphamide / Dexamethasone (Len-Cy-d)'})
+        ),
+        e(AlertBox,{type:'warning',title:'Frailty:'},'Quadruplet preferred, but start with 2\u20133 drugs and escalate based on functional status. Consider discontinuing dexamethasone at earliest timepoint. VRd-lite for assessed-frail patients.')
+      ),
+      // Maintenance
+      e('div',null,
+        e(RegimenSection,{title:'Preferred',badge:'Preferred',badgeType:'preferred',color:'text-emerald-700'},
+          e(RegimenCard,{name:'Lenalidomide',cat:'Cat 1'})
+        ),
+        e(RegimenSection,{title:'Other Recommended (consider for high-risk: two-drug maintenance)',badge:'Other Recommended',badgeType:'other',color:'text-amber-700'},
+          e(RegimenCard,{name:'Carfilzomib / Lenalidomide (KR)',note:'High-risk'}),
+          e(RegimenCard,{name:'Daratumumab / Lenalidomide (Dara-R)',note:'High-risk'})
+        ),
+        e(RegimenSection,{title:'Useful in Certain Circumstances',badge:'Useful',badgeType:'useful',color:'text-slate-600'},
+          e(RegimenCard,{name:'Bortezomib \u00b1 Lenalidomide (V \u00b1 R)'}),
+          e(RegimenCard,{name:'Daratumumab alone'}),
+          e(RegimenCard,{name:'Ixazomib',cat:'Cat 2B'})
+        ),
+        e(AlertBox,{type:'info',title:'Key Evidence:'},'Lenalidomide maintenance post-transplant improves PFS and OS (Category 1). For high-risk patients, two-drug maintenance with PI or anti-CD38 mAb added to lenalidomide is recommended.')
+      ),
+      // Relapsed 1-3 prior
+      e('div',null,
+        e(Collapsible,{title:'Anti-CD38 Refractory \u2014 Preferred',defaultOpen:true},
+          e(RegimenCard,{name:'Carfilzomib / Lenalidomide / Dexamethasone (KRd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Carfilzomib / Pomalidomide / Dexamethasone (KPd)'}),
+          e(RegimenCard,{name:'Pomalidomide / Bortezomib / Dexamethasone (PVd)',cat:'Cat 1'})
+        ),
+        e(Collapsible,{title:'Bortezomib-Refractory \u2014 Preferred',defaultOpen:true},
+          e(RegimenCard,{name:'Carfilzomib / Lenalidomide / Dexamethasone (KRd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Daratumumab / Carfilzomib / Dexamethasone (Dara-Kd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Daratumumab / Lenalidomide / Dexamethasone (Dara-Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Carfilzomib / Dexamethasone (Isa-Kd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Carfilzomib / Pomalidomide / Dexamethasone (KPd)'})
+        ),
+        e(Collapsible,{title:'Lenalidomide-Refractory \u2014 Preferred',defaultOpen:true},
+          e(RegimenCard,{name:'Daratumumab / Bortezomib / Dexamethasone (Dara-Vd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Daratumumab / Carfilzomib / Dexamethasone (Dara-Kd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Isatuximab-irfc / Carfilzomib / Dexamethasone (Isa-Kd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Pomalidomide / Bortezomib / Dexamethasone (PVd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Carfilzomib / Pomalidomide / Dexamethasone (KPd)'})
+        ),
+        e(Collapsible,{title:'After Specific Prior Therapy Sequences'},
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-2 mb-1'},'After 1 prior (Len + PI):'),
+          e(RegimenCard,{name:'Daratumumab / Pomalidomide / Dexamethasone (Dara-Pd)',cat:'Cat 1'}),
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-3 mb-1'},'After 2 prior (Len + PI):'),
+          e(RegimenCard,{name:'Isatuximab-irfc / Pomalidomide / Dexamethasone (Isa-Pd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Elotuzumab / Pomalidomide / Dexamethasone (Elo-Pd)'}),
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-3 mb-1'},'After 2 prior (IMiD + PI), progression within 60 days:'),
+          e(RegimenCard,{name:'Ixazomib / Pomalidomide / Dexamethasone (Ixa-Pd)'})
+        ),
+        e(Collapsible,{title:'CAR T-Cell Therapy'},
+          e(RegimenCard,{name:'Ciltacabtagene autoleucel (cilta-cel)',cat:'Cat 1',note:'After 1 prior (IMiD + PI), len-refractory'}),
+          e(RegimenCard,{name:'Idecabtagene vicleucel (ide-cel)',cat:'Cat 1',note:'After 2 prior (IMiD + anti-CD38 + PI)'})
+        ),
+        e(Collapsible,{title:'Other Recommended Regimens'},
+          e(RegimenCard,{name:'Elotuzumab / Lenalidomide / Dexamethasone (Elo-Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Ixazomib / Lenalidomide / Dexamethasone (Ixa-Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Selinexor / Bortezomib / Dexamethasone (SVd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Bortezomib / Cyclophosphamide / Dexamethasone (VCd)'}),
+          e(RegimenCard,{name:'Bortezomib / Lenalidomide / Dexamethasone (VRd)'}),
+          e(RegimenCard,{name:'Carfilzomib / Cyclophosphamide / Dexamethasone (KCd)'}),
+          e(RegimenCard,{name:'Daratumumab / Bortezomib / Cyclophosphamide / Dexamethasone (Dara-VCd)'}),
+          e(RegimenCard,{name:'Daratumumab / Carfilzomib / Pomalidomide / Dexamethasone (Dara-KPd)'}),
+          e(RegimenCard,{name:'Elotuzumab / Bortezomib / Dexamethasone (Elo-Vd)'}),
+          e(RegimenCard,{name:'Ixazomib / Cyclophosphamide / Dexamethasone (Ixa-Cd)'}),
+          e(RegimenCard,{name:'Lenalidomide / Cyclophosphamide / Dexamethasone (Len-Cd)'})
+        ),
+        e(Collapsible,{title:'Useful in Certain Circumstances'},
+          e(RegimenCard,{name:'Bortezomib / Dexamethasone (Vd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Bortezomib / Liposomal Doxorubicin / Dexamethasone',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Lenalidomide / Dexamethasone (Rd)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Carfilzomib / Cyclophosphamide / Thalidomide / Dexamethasone (KCTd)'}),
+          e(RegimenCard,{name:'Carfilzomib (weekly) / Dexamethasone (Kd weekly)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Selinexor / Carfilzomib / Dexamethasone (Sel-Kd)'}),
+          e(RegimenCard,{name:'Selinexor / Daratumumab / Dexamethasone (Sel-Dara-d)'}),
+          e(RegimenCard,{name:'Venetoclax / Dexamethasone',note:'t(11;14) ONLY'}),
+          e(RegimenCard,{name:'Venetoclax / Dexamethasone / Daratumumab'}),
+          e(RegimenCard,{name:'Venetoclax / Dexamethasone / PI'})
+        )
+      ),
+      // Late-line
+      e('div',null,
+        e(RegimenSection,{title:'Preferred \u2014 CAR T-Cell Therapy',badge:'Preferred',badgeType:'preferred',color:'text-emerald-700'},
+          e(RegimenCard,{name:'Ciltacabtagene autoleucel (cilta-cel)',cat:'Cat 1'}),
+          e(RegimenCard,{name:'Idecabtagene vicleucel (ide-cel)',cat:'Cat 1'})
+        ),
+        e(RegimenSection,{title:'Preferred \u2014 Bispecific Antibodies (after \u22654 prior: anti-CD38 + PI + IMiD)',badge:'Preferred',badgeType:'preferred',color:'text-emerald-700'},
+          e(RegimenCard,{name:'Elranatamab-bcmm (BCMA-targeting BsAb)'}),
+          e(RegimenCard,{name:'Linvoseltamab-gcpt (BCMA-targeting BsAb)'}),
+          e(RegimenCard,{name:'Talquetamab-tgvs (GPRC5D-targeting BsAb)'}),
+          e(RegimenCard,{name:'Teclistamab-cqyv (BCMA-targeting BsAb)'})
+        ),
+        e(RegimenSection,{title:'Other Recommended',badge:'Other Recommended',badgeType:'other',color:'text-amber-700'},
+          e(RegimenCard,{name:'High-dose or fractionated cyclophosphamide'}),
+          e(RegimenCard,{name:'Selinexor / Dexamethasone',note:'Penta-refractory (\u22654 prior, refractory to \u22652 PIs, \u22652 IMiDs, anti-CD38)'})
+        ),
+        e(RegimenSection,{title:'Useful in Certain Circumstances',badge:'Useful',badgeType:'useful',color:'text-slate-600'},
+          e(RegimenCard,{name:'Belantamab mafodotin-blmf',note:'Expanded access program'}),
+          e(RegimenCard,{name:'Bendamustine \u00b1 combinations (Vd, Kd, Rd)'}),
+          e(RegimenCard,{name:'Talquetamab + Teclistamab (dual BsAb)',note:'Novel combination'})
+        ),
+        e(AlertBox,{type:'danger',title:'Bendamustine Warning:'},'Bendamustine impacts T-cell collection. Avoid if future CAR T-cell therapy is being considered.'),
+        e(AlertBox,{type:'info',title:'TCR Therapy Candidacy:'},'Consider T-cell redirecting (TCR) therapy (CAR-T or BsAb) for eligible patients based on MYEL-G criteria. History of CNS disease should NOT preclude use of CAR-T or BsAb.')
+      ),
+    ])
+  );
+}
+
+// === THERAPY CONSIDERATIONS ===
+function PageTherapy(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-F'},'Considerations for Myeloma Therapy'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'General Principles'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,e('strong',null,'Quadruplet regimen is preferred.'),' Based on functional status, may start with 2\u20133 drugs then escalate as PS improves.'),
+        e('li',null,'Consider dose modifications based on functional status and age.'),
+        e('li',null,e('strong',null,'Discontinue dexamethasone'),' at the earliest possible timepoint.'),
+        e('li',null,'Systemic therapy should ',e('strong',null,'not be delayed'),' for advanced imaging if diagnosis is clear.'),
+        e('li',null,'For older patients: reduce dex to 20 mg weekly.')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Black/African American Individuals'),
+      e(AlertBox,{type:'info',title:'Key Population Data:'},null),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,'Highest rate of myeloma of any race/ethnic group; ',e('strong',null,'twice the incidence'),' of all other races.'),
+        e('li',null,'Earlier age at diagnosis, more severe symptoms at presentation.'),
+        e('li',null,'Biology differs: more likely to have ',e('strong',null,'chromosome 14 translocations'),' [t(11;14), t(14;16), t(14;20)].'),
+        e('li',null,'Less likely to have high-risk mutations: del(17p) and gain/amp 1q.'),
+        e('li',null,'Without disparities in use of novel agents or autoHCT, ',e('strong',null,'superior median OS'),': 7.07 vs 5.83 years (P<.001).')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Older Adults & Frailty'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,'Frailty assessment should be considered for all older patients.'),
+        e('li',null,'Use the ',e('strong',null,'Myeloma Frailty Score Calculator'),' (age, ADL, IADL, Charlson Comorbidity Index).'),
+        e('li',null,'VRd-lite or Rd for frail patients; avoid quadruplets in frail/very elderly (\u226580 yrs).'),
+        e('li',null,'Reduce dexamethasone to 20 mg weekly in older patients.')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'HCT & Stem Cell Considerations'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,'Limit myelotoxic agents prior to stem cell harvest.'),
+        e('li',null,'Harvest within first 6 cycles before prolonged lenalidomide and/or daratumumab exposure.'),
+        e('li',null,'If delayed HCT, collect and store stem cells early.'),
+        e('li',null,'Consider collecting for ',e('strong',null,'2 transplants'),' if appropriate.')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Dosing & Administration'),
+      e(DataTable,{headers:['Agent','Key Points'],rows:[
+        ['Bortezomib','SC preferred over IV. Weekly preferred over twice-weekly. FDA-approved biosimilar appropriate.'],
+        ['Carfilzomib','Weekly (preferred) or twice-weekly. Monitor for cardiac, renal, and pulmonary toxicity.'],
+        ['Ixazomib','Oral PI. Can substitute for bortezomib in some settings.'],
+        ['Daratumumab','IV or SC (with hyaluronidase-fihj). Different dosing schedules for each formulation.'],
+        ['Isatuximab-irfc','IV administration. Different dosing than daratumumab.'],
+        ['Dexamethasone','Reduce to 20 mg weekly in older patients. Discontinue early when possible.'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Lab Interference & Side Effects'),
+      e(AlertBox,{type:'warning',title:'Critical Lab Interference:'},
+        e('ul',{className:'list-disc ml-4 space-y-1 mt-1'},
+          e('li',null,e('strong',null,'Daratumumab & Isatuximab-irfc'),' \u2192 false positive indirect Coombs test. Type and screen ',e('strong',null,'BEFORE'),' starting treatment.'),
+          e('li',null,e('strong',null,'Monoclonal antibodies'),' \u2192 false positive SIFE if M-protein is IgG kappa. Use Hydrashift or DIRA assay to distinguish.'),
+          e('li',null,e('strong',null,'Carfilzomib'),' \u2192 cardiac (heart failure, arrhythmia), renal, and pulmonary toxicity risk. Baseline echo recommended.')
+        )
+      ),
+      e(AlertBox,{type:'info',title:'Immunoglobulin Replacement:'},'Consider IVIG replacement if IgG <400 mg/dL and/or recurrent life-threatening infections.'),
+      e(AlertBox,{type:'danger',title:'Bendamustine:'},'Impacts T-cell collection for CAR-T therapy. Avoid if future CAR-T is being considered.')
+    )
+  );
+}
+
+// === RESPONSE CRITERIA ===
+function PageResponse(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-E'},'Response Criteria for Multiple Myeloma (IMWG)'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'MRD Criteria (requires complete response first)'),
+      e(DataTable,{headers:['Category','Criteria','Technical Details'],rows:[
+        [e('strong',null,'Sustained MRD-negative'),'MRD negativity confirmed minimum 1 year apart','Repeated testing at \u22651 year interval'],
+        [e('strong',null,'Flow MRD-negative'),'Absence of aberrant clonal PCs by NGF','EuroFlow standard 8-colour panel; sensitivity 1 in 10\u2075 (10\u207B\u2075)'],
+        [e('strong',null,'Sequencing MRD-negative'),'Absence of clonal PCs by NGS','Sensitivity 1 in 10\u2075 or higher; requires baseline clonotype'],
+        [e('strong',null,'Imaging + MRD-negative'),'MRD-negative by NGF or NGS PLUS disappearance of all areas of increased tracer uptake on FDG-PET/CT','Combined flow/sequencing + imaging assessment'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Standard IMWG Response Categories'),
+      e(DataTable,{headers:['Category','Criteria'],rows:[
+        [e('strong',null,'Stringent CR (sCR)'),'CR plus normal FLC ratio (0.26\u20131.65) AND absence of clonal cells in BM by IHC (\u03BA/\u03BB ratio requires minimum 100 plasma cells counted)'],
+        [e('strong',null,'Complete Response (CR)'),'Negative immunofixation on serum and urine; disappearance of soft tissue plasmacytomas; <5% plasma cells in bone marrow'],
+        [e('strong',null,'VGPR'),'Serum and urine M-protein detectable by immunofixation but not on electrophoresis; OR \u226590% reduction in serum M-protein plus urine M-protein <100 mg/24h'],
+        [e('strong',null,'Partial Response (PR)'),'\u226550% reduction of serum M-protein plus \u226590% reduction in 24h urine M-protein or to <200 mg/24h. If M-protein unmeasurable: \u226550% decrease in dFLC (difference between involved and uninvolved FLC).'],
+        [e('strong',null,'Minimal Response (MR)'),'\u226525% but \u226449% reduction of serum M-protein and 50\u201389% reduction in 24h urine M-protein'],
+        [e('strong',null,'Stable Disease (SD)'),'Not meeting criteria for CR, VGPR, PR, MR, or progressive disease'],
+      ]}),
+      e(AlertBox,{type:'info'},'All responses require two consecutive assessments made at any time before institution of new therapy.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Progressive Disease (PD)'),
+      e('p',{className:'text-sm text-slate-700 mb-2'},'Increase of ',e('strong',null,'25%'),' from lowest confirmed response value in any one or more of:'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Serum M-component (absolute increase must be \u22650.5 g/dL)'),
+        e('li',null,'Urine M-component (absolute increase must be \u2265200 mg/24h)'),
+        e('li',null,'Only in patients without measurable serum/urine: difference between involved and uninvolved FLC (absolute increase >10 mg/dL)'),
+        e('li',null,'Bone marrow plasma cell percentage (absolute \u226510%)'),
+        e('li',null,'New bone/soft tissue lesions or definite increase in size of existing lesions'),
+        e('li',null,'Development of new or increase in circulating plasma cells (if sole measure of disease)')
+      )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Clinical Relapse'),
+      e('p',{className:'text-sm text-slate-700 mb-2'},'Direct indicators of increasing disease and/or end-organ dysfunction (CRAB features):'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'New soft tissue plasmacytomas or bone lesions'),
+        e('li',null,'Definite increase in size of existing plasmacytomas or bone lesions (SPD measurements)'),
+        e('li',null,'Hypercalcemia (>11.5 mg/dL / >2.875 mmol/L)'),
+        e('li',null,'Decrease in haemoglobin >2 g/dL not related to therapy or other conditions'),
+        e('li',null,'Rise in serum creatinine \u22652 mg/dL from start of therapy attributable to myeloma'),
+        e('li',null,'Hyperviscosity related to paraprotein')
+      ),
+      e(AlertBox,{type:'warning',title:'Relapse from CR:'},'Any one or more: reappearance of serum or urine M-protein by immunofixation or electrophoresis, development of \u22655% BM plasma cells, or appearance of any sign of progression.'),
+      e(AlertBox,{type:'warning',title:'Relapse from MRD-negative:'},'Reappearance of MRD by NGF or NGS (confirmed on two consecutive assessments).')
+    )
+  );
+}
+
+// === SUPPORTIVE CARE ===
+function PageSupportive(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-I'},'Supportive Care for Multiple Myeloma'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Bone Disease Management'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,e('strong',null,'All patients'),' should receive bisphosphonates (Category 1) or denosumab.'),
+        e('li',null,'Pamidronate 90 mg IV q3\u20134 weeks = zoledronic acid 4 mg IV q1\u20133 months (equivalent SRE reduction).'),
+        e('li',null,e('strong',null,'Denosumab 120 mg SC q4 weeks'),' \u2014 preferred in renal insufficiency (does not require renal dose adjustment). Monitor for hypocalcaemia.'),
+        e('li',null,'Baseline dental exam ',e('strong',null,'strongly recommended'),' before starting bone-modifying agents.'),
+        e('li',null,'Assess and supplement vitamin D.'),
+        e('li',null,'Monitor for osteonecrosis of the jaw (ONJ).'),
+        e('li',null,'Continue bone-targeting treatment for ',e('strong',null,'up to 2 years'),'.'),
+        e('li',null,'Consider vertebroplasty or kyphoplasty for symptomatic vertebral compression fractures.')
+      ),
+      e(AlertBox,{type:'danger',title:'Denosumab Discontinuation:'},'Risk of rebound osteoporosis and hypercalcaemia. When discontinuing denosumab, switch to a bisphosphonate (e.g., zoledronic acid q6 months or a single transitional dose) to prevent rebound bone loss.'),
+      e(AlertBox,{type:'info'},'DEXA scans are NOT useful to assess myeloma bone disease.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Other Supportive Measures'),
+      e(DataTable,{headers:['Complication','Management'],rows:[
+        [e('strong',null,'Hypercalcaemia'),'Hydration, bisphosphonates (zoledronic acid preferred), denosumab, steroids, and/or calcitonin'],
+        [e('strong',null,'Hyperviscosity'),'Plasmapheresis as adjunctive therapy for symptomatic hyperviscosity'],
+        [e('strong',null,'Anaemia'),'Consider erythropoietin (ESA) for anaemic patients. Note: ESAs add +1 to IMPEDE VTE score.'],
+        [e('strong',null,'Infections'),'See MYEL-J. Prophylactic antibiotics, antivirals, vaccination. IVIG if IgG <400 mg/dL.'],
+        [e('strong',null,'Renal dysfunction'),'See MYEL-L. Bortezomib-based regimens preferred.'],
+        [e('strong',null,'VTE'),'See MYEL-K. Risk stratify with IMPEDE/SAVED scores.'],
+        [e('strong',null,'Neuropathy'),'Dose-reduce or switch PI. SC bortezomib preferred. Consider gabapentin/pregabalin/duloxetine.'],
+      ]})
+    )
+  );
+}
+
+// === INFECTION MANAGEMENT ===
+function PageInfection(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-J'},'Management of Infections in Multiple Myeloma'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Risk Factors for Increased Infection'),
+      e(DataTable,{headers:['Infection Type','Contributing Factors'],rows:[
+        [e('strong',null,'General (all infections)'),'Autologous HCT, BsAb therapy, CAR T-cell therapy, CD38 antibodies, Cytotoxic chemotherapy'],
+        [e('strong',null,'Bacterial'),'Diagnosis of MM (hypogammaglobulinaemia), BsAb therapy, CAR T-cell therapy'],
+        [e('strong',null,'Viral'),'Proteasome inhibitors, Monoclonal antibodies, BsAb therapy, CAR T-cell therapy'],
+        [e('strong',null,'Fungal'),'High-dose steroids, Prolonged neutropenia, BsAb therapy, CAR T-cell therapy'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Bacterial Infection Prophylaxis & Treatment'),
+      e(DataTable,{headers:['Intervention','Details'],rows:[
+        [e('strong',null,'Levofloxacin'),'500 mg PO daily. Start when ANC <500 for CAR-T/BsAb. Consider for 12 weeks in newly diagnosed MM.'],
+        [e('strong',null,'Immunoglobulin replacement'),'IVIG for IgG <400 mg/dL and/or recurrent life-threatening infections. After CAR-T: regular IVIG. During BsAb: consider IVIG.'],
+        [e('strong',null,'Pneumococcal vaccination'),'PCV20 (1 dose) OR PCV15 + PPSV23 (per CDC schedule). Revaccinate 3\u20136 months post-CAR-T or post-autoHCT.'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Viral Infection Prophylaxis'),
+      e(DataTable,{headers:['Pathogen','Prophylaxis / Management'],rows:[
+        [e('strong',null,'HSV/VZV'),'Acyclovir 400\u2013800 mg PO BID or valacyclovir 500 mg PO daily/BID. Minimum 1 year post-CAR-T (indefinite preferred). BsAb: indefinite antiviral regardless of vaccination status.'],
+        [e('strong',null,'HBV/HIV'),'Screening recommended for all patients before immunosuppressive therapy.'],
+        [e('strong',null,'CMV'),'Monitor viral load only in suspected CMV disease. PCR in high-risk patients.'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Fungal & PJP Prophylaxis'),
+      e(DataTable,{headers:['Pathogen','Prophylaxis / Management'],rows:[
+        [e('strong',null,'PJP (Pneumocystis)'),'TMP-SMX (preferred), or pentamidine, or atovaquone. Duration: \u22656 months post-CAR-T/BsAb or until CD4 \u2265200/mm\u00B3. Also indicated if dexamethasone >40 mg/day for \u22654 days/week.'],
+        [e('strong',null,'Yeast'),'Fluconazole 400 mg PO daily when ANC <500.'],
+        [e('strong',null,'Mold'),'Anti-mold azole (e.g., posaconazole, voriconazole) in patients with high risk of infections.'],
+      ]}),
+      e(AlertBox,{type:'danger',title:'High-Risk Infection Definition (post-CAR-T/BsAb):'},'Patients who received >1 dose tocilizumab, required second-line agents for CRS/ICANS, or received prolonged courses of steroids.')
+    )
+  );
+}
+
+// === VTE MANAGEMENT (page with general info; calculators are separate) ===
+function PageVTE(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-K'},'VTE Management in Multiple Myeloma'),
+    e(AlertBox,{type:'warning',title:'Highest Risk Period:'},'The first 6 months of myeloma treatment carry the highest VTE risk, particularly with IMiD-based regimens.'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'IMPEDE VTE Score'),
+      e(DataTable,{headers:['Factor','Points'],rows:[
+        ['Central venous catheter / tunneled line','+2'],
+        ['Pelvic, hip, or femur fracture','+4'],
+        ['Obesity (BMI \u226525)','+1'],
+        ['Previous VTE','+5'],
+        ['Immunomodulatory drug (IMiD)','+4'],
+        ['Erythropoiesis-stimulating agent','+1'],
+        ['Dexamethasone \u2264160 mg/month','+2'],
+        ['Dexamethasone >160 mg/month','+4'],
+        ['Doxorubicin or multiagent chemo','+3'],
+        ['Asian / Pacific Islander','\u20133'],
+        ['Existing prophylactic LMWH / aspirin','\u20133'],
+        ['Existing therapeutic LMWH / warfarin','\u20134'],
+      ]}),
+      e('p',{className:'text-sm font-semibold text-slate-700 mt-2'},'\u2265 4 points = High risk \u2192 Anticoagulant prophylaxis')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'SAVED VTE Score'),
+      e(DataTable,{headers:['Variable','Points'],rows:[
+        ['Surgery within 90 days','+2'],
+        ['Asian race','\u20133'],
+        ['VTE history','+3'],
+        ['Age \u226580 years','+1'],
+        ['Dexamethasone standard dose (120\u2013160 mg/cycle)','+1'],
+        ['Dexamethasone high dose (>160 mg/cycle)','+2'],
+      ]}),
+      e('p',{className:'text-sm font-semibold text-slate-700 mt-2'},'\u2265 2 points = High risk \u2192 Anticoagulant prophylaxis')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'VTE Prophylaxis Recommendations'),
+      e(DataTable,{headers:['Risk Level','Recommendation'],rows:[
+        [e('span',{className:'font-bold text-green-700'},'Low Risk (\u22643 IMPEDE or <2 SAVED)'),'Aspirin 81\u2013325 mg once daily'],
+        [e('span',{className:'font-bold text-red-700'},'High Risk (\u22654 IMPEDE or \u22652 SAVED)'),'LMWH (enoxaparin 40 mg daily) OR Rivaroxaban 10 mg daily OR Apixaban 2.5 mg BID OR Fondaparinux 2.5 mg daily OR Warfarin (INR 2.0\u20133.0)'],
+      ]}),
+      e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Duration & Principles'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,e('strong',null,'Duration:'),' Indefinite while on myeloma therapy. Consider 3\u20136 months followed by aspirin.'),
+        e('li',null,'Warfarin INR 2\u20133 is not directly comparable to DOAC efficacy data.'),
+        e('li',null,e('strong',null,'Carfilzomib + IMiD'),' therapy: consider anticoagulant prophylaxis regardless of score.'),
+        e('li',null,'Factors for optimal agent: renal function, platelet count, bleeding risk, drug interactions, patient preference, cost, compliance, concurrent meds, body weight, GI absorption.')
       )
     )
   );
 }
 
-function StagingPage() {
-  var _s = useState('iss'); var tab = _s[0]; var setTab = _s[1];
-  var tabs = [{id:'iss',label:'ISS'},{id:'riss',label:'R-ISS'},{id:'r2iss',label:'R2-ISS'},{id:'hr',label:'High-Risk Factors'}];
-
-  var issData = [
-    {stage:'I',criteria:'β2M <3.5 mg/L AND albumin ≥3.5 g/dL',prog:'Median OS: 62 months',cl:'bg-emerald-500'},
-    {stage:'II',criteria:'Not stage I or III',prog:'Median OS: 44 months',cl:'bg-amber-500'},
-    {stage:'III',criteria:'β2M ≥5.5 mg/L',prog:'Median OS: 29 months',cl:'bg-rose-500'},
-  ];
-  var rissData = [
-    {stage:'I',criteria:'ISS I + standard-risk cytogenetics + LDH ≤ ULN',prog:'5-yr OS: ~82%',cl:'bg-emerald-500'},
-    {stage:'II',criteria:'Not R-ISS I or III',prog:'5-yr OS: ~62%',cl:'bg-amber-500'},
-    {stage:'III',criteria:'ISS III + [del(17p) or t(4;14) or t(14;16) or LDH > ULN]',prog:'5-yr OS: ~40%',cl:'bg-rose-500'},
-  ];
-  var r2Data = [
-    {g:'Low-risk',p:'0 points',f:'Not ISS II/III, LDH ≤ ULN, no del(17p)/t(4;14)/1q+',cl:'bg-emerald-500'},
-    {g:'Low-intermediate',p:'0.5–1 pts',f:'ISS II or LDH > ULN or del(17p)/t(4;14)/1q+',cl:'bg-blue-500'},
-    {g:'Intermediate-high',p:'1.5–2.5 pts',f:'Combination of high-risk features',cl:'bg-amber-500'},
-    {g:'High-risk',p:'3–5 pts',f:'Multiple high-risk features combined',cl:'bg-rose-500'},
-  ];
-
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-B: Disease Staging & Risk Stratification'),
-    e('p', {className:'text-sm text-slate-500 mb-4'}, 'ISS, R-ISS, R2-ISS, and IMS-IMWG high-risk criteria'),
-    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
-      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.label)})
+// === RENAL MANAGEMENT ===
+function PageRenal(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MYEL-L'},'Renal Disease Management in Multiple Myeloma'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Diagnostic Workup'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Serum creatinine, electrolytes, and uric acid'),
+        e('li',null,'Urinalysis, electrolytes, and sediment'),
+        e('li',null,'24-hour urine for total protein, UPEP/UIFE'),
+        e('li',null,'SPEP/SIFE and serum FLCs'),
+        e('li',null,'Consider renal ultrasound'),
+        e('li',null,'Consider renal biopsy (see Dimopoulos criteria below)')
+      )
     ),
-    tab==='iss' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-4'},'International Staging System (ISS)'),
-      e('div',{className:'space-y-3'}, issData.map(function(s,i){
-        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2'},
-          e('div',{className:'flex items-center gap-3'},
-            e('span',{className:'badge text-white px-3 py-1 '+s.cl},'Stage '+s.stage),
-            e('p',{className:'text-sm'},s.criteria)
-          ),
-          e('span',{className:'text-xs text-slate-500 whitespace-nowrap'},s.prog)
-        );
-      }))
-    ) : null,
-    tab==='riss' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-4'},'Revised ISS (R-ISS)'),
-      e('div',{className:'space-y-3'}, rissData.map(function(s,i){
-        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200'},
-          e('div',{className:'flex items-center gap-3 mb-1'},
-            e('span',{className:'badge text-white px-3 py-1 '+s.cl},'R-ISS '+s.stage),
-            e('span',{className:'text-xs text-slate-500'},s.prog)
-          ),
-          e('p',{className:'text-sm'},s.criteria)
-        );
-      }))
-    ) : null,
-    tab==='r2iss' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-4'},'Second Revision of ISS (R2-ISS)'),
-      e('p',{className:'text-xs text-slate-500 mb-4'},'Only validated for newly diagnosed MM. Each risk factor assigned numerical value based on OS impact.'),
-      e('div',{className:'space-y-3'}, r2Data.map(function(s,i){
-        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200'},
-          e('div',{className:'flex items-center gap-3 mb-1'},
-            e('span',{className:'badge text-white px-3 py-1 '+s.cl},s.g),
-            e('span',{className:'text-sm font-medium'},s.p)
-          ),
-          e('p',{className:'text-xs text-slate-500'},s.f)
-        );
-      })),
-      e('div',{className:'mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-800'},
-        e('p',{className:'font-medium'},'Point Assignment:'),
-        e('p',null,'ISS-III = 1.5 pts | ISS-II = 1 pt | del(17p) = 1 pt | t(4;14) = 1 pt | 1q+ = 0.5 pts | LDH > ULN = 1 pt')
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Treatment Approach'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+        e('li',null,e('strong',null,'Pulse dexamethasone'),' \u2014 rapid tumour reduction.'),
+        e('li',null,e('strong',null,'Bortezomib and/or daratumumab-based regimens'),' preferred (no renal dose adjustment needed).'),
+        e('li',null,'Switch to other regimen once renal function has improved or stabilised.')
       )
-    ) : null,
-    tab==='hr' ? e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
-      e('div',{className:'card p-5'},
-        e('h3',{className:'font-semibold mb-3 flex items-center gap-2'},e('span',{className:'badge bg-rose-100 text-rose-700'},'New Dx'),' Newly Diagnosed MM'),
-        e('ul',{className:'space-y-2 text-sm'},
-          ['R-ISS III','Extramedullary disease','Circulating plasma cells','Del(1p32)','t(4;14), t(14;16), t(14;20)','Del(17p)/monosomy 17/TP53 mutation','1q21 gain/1q21 amplification','MYC translocation','High-risk gene expression profile'].map(function(f,i){
-            return e('li',{key:i,className:'flex items-start gap-2'},e('span',{className:'text-rose-500'},'•'),f);
-          })
-        )
-      ),
-      e('div',{className:'card p-5'},
-        e('h3',{className:'font-semibold mb-3 flex items-center gap-2'},e('span',{className:'badge bg-amber-100 text-amber-700'},'Relapsed'),' Relapsed MM'),
-        e('ul',{className:'space-y-2 text-sm'},
-          ['Relapse within 2 years of transplant + maintenance','Relapse within 18 months of non-transplant tx','Acquisition of 1q gain/amp and/or del(17p)/TP53','Extramedullary disease at relapse','Circulating plasma cells at relapse'].map(function(f,i){
-            return e('li',{key:i,className:'flex items-start gap-2'},e('span',{className:'text-amber-500'},'•'),f);
-          })
-        )
-      ),
-      e('div',{className:'card p-5 md:col-span-2'},
-        e('h3',{className:'font-semibold mb-3'},'IMS-IMWG High-Risk Definition (2025)'),
-        e('div',{className:'grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm'},
-          ['Del(17p) >20% of plasma cells and/or TP53 mutation',
-           'Translocations co-occurring with 1q+ and/or del(1p32): t(4;14), t(14;16), t(14;20)',
-           'Monoallelic del(1p32) + 1q+ or biallelic del(1p32)',
-           'High β2M (>5.5 mg/dL) with normal creatinine (<1.2 mg/dL)'
-          ].map(function(f,i){
-            return e('div',{key:i,className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
-              e('p',{className:'font-medium text-rose-800'},f)
-            );
-          })
-        )
-      )
-    ) : null
-  );
-}
-
-function CalculatorPage() {
-  var _s = useState({}); var checked = _s[0]; var setChecked = _s[1];
-  function toggle(i) { setChecked(function(p) { var n=Object.assign({},p); n[i]=!n[i]; return n; }); }
-
-  var score = IMPEDE_FACTORS.reduce(function(sum,f,i){ return sum + (checked[i] ? f.points : 0); }, 0);
-  var isHigh = score >= 4;
-
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-K: VTE Risk Calculator'),
-    e('p', {className:'text-sm text-slate-500 mb-6'}, 'IMPEDE score for VTE risk stratification in myeloma'),
-    e('div', {className:'grid grid-cols-1 lg:grid-cols-3 gap-6'},
-      e('div', {className:'lg:col-span-2 card p-5'},
-        e('h3', {className:'font-semibold mb-4'}, 'IMPEDE Score Calculator'),
-        e('div', {className:'space-y-2'},
-          IMPEDE_FACTORS.map(function(f,i) {
-            return e('label', {key:i, className:'flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer'},
-              e('input', {type:'checkbox', checked:!!checked[i], onChange:function(){toggle(i)}, className:'w-4 h-4', style:{accentColor:'#2563eb'}}),
-              e('span', {className:'flex-1 text-sm'}, f.factor),
-              e('span', {className:'badge text-xs '+(f.points>0?'bg-rose-100 text-rose-700':'bg-emerald-100 text-emerald-700')},
-                (f.points>0?'+':'')+f.points)
-            );
-          })
-        )
-      ),
-      e('div', {className:'space-y-4'},
-        e('div', {className:'card p-5 text-center'},
-          e('p', {className:'text-sm text-slate-500 mb-1'}, 'IMPEDE Score'),
-          e('p', {className:'text-5xl font-bold '+(isHigh?'text-rose-600':'text-emerald-600')}, score),
-          e('p', {className:'text-sm font-semibold mt-1 '+(isHigh?'text-rose-600':'text-emerald-600')}, isHigh?'High Risk':'Low Risk'),
-          e('div', {className:'mt-3 text-xs text-slate-500'},
-            e('p', null, '≤3 points = Low risk'),
-            e('p', null, '≥4 points = High risk')
-          )
-        ),
-        e('div', {className:'card p-5'},
-          e('h4', {className:'font-semibold text-sm mb-3'}, 'VTE Prophylaxis Recommendation'),
-          isHigh ?
-            e('div', {className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
-              e('p', {className:'font-medium text-sm text-rose-800'}, 'Anticoagulation Required'),
-              e('ul', {className:'text-xs text-rose-700 mt-2 space-y-1'},
-                e('li',null,'• LMWH (enoxaparin 40 mg daily)'),
-                e('li',null,'• OR Rivaroxaban 10 mg daily'),
-                e('li',null,'• OR Apixaban 2.5 mg BID'),
-                e('li',null,'• OR Fondaparinux 2.5 mg daily'),
-                e('li',null,'• OR Warfarin (INR 2.0-3.0)')
-              )
-            ) :
-            e('div', {className:'p-3 bg-emerald-50 rounded-lg border border-emerald-200'},
-              e('p', {className:'font-medium text-sm text-emerald-800'}, 'Aspirin Prophylaxis'),
-              e('p', {className:'text-xs text-emerald-700 mt-1'}, 'Aspirin 81–325 mg once daily')
-            ),
-          e('p', {className:'text-xs text-slate-500 mt-3'}, 'Duration: Indefinite while on myeloma therapy')
-        )
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Lenalidomide Dosing in Renal Impairment'),
+      e(DataTable,{headers:['Category','Renal Function','Dose'],rows:[
+        [e('strong',null,'Moderate impairment'),'CrCl \u226530 to <60 mL/min','10 mg every 24 hours'],
+        [e('strong',null,'Severe impairment'),'CrCl <30 mL/min (not on dialysis)','15 mg every 48 hours'],
+        [e('strong',null,'End-stage renal disease'),'CrCl <30 mL/min (on dialysis)','5 mg once daily; on dialysis days, dose AFTER dialysis'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Bone-Modifying Agent Dosing'),
+      e(DataTable,{headers:['Renal Function','Pamidronate','Zoledronic Acid','Denosumab'],rows:[
+        [e('strong',null,'Normal'),'90 mg IV q3\u20134 weeks','4 mg IV q1\u20133 months','120 mg SC q4 weeks'],
+        [e('strong',null,'Mild/Moderate impairment'),'Standard dose','Reduce dose per CrCl','120 mg SC q4 weeks'],
+        [e('strong',null,'Severe impairment'),'60\u201390 mg IV (slower infusion)','NOT recommended','120 mg SC q4 weeks (monitor Ca\u00B2\u207A)'],
+      ]}),
+      e(AlertBox,{type:'info',title:'Denosumab Advantage:'},'Does not require renal dose adjustment. Preferred agent in renal insufficiency. However, monitor for hypocalcaemia, especially in severe renal impairment.')
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Supportive Care for Renal Disease'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,e('strong',null,'Hydration'),' to dilute tubular light chains (goal urine output 100\u2013150 cc/h)'),
+        e('li',null,'Monitor fluid status carefully'),
+        e('li',null,'Treat hypercalcaemia, hyperuricaemia, and metabolic abnormalities'),
+        e('li',null,e('strong',null,'Discontinue nephrotoxic medications'),' (NSAIDs, contrast agents, aminoglycosides)'),
+        e('li',null,'Dialysis for refractory electrolyte disturbances, uraemia, and fluid overload'),
+        e('li',null,'Renal dosing of ALL medications')
       )
     )
   );
 }
 
-function TreatmentPage() {
-  var _s = useState('hct'); var tab = _s[0]; var setTab = _s[1];
-  var tabs = [{id:'hct',l:'HCT Candidates'},{id:'nonhct',l:'Non-HCT'},{id:'maint',l:'Maintenance'},{id:'rel',l:'Relapsed 1-3'},{id:'late',l:'≥3 Prior Lines'}];
-
-  function Regimen(props) {
-    var r = props.r;
-    return e('div', {className:'p-3 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors'},
-      e('div', {className:'flex items-center justify-between flex-wrap gap-2'},
-        e('div', null,
-          e('p', {className:'font-medium text-sm'}, r.name),
-          r.full ? e('p',{className:'text-xs text-slate-500'},r.full) : null,
-          r.context ? e('p',{className:'text-xs text-blue-600 mt-0.5'},r.context) : null,
-          r.note ? e('p',{className:'text-xs text-slate-500'},r.note) : null
-        ),
-        e('span', {className:'badge bg-slate-100 text-slate-600 text-xs'}, r.cat)
-      )
-    );
-  }
-
-  function Section(props) {
-    return e('div', {className:'mb-4'},
-      e('h4', {className:'font-semibold text-sm mb-2 flex items-center gap-2'},
-        e('span', {className:'badge '+props.badgeCl}, props.label)
-      ),
-      e('div', {className:'space-y-2'}, props.items.map(function(r,i){ return e(Regimen,{key:i,r:r}); }))
-    );
-  }
-
-  var hctPref = [{name:'Dara-VRd',full:'Daratumumab/Lenalidomide/Bortezomib/Dexamethasone',cat:'Category 1'},
-    {name:'Isa-VRd',full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'}];
-  var hctOther = [{name:'VRd',full:'Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'},
-    {name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
-    {name:'Dara-KRd',full:'Daratumumab/Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
-    {name:'Isa-KRd',full:'Isatuximab-irfc/Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'}];
-  var hctUseful = [{name:'VCd',full:'Bortezomib/Cyclophosphamide/Dexamethasone',cat:'Cat 2A'},
-    {name:'VTD-PACE',full:'For aggressive MM',cat:'Cat 2A'}];
-
-  var nonPref = [{name:'Dara-Rd',full:'Daratumumab/Lenalidomide/Dexamethasone',cat:'Category 1'},
-    {name:'Dara-VRd',full:'Daratumumab/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)',cat:'Category 1'},
-    {name:'Isa-VRd',full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)',cat:'Category 1'}];
-  var nonOther = [{name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
-    {name:'VRd',full:'Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'},
-    {name:'Isa-Rd',full:'Isatuximab-irfc/Lenalidomide/Dexamethasone',cat:'Cat 2A'}];
-
-  var maintPref = [{name:'Lenalidomide',cat:'Category 1',note:'Standard maintenance post-HCT and non-HCT'}];
-  var maintOther = [{name:'Carfilzomib/Lenalidomide',cat:'Cat 2A',note:'Two-drug for high-risk MM'},
-    {name:'Daratumumab/Lenalidomide',cat:'Cat 2A',note:'Two-drug for high-risk MM'}];
-  var maintUseful = [{name:'Bortezomib ± Lenalidomide',cat:'Cat 2A'},{name:'Daratumumab',cat:'Cat 2A'},{name:'Ixazomib',cat:'Cat 2B',note:'Oral option'}];
-
-  var relapsed = [
-    {name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',context:'Anti-CD38/Bortezomib refractory',cat:'Category 1'},
-    {name:'Dara-Kd',full:'Daratumumab/Carfilzomib/Dexamethasone',context:'Bortezomib/Len refractory',cat:'Category 1'},
-    {name:'Isa-Kd',full:'Isatuximab-irfc/Carfilzomib/Dexamethasone',context:'Bortezomib/Len refractory',cat:'Category 1'},
-    {name:'PVd',full:'Pomalidomide/Bortezomib/Dexamethasone',context:'Anti-CD38/Len refractory',cat:'Category 1'},
-    {name:'Dara-Pd',full:'Daratumumab/Pomalidomide/Dexamethasone',context:'After 1 prior (Len + PI)',cat:'Category 1'},
-    {name:'Isa-Pd',full:'Isatuximab-irfc/Pomalidomide/Dexamethasone',context:'After 2 prior (Len + PI)',cat:'Category 1'},
-    {name:'Cilta-cel',full:'Ciltacabtagene autoleucel (CAR-T)',context:'After 1 prior (IMiD+PI), Len-refractory',cat:'Category 1'},
-    {name:'Ide-cel',full:'Idecabtagene vicleucel (CAR-T)',context:'After 2 prior (IMiD+anti-CD38+PI)',cat:'Category 1'},
-  ];
-
-  var lateLine = [
-    {name:'Ciltacabtagene autoleucel',cat:'Preferred',context:'CAR T-cell therapy'},
-    {name:'Idecabtagene vicleucel',cat:'Preferred',context:'CAR T-cell therapy'},
-    {name:'Elranatamab-bcmm',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
-    {name:'Linvoseltamab-gcpt',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
-    {name:'Talquetamab-tgvs',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (GPRC5D)'},
-    {name:'Teclistamab-cqyv',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
-    {name:'Selinexor/Dexamethasone',cat:'Other (≥4, penta-ref)',context:'XPO1 inhibitor'},
-  ];
-
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-G: Myeloma Therapy'),
-    e('p', {className:'text-sm text-slate-500 mb-4'}, 'Treatment regimens by setting and line of therapy'),
-    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
-      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.l)})
+// === CNS DISEASE ===
+function PageCNS(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'CNSM-1/MYEL-H'},'Multiple Myeloma with CNS Disease'),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Clinical Presentation'),
+      e('p',{className:'text-sm text-slate-700'},'Confusion, headache, visual symptoms, weakness, cranial nerve palsies')
     ),
-    tab==='hct' ? e(Fragment,null,
-      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:hctPref}),
-      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:hctOther}),
-      e(Section,{label:'Useful in Certain Circumstances',badgeCl:'bg-amber-100 text-amber-700',items:hctUseful})
-    ) : null,
-    tab==='nonhct' ? e(Fragment,null,
-      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:nonPref}),
-      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:nonOther})
-    ) : null,
-    tab==='maint' ? e(Fragment,null,
-      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:maintPref}),
-      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:maintOther}),
-      e(Section,{label:'Useful in Certain Circumstances',badgeCl:'bg-amber-100 text-amber-700',items:maintUseful})
-    ) : null,
-    tab==='rel' ? e('div', {className:'space-y-2'},
-      e('h4',{className:'font-semibold text-sm flex items-center gap-2'},e('span',{className:'badge bg-blue-600 text-white'},'Preferred'),' Relapsed/Refractory After 1–3 Prior'),
-      e('p',{className:'text-xs text-slate-500 italic mb-2'},'Order does not indicate comparative efficacy. Selection based on refractoriness.'),
-      relapsed.map(function(r,i){return e(Regimen,{key:i,r:r});})
-    ) : null,
-    tab==='late' ? e('div', {className:'space-y-2'},
-      e('h4',{className:'font-semibold text-sm mb-2'},'After ≥3 Prior Lines of Therapy'),
-      lateLine.map(function(r,i){return e(Regimen,{key:i,r:r});}),
-      e('div',{className:'p-3 bg-blue-50 rounded-lg border border-blue-200 mt-4'},
-        e('p',{className:'text-xs text-blue-800'},e('strong',null,'Note: '),'Patients can receive >1 BCMA-targeted therapy. Immediate follow-on with 2nd BCMA therapy may have lower response rates. Consider prophylactic tocilizumab before 1st BsAb dose to reduce CRS risk.')
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Essential Workup'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Brain and spine MRI with and without contrast'),
+        e('li',null,'Lumbar puncture with flow cytometry, cytopathology, cell count, total protein'),
+        e('li',null,'Workup for infections (exclude CNS infections)')
       )
-    ) : null
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Diagnostic Criteria'),
+      e(DataTable,{headers:['Category','Criteria'],rows:[
+        [e('strong',null,'Definitive Diagnosis'),'Clonal plasma cells observed in CSF by immunophenotyping; OR tissue diagnosis of plasma cell myeloma in affected CNS tissue'],
+        [e('strong',null,'Probable Diagnosis'),'Leptomeningeal enhancement or parenchymal lesions on MRI WITHOUT definitive clonal plasma cells demonstrated'],
+      ]})
+    ),
+    e(Card,null,
+      e('h3',{className:'font-bold text-slate-800 mb-3'},'Management Principles'),
+      e(AlertBox,{type:'info'},'Multimodality therapy (radiation + systemic therapy) is associated with improved outcomes. Incorporate palliative care.'),
+      e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Radiation Therapy'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,e('strong',null,'Focal RT'),' for rapidly progressive focal neurologic deficits'),
+        e('li',null,e('strong',null,'WBRT'),' for poorly localised disease: \u226423.4 Gy in 13 fractions'),
+        e('li',null,'Consider ',e('strong',null,'craniospinal irradiation (CSI)'),' with VMAT or protons for patients with negative or well-controlled extra-CNS disease')
+      ),
+      e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Intrathecal Chemotherapy'),
+      e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+        e('li',null,'Thiotepa / Hydrocortisone'),
+        e('li',null,'Methotrexate / Cytarabine / Hydrocortisone')
+      ),
+      e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Novel Agents for CNS Disease'),
+      e(DataTable,{headers:['Agent Class','CNS Activity'],rows:[
+        [e('strong',null,'IMiDs (pomalidomide, lenalidomide)'),'BBB penetration observed. Consider as part of systemic regimen.'],
+        [e('strong',null,'Selinexor'),'Can penetrate BBB but not specifically tested in CNS myeloma.'],
+        [e('strong',null,'Venetoclax'),'Preclinical BBB penetration data. Consider in t(11;14).'],
+        [e('strong',null,'CAR T-cell & BsAb therapy'),'History of CNS disease should NOT preclude use. Active investigation.'],
+        [e('strong',null,'Monoclonal antibodies (Dara, Isa)'),'Limited BBB penetration data.'],
+        [e('strong',null,'Proteasome inhibitors'),'Limited BBB penetration. No clear signal for CNS activity.'],
+      ]}),
+      e(AlertBox,{type:'warning',title:'Hyperammonaemic Encephalopathy:'},'Rare complication of MM. Consider in patients with unexplained encephalopathy and elevated ammonia levels. Not true CNS myeloma involvement.')
+    )
   );
 }
 
-function ResponsePage() {
-  var colors = {mrd:'bg-emerald-500',cr:'bg-emerald-400',pr:'bg-blue-500',mr:'bg-amber-500',sd:'bg-slate-400',pd:'bg-rose-500'};
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-E: Response Criteria (IMWG)'),
-    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Including MRD criteria — revised by International Myeloma Working Group'),
-    e('div', {className:'space-y-3'},
-      RESPONSE_CRITERIA.map(function(r,i) {
-        return e('div', {key:i, className:'card p-4'},
-          e('div', {className:'flex items-start gap-3'},
-            e('div', {className:'w-1.5 rounded-full self-stretch '+(colors[r.depth]||'bg-slate-300')}),
-            e('div', {className:'flex-1'},
-              e('div', {className:'flex items-center gap-2 flex-wrap'},
-                e('h4', {className:'font-semibold text-sm'}, r.cat),
-                r.depth==='mrd' ? e('span',{className:'badge bg-emerald-100 text-emerald-700 text-[10px]'},'MRD Criteria') : null,
-                r.depth==='pd' ? e('span',{className:'badge bg-rose-100 text-rose-700 text-[10px]'},'Progression') : null
-              ),
-              e('p', {className:'text-sm text-slate-500 mt-1'}, r.def)
-            )
+// === RELATED DISORDERS ===
+function PageRelated(){
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'MGRS/MIDD/MGNS/POEMS'},'Related Plasma Cell Disorders'),
+    e(TabGroup,{tabs:['MGRS','MIDD','MGNS','POEMS'],defaultTab:0},[
+      // MGRS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'Monoclonal Gammopathy of Renal Significance (MGRS)'),
+          e('h4',{className:'font-semibold text-sm mt-2 mb-2'},'Initial Workup'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'eGFR, urinalysis, 24h urine for total protein / UPEP / UIFE'),
+            e('li',null,'Metabolic panel')
+          ),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Renal Biopsy Recommended If:'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'AKI stage 3'),
+            e('li',null,'eGFR <60 mL/min AND >2 mL/min per year decline'),
+            e('li',null,'Proteinuria >1 g/day; Albumin:creatinine >30 mg/mmol with GFR <60'),
+            e('li',null,'Evidence of light chain proteinuria'),
+            e('li',null,'Fanconi syndrome')
+          ),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Defer Renal Biopsy If:'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Stable eGFR'),
+            e('li',null,'Normal urinalysis'),
+            e('li',null,'No evidence of light chain proteinuria')
+          ),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Confirmation of MGRS Diagnosis'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Light microscopy'),
+            e('li',null,'Immunofluorescence (IgG subclasses, IgA, IgM, kappa, lambda)'),
+            e('li',null,'Electron microscopy'),
+            e('li',null,'Match M-protein type with renal deposit'),
+            e('li',null,'BM biopsy if suspected MM or WM/LPL')
+          ),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Treatment'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Plasma cell-related MGRS \u2192 MM management algorithm (MYEL-4)'),
+            e('li',null,'IgM-associated MGRS \u2192 WM response criteria'),
+            e('li',null,'Lymphoplasmacytic MGRS \u2192 WM/LPL guidelines'),
+            e('li',null,'FLC-associated MGRS \u2192 Amyloidosis response criteria')
           )
+        )
+      ),
+      // MIDD
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'Monoclonal Immunoglobulin Deposition Disease (MIDD)'),
+          e('h4',{className:'font-semibold text-sm mt-2 mb-2'},'Types'),
+          e(DataTable,{headers:['Type','Frequency','Details'],rows:[
+            [e('strong',null,'LCDD (Light Chain)'),'~80%','80\u201390% are Kappa light chain'],
+            [e('strong',null,'HCDD (Heavy Chain)'),'~10%',''],
+            [e('strong',null,'LHCDD (Light + Heavy Chain)'),'~10%',''],
+          ]}),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Organ Involvement Frequency'),
+          e(DataTable,{headers:['Organ','Frequency'],rows:[
+            ['Kidney','~96%'],
+            ['Heart','~21%'],
+            ['Liver','~19%'],
+            ['Peripheral nervous system','~8%'],
+          ]}),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Workup'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Standard MYEL-1 investigations'),
+            e('li',null,'Evaluate for kidney or other organ damage'),
+            e('li',null,'PCR assay for MYD88 L265P'),
+            e('li',null,'Peripheral blood flow cytometry for CLL/SLL or LPL')
+          ),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Treatment & Transplant'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Plasma cell MIDD \u2192 MM algorithm (MYEL-4/G)'),
+            e('li',null,'Lymphoplasmacytic MIDD \u2192 WM guidelines'),
+            e('li',null,'MIDD with MBL features \u2192 CLL/SLL guidelines'),
+            e('li',null,'AutoHCT consolidation preferable in eligible patients'),
+            e('li',null,'Consider solid organ transplant for affected organs')
+          )
+        )
+      ),
+      // MGNS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'Monoclonal Gammopathy of Neurological Significance (MGNS)'),
+          e('h4',{className:'font-semibold text-sm mt-2 mb-2'},'Initial Workup'),
+          e('p',{className:'text-sm text-slate-700 mb-2'},'Rule out other causes:'),
+          e('div',{className:'flex flex-wrap gap-1 mb-3'},
+            ['Diabetes','Cobalamin deficiency','Thyroid dysfunction','Lyme disease','HIV','Syphilis','Autoimmune disease','Cryoglobulinaemia'].map(function(c){
+              return e('span',{key:c,className:'badge bg-slate-100 text-slate-600'},c);
+            })
+          ),
+          e('p',{className:'text-sm text-slate-700 mb-2'},'Evaluate for:'),
+          e('div',{className:'flex flex-wrap gap-1 mb-3'},
+            ['Light chain amyloidosis','WM','POEMS'].map(function(c){
+              return e('span',{key:c,className:'badge bg-blue-100 text-blue-700'},c);
+            })
+          ),
+          e('p',{className:'text-sm text-slate-700 mb-2'},'Additional tests: Anti-MAG antibodies, ganglioside antibody panel, NCS/EMG, MYD88 L265P PCR'),
+          e('h4',{className:'font-semibold text-sm mt-3 mb-2'},'Clinical Classification'),
+          e(DataTable,{headers:['Feature','High Suspicion MGNS','Low Suspicion'],rows:[
+            ['Pattern','Sensory predominant, length-dependent','Motor/pain predominant, non-length-dependent'],
+            ['Progression','Slow (years)','Rapid (weeks to months)'],
+            ['Distribution','Bilateral and symmetrical','Unilateral / asymmetrical'],
+            ['Antibodies','Present','Absent'],
+            ['EMG/NCS','Demyelination AND affecting ADLs','Variable'],
+            ['Action','\u2192 See WM/LPL guidelines','\u2192 Observation'],
+          ]})
+        )
+      ),
+      // POEMS
+      e('div',null,
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'POEMS Syndrome'),
+          e('p',{className:'text-sm text-slate-600 mb-3'},'Polyneuropathy, Organomegaly, Endocrinopathy, Monoclonal protein, Skin changes'),
+          e('h4',{className:'font-semibold text-sm text-red-800 mb-2'},'Diagnostic Criteria'),
+          e(AlertBox,{type:'info'},'Diagnosis requires: BOTH mandatory + at least ONE other major + at least ONE minor criterion.'),
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-3 mb-1'},'Mandatory Major Criteria (both required):'),
+          e('ol',{className:'list-decimal ml-5 text-sm space-y-1 text-slate-700'},
+            e('li',null,'Polyneuropathy (typical demyelinating)'),
+            e('li',null,'Monoclonal plasma cell proliferative disorder (almost always \u03BB)')
+          ),
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-3 mb-1'},'Other Major Criteria (at least 1 required):'),
+          e('ol',{className:'list-decimal ml-5 text-sm space-y-1 text-slate-700',start:3},
+            e('li',null,'Castleman disease'),
+            e('li',null,'Sclerotic bone lesions'),
+            e('li',null,'Vascular endothelial growth factor (VEGF) elevation')
+          ),
+          e('h5',{className:'font-semibold text-xs text-slate-700 mt-3 mb-1'},'Minor Criteria:'),
+          e('ol',{className:'list-decimal ml-5 text-sm space-y-1 text-slate-700',start:6},
+            e('li',null,'Organomegaly'),
+            e('li',null,'Extravascular volume overload (ascites, effusions, oedema)'),
+            e('li',null,'Endocrinopathy (not diabetes or thyroid alone)'),
+            e('li',null,'Skin changes (hyperpigmentation, hypertrichosis, acrocyanosis, glomeruloid haemangiomata, plethora, flushing, clubbing)'),
+            e('li',null,'Papilledema'),
+            e('li',null,'Thrombocytosis / polycythaemia')
+          )
+        ),
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'Treatment'),
+          e('ul',{className:'list-disc ml-5 text-sm space-y-1.5 text-slate-700'},
+            e('li',null,e('strong',null,'Isolated bone lesion (<3 sites) without clonal BMPCs:'),' RT alone'),
+            e('li',null,e('strong',null,'HCT-eligible:'),' AutoHCT as sole therapy or consolidation after induction'),
+            e('li',null,e('strong',null,'Induction options:'),' Lenalidomide/Dex \u00b1 Daratumumab, Bortezomib/Dex, Cyclophosphamide/Dex, Pomalidomide/Dex'),
+            e('li',null,e('strong',null,'Non-HCT candidates:'),' All above regimens PLUS Melphalan/Dex')
+          )
+        ),
+        e(Card,null,
+          e('h3',{className:'font-bold text-slate-800 mb-3'},'POEMS Response Criteria'),
+          e(DataTable,{headers:['Parameter','Complete Response','Improvement','Progression'],rows:[
+            ['Plasma VEGF','Normal','50% reduction from baseline','50% increase from lowest'],
+            ['Haematologic','Negative serum & urine IFE and BM','50% reduction of M-spike','25% increase from lowest (must be >0.5 g/dL)'],
+            ['PET/CT','No FDG uptake','50% reduction in sum of SUVmax','30% increase or new FDG lesion'],
+            ['mNIS+7','\u2014','15% decrease from baseline (min 10 pts)','15% increase from lowest (min 10 pts)'],
+            ['Ascites/effusion/oedema','Absent','Improved by 1 CTCAE grade','Worsened by 1 CTCAE grade'],
+            ['ECHO RVSP','\u2014','<40 mmHg','\u2014'],
+            ['Papilledema','\u2014','Absent','Worsened by 1 CTCAE grade'],
+            ['DLCO','\u226570% predicted','\u2014','Worsened by 1 CTCAE grade'],
+          ]})
+        )
+      ),
+    ])
+  );
+}
+
+// === EVIDENCE BLOCKS ===
+function PageEvidence(){
+  function EBRow(props){
+    var colors = {5:'bg-emerald-500',4:'bg-blue-500',3:'bg-amber-500',2:'bg-orange-500',1:'bg-red-500'};
+    return e('tr',null,
+      e('td',{className:'font-medium text-sm'},props.name,props.note?e('span',{className:'text-xs text-slate-500 ml-1'},props.note):null),
+      ['E','S','Q','C','A'].map(function(dim,i){
+        var val=props.scores[i];
+        return e('td',{key:dim,className:'text-center'},
+          val?e('div',{className:'flex items-center gap-1'},
+            e('div',{className:'eb-bar flex-1 '+colors[val],style:{width:(val*20)+'%',minWidth:'8px'}}),
+            e('span',{className:'text-xs font-mono font-bold text-slate-600 w-4'},val)
+          ):e('span',{className:'text-xs text-slate-400'},'TBD')
         );
       })
+    );
+  }
+  function EBTable(props){
+    return e('div',{className:'overflow-x-auto rounded-lg border border-slate-200 mb-4'},
+      e('table',{className:'tbl'},
+        e('thead',null,e('tr',null,
+          e('th',null,'Regimen'),
+          e('th',{className:'text-center w-24'},'Efficacy'),
+          e('th',{className:'text-center w-24'},'Safety'),
+          e('th',{className:'text-center w-24'},'Quality'),
+          e('th',{className:'text-center w-24'},'Consistency'),
+          e('th',{className:'text-center w-24'},'Affordability')
+        )),
+        e('tbody',null,props.children)
+      )
+    );
+  }
+
+  return e('div',{className:'fade-in'},
+    e(SectionTitle,{code:'EB-1\u20136'},'NCCN Evidence Blocks'),
+    e(AlertBox,{type:'info'},'Evidence Blocks rate each regimen on 5 dimensions (1\u20135 scale): Efficacy (E), Safety (S), Quality of Evidence (Q), Consistency (C), Affordability (A). Scores shown where available; "TBD" = development in progress.'),
+
+    e(Collapsible,{title:'EB-1: Primary Therapy for HCT Candidates & Maintenance',defaultOpen:true},
+      e('h4',{className:'font-semibold text-sm mb-2'},'HCT Candidates \u2014 Preferred'),
+      e(EBTable,null,
+        e(EBRow,{name:'Dara-VRd (Daratumumab/Len/Bort/Dex)',scores:[5,3,4,4,1]}),
+        e(EBRow,{name:'Isa-VRd (Isatuximab/Bort/Len/Dex)',scores:[5,3,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'HCT Candidates \u2014 Other Recommended'),
+      e(EBTable,null,
+        e(EBRow,{name:'VRd (Bort/Len/Dex)',scores:[4,3,5,5,2]}),
+        e(EBRow,{name:'KRd (Carfilzomib/Len/Dex)',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Dara-KRd',scores:[5,2,3,3,1]}),
+        e(EBRow,{name:'Isa-KRd',scores:[5,2,3,3,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'HCT Candidates \u2014 Useful in Certain Circumstances'),
+      e(EBTable,null,
+        e(EBRow,{name:'VCd (Bort/Cyclo/Dex)',scores:[3,3,3,4,3]}),
+        e(EBRow,{name:'KCd (Carfilzomib/Cyclo/Dex)',scores:[3,3,2,3,2]}),
+        e(EBRow,{name:'Dara-VCd',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'VTD-PACE',scores:[4,1,2,3,3]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2 mt-4'},'Maintenance'),
+      e(EBTable,null,
+        e(EBRow,{name:'Lenalidomide (Preferred)',scores:[4,4,5,5,2]}),
+        e(EBRow,{name:'Carfilzomib/Lenalidomide',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Daratumumab/Lenalidomide',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Bortezomib',scores:[3,3,4,4,3]}),
+        e(EBRow,{name:'Bortezomib/Lenalidomide',scores:[4,3,3,3,2]}),
+        e(EBRow,{name:'Daratumumab',scores:[3,4,3,3,1]}),
+        e(EBRow,{name:'Ixazomib',scores:[3,4,3,3,1]})
+      )
     ),
-    e('div', {className:'card p-4 mt-4'},
-      e('h4', {className:'font-semibold text-sm mb-2'}, 'Key Notes'),
-      e('ul', {className:'text-xs text-slate-500 space-y-1'},
-        e('li',null,'• All response categories require two consecutive assessments before new therapy'),
-        e('li',null,'• MRD tests initiated only at time of suspected complete response'),
-        e('li',null,'• Reference NGF method: eight-color two-tube approach (EuroFlow)'),
-        e('li',null,'• Sustained MRD-negativity should annotate the method used')
+
+    e(Collapsible,{title:'EB-2: Primary Therapy \u2014 Non-HCT / Deferred'},
+      e('h4',{className:'font-semibold text-sm mb-2'},'Preferred'),
+      e(EBTable,null,
+        e(EBRow,{name:'Dara-Rd',scores:[4,3,5,5,1]}),
+        e(EBRow,{name:'Dara-VRd (<80, not frail)',scores:[null,null,null,null,null],note:'TBD'}),
+        e(EBRow,{name:'Isa-VRd (<80, not frail)',scores:[5,3,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Other Recommended'),
+      e(EBTable,null,
+        e(EBRow,{name:'KRd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'VRd',scores:[4,3,5,5,2]}),
+        e(EBRow,{name:'Isa-Rd',scores:[null,null,null,null,null],note:'TBD'})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Useful in Certain Circumstances'),
+      e(EBTable,null,
+        e(EBRow,{name:'Rd (Len/low-dose Dex)',scores:[3,4,5,5,2]}),
+        e(EBRow,{name:'Vd (Bort/Dex)',scores:[3,3,4,4,3]}),
+        e(EBRow,{name:'VCd',scores:[3,3,3,4,3]}),
+        e(EBRow,{name:'VRd-lite (frail)',scores:[3,4,3,3,2]}),
+        e(EBRow,{name:'KCd',scores:[3,3,2,3,2]}),
+        e(EBRow,{name:'Dara-VCd',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Isa-KRd',scores:[5,2,3,3,1]}),
+        e(EBRow,{name:'Ixa-Rd',scores:[null,null,null,null,null],note:'TBD'}),
+        e(EBRow,{name:'Len-Cyclo-Dex',scores:[3,3,3,3,2]})
+      )
+    ),
+
+    e(Collapsible,{title:'EB-3: Relapsed/Refractory 1\u20133 Prior \u2014 Preferred'},
+      e('h4',{className:'font-semibold text-sm mb-2'},'Anti-CD38 Refractory'),
+      e(EBTable,null,
+        e(EBRow,{name:'KRd',scores:[4,3,5,5,1]}),
+        e(EBRow,{name:'KPd',scores:[4,2,3,3,1]}),
+        e(EBRow,{name:'PVd',scores:[4,3,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Bortezomib-Refractory'),
+      e(EBTable,null,
+        e(EBRow,{name:'KRd',scores:[4,3,5,5,1]}),
+        e(EBRow,{name:'Dara-Kd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Dara-Rd',scores:[4,3,5,5,1]}),
+        e(EBRow,{name:'Isa-Kd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'KPd',scores:[4,2,3,3,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Lenalidomide-Refractory'),
+      e(EBTable,null,
+        e(EBRow,{name:'Dara-Vd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Dara-Kd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Isa-Kd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'PVd',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'KPd',scores:[4,2,3,3,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'CAR T-Cell Therapy'),
+      e(EBTable,null,
+        e(EBRow,{name:'Cilta-cel (after 1 prior)',scores:[5,2,4,4,1]}),
+        e(EBRow,{name:'Ide-cel (after 2 prior)',scores:[4,2,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'After Specific Sequences'),
+      e(EBTable,null,
+        e(EBRow,{name:'Dara-Pd (after 1 prior Len+PI)',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Isa-Pd (after 2 prior Len+PI)',scores:[4,3,4,4,1]}),
+        e(EBRow,{name:'Elo-Pd (after 2 prior Len+PI)',scores:[3,3,4,4,1]}),
+        e(EBRow,{name:'Ixa-Pd (progression within 60d)',scores:[3,3,3,3,1]})
+      )
+    ),
+
+    e(Collapsible,{title:'EB-4: Relapsed/Refractory 1\u20133 Prior \u2014 Other & Useful'},
+      e('h4',{className:'font-semibold text-sm mb-2'},'Other Recommended'),
+      e(EBTable,null,
+        e(EBRow,{name:'Elo-Rd',scores:[3,3,4,4,1]}),
+        e(EBRow,{name:'Ixa-Rd',scores:[null,null,null,null,null],note:'TBD'}),
+        e(EBRow,{name:'SVd (Selinexor/Bort/Dex)',scores:[4,2,4,4,1]}),
+        e(EBRow,{name:'VCd',scores:[3,3,3,4,3]}),
+        e(EBRow,{name:'VRd',scores:[4,3,5,5,2]}),
+        e(EBRow,{name:'KCd',scores:[3,3,2,3,2]}),
+        e(EBRow,{name:'Dara-VCd',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Dara-KPd',scores:[4,2,3,3,1]}),
+        e(EBRow,{name:'Elo-Vd',scores:[3,3,4,4,1]}),
+        e(EBRow,{name:'Ixa-Cd',scores:[3,3,2,3,2]}),
+        e(EBRow,{name:'Len-Cd',scores:[3,3,3,3,2]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Useful in Certain Circumstances'),
+      e(EBTable,null,
+        e(EBRow,{name:'Vd',scores:[3,3,5,5,3]}),
+        e(EBRow,{name:'Bort/Liposomal Dox/Dex',scores:[3,2,4,4,2]}),
+        e(EBRow,{name:'Rd',scores:[3,4,5,5,2]}),
+        e(EBRow,{name:'KCTd',scores:[3,2,2,3,1]}),
+        e(EBRow,{name:'Kd weekly',scores:[3,3,4,4,1]}),
+        e(EBRow,{name:'Selinexor-Kd',scores:[4,2,3,3,1]}),
+        e(EBRow,{name:'Selinexor-Dara-d',scores:[3,2,3,3,1]}),
+        e(EBRow,{name:'Venetoclax-d (t(11;14))',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Venetoclax-d-Dara',scores:[4,3,3,3,1]}),
+        e(EBRow,{name:'Venetoclax-d-PI',scores:[4,3,3,3,1]})
+      )
+    ),
+
+    e(Collapsible,{title:'EB-5: After \u22653 Prior Lines'},
+      e('h4',{className:'font-semibold text-sm mb-2'},'CAR T-Cell (Preferred)'),
+      e(EBTable,null,
+        e(EBRow,{name:'Cilta-cel',scores:[5,2,4,4,1]}),
+        e(EBRow,{name:'Ide-cel',scores:[4,2,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Bispecific Antibodies (Preferred, after \u22654 prior)'),
+      e(EBTable,null,
+        e(EBRow,{name:'Elranatamab-bcmm',scores:[4,2,4,4,1]}),
+        e(EBRow,{name:'Linvoseltamab-gcpt',scores:[null,null,null,null,null],note:'TBD'}),
+        e(EBRow,{name:'Talquetamab-tgvs',scores:[4,2,3,3,1]}),
+        e(EBRow,{name:'Teclistamab-cqyv',scores:[4,2,4,4,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Other Recommended'),
+      e(EBTable,null,
+        e(EBRow,{name:'High-dose/fractionated cyclophosphamide',scores:[2,2,2,3,4]}),
+        e(EBRow,{name:'Selinexor/Dex (penta-refractory)',scores:[3,2,3,3,1]})
+      ),
+      e('h4',{className:'font-semibold text-sm mb-2'},'Useful in Certain Circumstances'),
+      e(EBTable,null,
+        e(EBRow,{name:'Bendamustine',scores:[2,3,2,3,4]}),
+        e(EBRow,{name:'Bendamustine/Bort/Dex',scores:[3,2,2,3,2]}),
+        e(EBRow,{name:'Bendamustine/Carfilzomib/Dex',scores:[3,2,2,2,1]}),
+        e(EBRow,{name:'Bendamustine/Len/Dex',scores:[3,2,2,3,1]}),
+        e(EBRow,{name:'Talquetamab + Teclistamab',scores:[null,null,null,null,null],note:'TBD'}),
+        e(EBRow,{name:'Belantamab mafodotin (expanded access)',scores:[3,2,3,3,1]})
+      )
+    ),
+
+    e(Card,{className:'mt-4'},
+      e('h3',{className:'font-bold text-sm text-slate-800 mb-2'},'Evidence Block Scales'),
+      e('div',{className:'grid sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs'},
+        [{t:'Efficacy',d:'5=Cure likely, 4=Very effective, 3=Moderate, 2=Minimal, 1=Palliative'},
+         {t:'Safety',d:'5=No meaningful toxicity, 4=Occasionally toxic, 3=Mildly, 2=Moderately, 1=Highly toxic'},
+         {t:'Quality',d:'5=Multiple RCTs/meta-analyses, 4=\u22651 RCT, 3=Low-quality RCT/non-randomised, 2=Case reports, 1=Little evidence'},
+         {t:'Consistency',d:'5=Highly consistent, 4=Mainly, 3=May be, 2=Inconsistent, 1=Anecdotal'},
+         {t:'Affordability',d:'5=Very inexpensive, 4=Inexpensive, 3=Moderate, 2=Expensive, 1=Very expensive'}
+        ].map(function(s){
+          return e('div',{key:s.t,className:'border border-slate-200 rounded-lg p-2'},
+            e('div',{className:'font-semibold text-slate-800 mb-1'},s.t),
+            e('div',{className:'text-slate-600'},s.d)
+          );
+        })
       )
     )
   );
 }
 
-function SupportivePage() {
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-I/J/K/L: Supportive Care'),
-    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Comprehensive supportive management for multiple myeloma'),
-    e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'},
-      SUPPORTIVE.map(function(s,i) {
-        return e('div', {key:i, className:'card p-5'},
-          e('div', {className:'flex items-center gap-2 mb-3'},
-            e('span', {className:'text-2xl'}, s.emoji),
-            e('h3', {className:'font-semibold'}, s.title)
-          ),
-          e('ul', {className:'space-y-2'},
-            s.items.map(function(item,j) {
-              return e('li', {key:j, className:'text-sm text-slate-500 flex items-start gap-2'},
-                e('span', {className:'text-blue-600 mt-0.5 flex-shrink-0'}, e(IcoCheck,{size:14})),
-                item
-              );
-            })
+// ─── MAIN APP ───
+function App(){
+  var st=useState('dashboard');var page=st[0];var setPage=st[1];
+  var mob=useState(false);var mobileOpen=mob[0];var setMobileOpen=mob[1];
+
+  function navigate(id){setPage(id);setMobileOpen(false);window.scrollTo(0,0);}
+
+  function Sidebar(props){
+    return e('nav',{className:props.className||''},
+      e('div',{className:'p-4 border-b border-slate-200'},
+        e('div',{className:'flex items-center gap-2'},
+          e('span',{className:'text-lg'},'🩸'),
+          e('div',null,
+            e('div',{className:'font-extrabold text-sm text-slate-900'},'Blood Doctor'),
+            e('div',{className:'text-xs text-slate-500'},'Myeloma Hub')
           )
-        );
-      })
-    ),
-    e('div', {className:'card p-5 mt-4'},
-      e('h3', {className:'font-semibold mb-3'}, 'Lenalidomide Dosing in Renal Impairment'),
-      e('div', {className:'overflow-x-auto'},
-        e('table', {className:'w-full text-sm'},
-          e('thead', null, e('tr', {className:'border-b border-slate-200'},
-            e('th',{className:'text-left py-2 px-3 font-medium'},'Category'),
-            e('th',{className:'text-left py-2 px-3 font-medium'},'Renal Function (CrCL)'),
-            e('th',{className:'text-left py-2 px-3 font-medium'},'Dose')
-          )),
-          e('tbody', null,
-            e('tr',{className:'border-b border-slate-200'},e('td',{className:'py-2 px-3'},'Moderate'),e('td',{className:'py-2 px-3'},'≥30 to <60 mL/min'),e('td',{className:'py-2 px-3 font-medium'},'10 mg q24h')),
-            e('tr',{className:'border-b border-slate-200'},e('td',{className:'py-2 px-3'},'Severe'),e('td',{className:'py-2 px-3'},'<30 mL/min (no dialysis)'),e('td',{className:'py-2 px-3 font-medium'},'15 mg q48h')),
-            e('tr',null,e('td',{className:'py-2 px-3'},'ESRD'),e('td',{className:'py-2 px-3'},'<30 mL/min (on dialysis)'),e('td',{className:'py-2 px-3 font-medium'},'5 mg daily; post-dialysis'))
-          )
-        )
-      )
-    )
-  );
-}
-
-function EvidencePage() {
-  var regimens = [
-    {name:'Dara-VRd (HCT)', e:4,s:3,q:4,c:4,a:1},
-    {name:'Isa-VRd (HCT)', e:4,s:3,q:4,c:4,a:1},
-    {name:'VRd', e:4,s:3,q:4,c:4,a:2},
-    {name:'Dara-Rd (non-HCT)', e:4,s:4,q:4,c:4,a:1},
-    {name:'KRd', e:4,s:3,q:3,c:3,a:1},
-    {name:'Lenalidomide (maint.)', e:4,s:4,q:5,c:4,a:2},
-    {name:'Cilta-cel (CAR-T)', e:5,s:2,q:4,c:4,a:1},
-    {name:'Ide-cel (CAR-T)', e:4,s:2,q:4,c:3,a:1},
-    {name:'Teclistamab (BsAb)', e:4,s:2,q:3,c:3,a:1},
-  ];
-
-  var blockColors = {E:'bg-blue-500',S:'bg-emerald-500',Q:'bg-purple-500',C:'bg-amber-500',A:'bg-rose-500'};
-
-  function EvidenceBlock(props) {
-    var r = props.r;
-    return e('div', {className:'p-3 border border-slate-200 rounded-lg'},
-      e('p', {className:'font-medium text-sm mb-2'}, r.name),
-      e('div', {className:'flex gap-3'},
-        [{k:'E',v:r.e},{k:'S',v:r.s},{k:'Q',v:r.q},{k:'C',v:r.c},{k:'A',v:r.a}].map(function(b) {
-          return e('div', {key:b.k, className:'flex flex-col items-center gap-0.5'},
-            e('div', {className:'flex flex-col-reverse gap-0.5'},
-              [1,2,3,4,5].map(function(n) {
-                return e('div', {key:n, className:'w-5 h-3 rounded-sm '+(n<=b.v ? blockColors[b.k] : 'bg-slate-100')});
-              })
-            ),
-            e('span', {className:'text-[9px] font-bold text-slate-500'}, b.k)
+        ),
+        e('div',{className:'text-xs text-slate-400 mt-1'},'NCCN v2.2026')
+      ),
+      e('div',{className:'p-2 overflow-y-auto',style:{maxHeight:'calc(100vh - 100px)'}},
+        NAV.map(function(n){
+          return e('div',{key:n.id,className:'sidebar-item'+(page===n.id?' active':''),onClick:function(){navigate(n.id)}},
+            Ico(ICONS[n.icon],{size:14}),
+            e('span',{className:'flex-1'},n.label),
+            n.code?e('span',{className:'text-xs opacity-60 hidden xl:inline'},n.code):null
           );
         })
       )
     );
   }
 
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'NCCN Evidence Blocks™'),
-    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Visual ratings of key treatment attributes on a 1–5 scale'),
-    e('div', {className:'card p-4 mb-4'},
-      e('div', {className:'grid grid-cols-2 sm:grid-cols-5 gap-3'},
-        [{k:'E',l:'Efficacy',c:'bg-blue-500',d:'Impact on survival'},
-         {k:'S',l:'Safety',c:'bg-emerald-500',d:'Toxicity profile'},
-         {k:'Q',l:'Quality',c:'bg-purple-500',d:'Evidence quality'},
-         {k:'C',l:'Consistency',c:'bg-amber-500',d:'Results consistency'},
-         {k:'A',l:'Affordability',c:'bg-rose-500',d:'Drug cost + supportive'}
-        ].map(function(m) {
-          return e('div', {key:m.k, className:'flex items-center gap-2'},
-            e('div', {className:'w-4 h-4 rounded '+m.c}),
-            e('div', null,
-              e('p', {className:'text-xs font-semibold'}, m.k+' = '+m.l),
-              e('p', {className:'text-[10px] text-slate-500'}, m.d)
-            )
-          );
-        })
-      )
-    ),
-    e('div', {className:'card p-5'},
-      e('h3', {className:'font-semibold mb-4'}, 'Selected Regimen Ratings'),
-      e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'},
-        regimens.map(function(r,i){ return e(EvidenceBlock, {key:i, r:r}); })
-      )
-    ),
-    e('div', {className:'grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'},
-      e('div', {className:'card p-4'},
-        e('h4', {className:'font-semibold text-sm mb-2'}, 'Efficacy Scale'),
-        e('div', {className:'text-xs space-y-1 text-slate-500'},
-          e('p',null,e('strong',null,'5: '),'Highly effective — cure likely'),
-          e('p',null,e('strong',null,'4: '),'Very effective — cure unlikely but long-term benefit'),
-          e('p',null,e('strong',null,'3: '),'Moderately effective — disease control'),
-          e('p',null,e('strong',null,'2: '),'Minimally effective'),
-          e('p',null,e('strong',null,'1: '),'Palliative only')
-        )
-      ),
-      e('div', {className:'card p-4'},
-        e('h4', {className:'font-semibold text-sm mb-2'}, 'Safety Scale'),
-        e('div', {className:'text-xs space-y-1 text-slate-500'},
-          e('p',null,e('strong',null,'5: '),'Usually no meaningful toxicity'),
-          e('p',null,e('strong',null,'4: '),'Occasionally toxic'),
-          e('p',null,e('strong',null,'3: '),'Mildly toxic — interferes with ADLs'),
-          e('p',null,e('strong',null,'2: '),'Moderately toxic — significant but rarely fatal'),
-          e('p',null,e('strong',null,'1: '),'Highly toxic — life-threatening')
-        )
-      )
-    )
-  );
-}
+  var pages={
+    dashboard:e(PageDashboard,{nav:navigate}),
+    workup:e(PageWorkup),
+    definitions:e(PageDefinitions),
+    pathway:e(PagePathway),
+    staging:e(PageStaging),
+    imaging:e(PageImaging),
+    radiation:e(PageRadiation),
+    calculators:e(PageCalculators),
+    treatment:e(PageTreatment),
+    therapy:e(PageTherapy),
+    response:e(PageResponse),
+    supportive:e(PageSupportive),
+    infection:e(PageInfection),
+    vte:e(PageVTE),
+    renal:e(PageRenal),
+    cns:e(PageCNS),
+    related:e(PageRelated),
+    evidence:e(PageEvidence),
+  };
 
-function RelatedPage() {
-  var _s = useState('mgrs'); var tab = _s[0]; var setTab = _s[1];
-  var tabs = [{id:'mgrs',l:'MGRS'},{id:'midd',l:'MIDD'},{id:'mgns',l:'MGNS'},{id:'poems',l:'POEMS'}];
-
-  return e('div', null,
-    e('h2', {className:'text-xl font-bold mb-1'}, 'Related Plasma Cell Disorders'),
-    e('p', {className:'text-sm text-slate-500 mb-4'}, 'MGRS, MIDD, MGNS, and POEMS syndrome'),
-    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
-      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.l)})
-    ),
-    tab==='mgrs' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-3'},'Monoclonal Gammopathy of Renal Significance (MGRS)'),
-      e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
-        e('div',null,
-          e('h4',{className:'font-medium text-sm mb-2'},'Initial Workup'),
-          e('ul',{className:'text-sm text-slate-500 space-y-1'},['Kidney function: eGFR','Urinalysis','24-h urine for total protein, UPEP, UIFE','Metabolic panel'].map(function(i,j){return e('li',{key:j},'• '+i)})),
-          e('h4',{className:'font-medium text-sm mt-4 mb-2'},'Renal Biopsy If:'),
-          e('ul',{className:'text-sm text-slate-500 space-y-1'},['AKI stage 3','eGFR <60 + >2 mL/min/yr decline','Proteinuria (>1 g/day)','Light chain proteinuria','Fanconi syndrome'].map(function(i,j){return e('li',{key:j},'• '+i)}))
-        ),
-        e('div',null,
-          e('h4',{className:'font-medium text-sm mb-2'},'Confirm Diagnosis'),
-          e('ul',{className:'text-sm text-slate-500 space-y-1'},['Light microscopy','IF staining (IgG subclasses, IgA, IgM, κ, λ)','Electron microscopy','M-protein must match renal biopsy'].map(function(i,j){return e('li',{key:j},'• '+i)})),
-          e('h4',{className:'font-medium text-sm mt-4 mb-2'},'Treatment by Clone Type'),
-          e('ul',{className:'text-sm text-slate-500 space-y-1'},['IgG/IgA → MM response criteria','IgM → WM criteria','FLC → Amyloidosis criteria','Plasma cell → MM algorithm (MYEL-4)'].map(function(i,j){return e('li',{key:j},'• '+i)}))
-        )
-      )
-    ) : null,
-    tab==='midd' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-3'},'Monoclonal Immunoglobulin Deposition Disease (MIDD)'),
-      e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'},
-        [{t:'LCDD',p:'~80%',d:'Light chain (80-90% Kappa)'},{t:'HCDD',p:'~10%',d:'Heavy chain'},{t:'LHCDD',p:'~10%',d:'Light and heavy chain'}].map(function(x,i){
-          return e('div',{key:i,className:'p-3 bg-slate-50 rounded-lg text-center'},
-            e('p',{className:'font-bold text-lg text-blue-600'},x.t),
-            e('p',{className:'text-sm font-medium'},x.p),
-            e('p',{className:'text-xs text-slate-500'},x.d)
-          );
-        })
-      ),
-      e('div',{className:'p-3 bg-blue-50 rounded-lg text-sm text-blue-800'},
-        e('p',null,e('strong',null,'Organ involvement: '),'Kidney (~96%), Heart (~21%), Liver (~19%), PNS (~8%)'),
-        e('p',{className:'mt-1'},e('strong',null,'Transplant: '),'Auto HCT preferable in eligible patients. Consider solid organ transplant.')
-      )
-    ) : null,
-    tab==='mgns' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-3'},'Monoclonal Gammopathy of Neurological Significance (MGNS)'),
-      e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
-        e('div',{className:'p-4 bg-emerald-50 rounded-lg border border-emerald-200'},
-          e('h4',{className:'font-medium text-emerald-800 mb-2'},'High Suspicion → Treat'),
-          e('ul',{className:'text-sm text-emerald-700 space-y-1'},['Sensory predominant, length dependent','Slow progression (years)','Bilateral and symmetrical','Antibodies present','Demyelination by EMG/NCS AND affecting ADLs'].map(function(f,i){return e('li',{key:i},'• '+f)})),
-          e('p',{className:'font-medium text-emerald-800 mt-2'},'→ See WM/LPL guidelines')
-        ),
-        e('div',{className:'p-4 bg-slate-50 rounded-lg border border-slate-200'},
-          e('h4',{className:'font-medium text-slate-800 mb-2'},'Low Suspicion → Observe'),
-          e('ul',{className:'text-sm text-slate-600 space-y-1'},['Motor/pain predominant','Rapid progression (weeks-months)','Unilateral/asymmetrical','No antibodies','No demyelination OR not affecting ADLs'].map(function(f,i){return e('li',{key:i},'• '+f)})),
-          e('p',{className:'font-medium text-slate-800 mt-2'},'→ Observation')
-        )
-      )
-    ) : null,
-    tab==='poems' ? e('div',{className:'card p-5'},
-      e('h3',{className:'font-semibold mb-3'},'POEMS Syndrome — Diagnostic Criteria'),
-      e('div',{className:'space-y-3'},
-        e('div',{className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
-          e('h4',{className:'font-medium text-rose-800 mb-1'},'Mandatory Major Criteria (BOTH required)'),
-          e('p',{className:'text-sm text-rose-700'},'1. Polyneuropathy (typical demyelinating)'),
-          e('p',{className:'text-sm text-rose-700'},'2. Monoclonal plasma cell disorder (almost always λ)')
-        ),
-        e('div',{className:'p-3 bg-amber-50 rounded-lg border border-amber-200'},
-          e('h4',{className:'font-medium text-amber-800 mb-1'},'Other Major Criteria (ONE required)'),
-          e('p',{className:'text-sm text-amber-700'},'3. Castleman disease | 4. Sclerotic bone lesions | 5. VEGF elevation')
-        ),
-        e('div',{className:'p-3 bg-blue-50 rounded-lg border border-blue-200'},
-          e('h4',{className:'font-medium text-blue-800 mb-1'},'Minor Criteria (ONE required)'),
-          e('p',{className:'text-sm text-blue-700'},'6. Organomegaly | 7. Volume overload | 8. Endocrinopathy | 9. Skin changes | 10. Papilledema | 11. Thrombocytosis')
-        )
-      ),
-      e('div',{className:'mt-4 p-3 bg-slate-50 rounded-lg'},
-        e('p',{className:'text-sm font-medium'},'Treatment:'),
-        e('ul',{className:'text-sm text-slate-500 space-y-1 mt-1'},
-          e('li',null,'• RT alone for isolated bone lesion (<3 sites) without clonal BMPC'),
-          e('li',null,'• Autologous HCT in eligible patients'),
-          e('li',null,'• Induction: Len/Dex ± Dara, Bortezomib/Dex, CyDex, Pom/Dex'),
-          e('li',null,'• Non-HCT: above + Melphalan/Dex')
-        )
-      )
-    ) : null
-  );
-}
-
-// ─── APP ───
-function App() {
-  var _s = useState('dashboard'); var page = _s[0]; var setPage = _s[1];
-  var _m = useState(false); var mobileOpen = _m[0]; var setMobileOpen = _m[1];
-
-  var navItems = [
-    {id:'dashboard',label:'Dashboard',ico:IcoHome},
-    {id:'workup',label:'Diagnostic Workup',ico:IcoMicroscope},
-    {id:'algorithm',label:'Clinical Pathway',ico:IcoActivity},
-    {id:'staging',label:'Staging & Risk',ico:IcoBarChart},
-    {id:'calculator',label:'Risk Calculators',ico:IcoCalculator},
-    {id:'treatment',label:'Treatment',ico:IcoPill},
-    {id:'response',label:'Response Criteria',ico:IcoClipboard},
-    {id:'supportive',label:'Supportive Care',ico:IcoHeart},
-    {id:'evidence',label:'Evidence Blocks',ico:IcoShield},
-    {id:'related',label:'Related Disorders',ico:IcoBrain},
-  ];
-
-  function renderPage() {
-    switch(page) {
-      case 'dashboard': return e(Dashboard, {setPage:setPage});
-      case 'workup': return e(WorkupPage);
-      case 'algorithm': return e(AlgorithmPage, {setPage:setPage});
-      case 'staging': return e(StagingPage);
-      case 'calculator': return e(CalculatorPage);
-      case 'treatment': return e(TreatmentPage);
-      case 'response': return e(ResponsePage);
-      case 'supportive': return e(SupportivePage);
-      case 'evidence': return e(EvidencePage);
-      case 'related': return e(RelatedPage);
-      default: return e(Dashboard, {setPage:setPage});
-    }
-  }
-
-  return e('div', {className:'min-h-screen flex'},
-    // Desktop sidebar
-    e('aside', {className:'sidebar-desktop w-64 bg-white border-r border-slate-200 fixed h-full overflow-y-auto z-40', style:{display:''}},
-      e('div', {className:'p-4 border-b border-slate-200'},
-        e('div', {className:'flex items-center gap-2'},
-          e('span', {className:'text-2xl'}, '🩸'),
-          e('div', null,
-            e('h1', {className:'font-bold text-sm'}, 'Blood Doctor'),
-            e('p', {className:'text-[10px] text-slate-500 font-medium'}, 'MYELOMA HUB — NCCN 2026')
-          )
-        )
-      ),
-      e('nav', {className:'p-3 space-y-1'},
-        navItems.map(function(item) {
-          return e('div', {key:item.id, className:'sidebar-item '+(page===item.id?'active':''), onClick:function(){setPage(item.id)}},
-            e(item.ico), e('span',null,item.label)
-          );
-        })
-      ),
-      e('div', {className:'p-4 border-t border-slate-200'},
-        e('div', {className:'text-[10px] text-slate-500'},
-          e('p', {className:'font-semibold'}, 'NCCN Guidelines® v2.2026'),
-          e('p', null, 'All recommendations Category 2A unless noted'),
-          e('p', {className:'mt-1 font-medium text-blue-600'}, '#BloodDoctor')
-        )
-      )
-    ),
+  return e('div',{className:'min-h-screen bg-slate-50'},
     // Mobile header
-    e('div', {className:'md:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 px-4 py-3 flex items-center justify-between'},
-      e('div', {className:'flex items-center gap-2'},
-        e('span', {className:'text-xl'}, '🩸'),
-        e('span', {className:'font-bold text-sm'}, 'Myeloma Hub')
+    e('div',{className:'lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between'},
+      e('div',{className:'flex items-center gap-2'},
+        e('span',null,'🩸'),
+        e('span',{className:'font-bold text-sm'},'Myeloma Hub')
       ),
-      e('button', {onClick:function(){setMobileOpen(!mobileOpen)}, className:'p-1'}, mobileOpen ? e(IcoX) : e(IcoMenu))
+      e('button',{className:'p-1',onClick:function(){setMobileOpen(!mobileOpen)}},
+        Ico(mobileOpen?ICONS.x:ICONS.menu,{size:20})
+      )
     ),
-    // Mobile menu
-    mobileOpen ? e('div', {className:'md:hidden fixed inset-0 bg-black/50 z-40', onClick:function(){setMobileOpen(false)}},
-      e('div', {className:'bg-white w-64 h-full overflow-y-auto', onClick:function(ev){ev.stopPropagation()}},
-        e('div',{className:'p-4 border-b border-slate-200'},e('span',{className:'font-bold text-sm'},'Navigation')),
-        e('nav', {className:'p-3 space-y-1'},
-          navItems.map(function(item) {
-            return e('div', {key:item.id, className:'sidebar-item '+(page===item.id?'active':''), onClick:function(){setPage(item.id);setMobileOpen(false)}},
-              e(item.ico), e('span',null,item.label)
-            );
-          })
+    // Mobile sidebar overlay
+    mobileOpen?e('div',{className:'lg:hidden fixed inset-0 z-40 bg-black/30',onClick:function(){setMobileOpen(false)}},
+      e('div',{className:'w-72 h-full bg-white shadow-xl',onClick:function(ev){ev.stopPropagation()}},
+        e(Sidebar)
+      )
+    ):null,
+    // Desktop sidebar
+    e('div',{className:'sidebar-desktop fixed top-0 left-0 w-60 xl:w-64 h-screen bg-white border-r border-slate-200 overflow-hidden z-30'},
+      e(Sidebar)
+    ),
+    // Main content
+    e('div',{className:'lg:ml-60 xl:ml-64 pt-14 lg:pt-0'},
+      e('div',{className:'max-w-5xl mx-auto p-4 lg:p-6'},
+        pages[page]||e('div',null,'Page not found'),
+        // Footer
+        e('div',{className:'mt-8 pt-4 border-t border-slate-200 text-center'},
+          e('p',{className:'text-xs text-slate-400'},'Based on NCCN Clinical Practice Guidelines in Oncology \u2014 Multiple Myeloma, Version 2.2026 (July 16, 2025)'),
+          e('p',{className:'text-xs text-slate-400 mt-1'},'\u00A9 2025 NCCN. All rights reserved. This tool is for educational reference only.'),
+          e('p',{className:'text-xs font-semibold text-slate-500 mt-2'},'#BloodDoctor \u2014 Built by Dr Abdul Mannan')
         )
       )
-    ) : null,
-    // Main
-    e('main', {className:'md:ml-64 flex-1 min-h-screen pt-14 md:pt-0'},
-      e('div', {className:'p-4 md:p-6 max-w-7xl mx-auto fade-in', key:page}, renderPage())
     )
   );
 }
 
-// Mount
-var root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(e(App));
+ReactDOM.createRoot(document.getElementById('root')).render(e(App));
 </script>
 </body>
 </html>
