@@ -734,17 +734,42 @@ function PageWorkup(props){
   function toggleFish(f){setPd(function(p){var n=Object.assign({},p);var arr=(n.fishResults||[]).slice();var idx=arr.indexOf(f);if(idx>=0)arr.splice(idx,1);else arr.push(f);n.fishResults=arr;return n;});}
 
   // --- Classification Engine ---
+  // Unit system toggle
+  var unitSt=useState('UK');var units=unitSt[0];var setUnits=unitSt[1];
+  var isUK=units==='UK';
+
+  // Unit definitions
+  var U={
+    calcium:{UK:'mmol/L',US:'mg/dL',phUK:'e.g. 2.55',phUS:'e.g. 10.2',threshUK:2.75,threshUS:11,convert:function(v,toUK){return toUK?v*0.2495:v/0.2495}},
+    creatinine:{UK:'\u00b5mol/L',US:'mg/dL',phUK:'e.g. 97',phUS:'e.g. 1.1',threshUK:177,threshUS:2,convert:function(v,toUK){return toUK?v*88.4:v/88.4}},
+    crcl:{unit:'mL/min',ph:'e.g. 85'},
+    haemoglobin:{UK:'g/L',US:'g/dL',phUK:'e.g. 120',phUS:'e.g. 12.0',threshUK:100,threshUS:10,convert:function(v,toUK){return toUK?v*10:v/10}},
+    albumin:{UK:'g/L',US:'g/dL',phUK:'e.g. 38',phUS:'e.g. 3.8',threshUK_iss:35,threshUS_iss:3.5,convert:function(v,toUK){return toUK?v*10:v/10}},
+    b2m:{unit:'mg/L',ph:'e.g. 3.2'},
+    mProtein:{UK:'g/L',US:'g/dL',phUK:'e.g. 25',phUS:'e.g. 2.5',threshUK:30,threshUS:3,convert:function(v,toUK){return toUK?v*10:v/10}},
+    bjp:{unit:'mg/24h',ph:'e.g. 350'},
+  };
+
   function classify(d){
     var crab={c:false,r:false,a:false,b:false};
     var slim={s:false,li:false,m:false};
     var classification='Insufficient data';
     var iss=null;var risk=null;
 
-    // CRAB
-    if(d.calcium!==undefined&&d.calcium!=='')crab.c=parseFloat(d.calcium)>11;
-    if(d.creatinine!==undefined&&d.creatinine!=='')crab.r=parseFloat(d.creatinine)>2;
+    // CRAB — thresholds adapt to unit system
+    if(d.calcium!==undefined&&d.calcium!==''){
+      var caVal=parseFloat(d.calcium);
+      crab.c=isUK?(caVal>U.calcium.threshUK):(caVal>U.calcium.threshUS);
+    }
+    if(d.creatinine!==undefined&&d.creatinine!==''){
+      var crVal=parseFloat(d.creatinine);
+      crab.r=isUK?(crVal>U.creatinine.threshUK):(crVal>U.creatinine.threshUS);
+    }
     if(d.crcl!==undefined&&d.crcl!==''){if(parseFloat(d.crcl)<40)crab.r=true;}
-    if(d.haemoglobin!==undefined&&d.haemoglobin!=='')crab.a=parseFloat(d.haemoglobin)<100;
+    if(d.haemoglobin!==undefined&&d.haemoglobin!==''){
+      var hbVal=parseFloat(d.haemoglobin);
+      crab.a=isUK?(hbVal<U.haemoglobin.threshUK):(hbVal<U.haemoglobin.threshUS);
+    }
     if(d.boneLesions==='1+')crab.b=true;
 
     // SLiM
@@ -757,6 +782,7 @@ function PageWorkup(props){
     var bmpcVal=d.bmpc!==undefined&&d.bmpc!==''?parseFloat(d.bmpc):null;
     var mProtVal=d.mProtein!==undefined&&d.mProtein!==''?parseFloat(d.mProtein):null;
     var bjpVal=d.bjp!==undefined&&d.bjp!==''?parseFloat(d.bjp):null;
+    var mProtThresh=isUK?U.mProtein.threshUK:U.mProtein.threshUS; // 30 g/L UK or 3 g/dL US
 
     // Classification logic
     if(d.circulatingPC==='>=5%'){
@@ -771,7 +797,7 @@ function PageWorkup(props){
       }
     } else if(bmpcVal!==null&&bmpcVal>=10&&(anyCrab||anySlim)){
       classification='Active Multiple Myeloma';
-    } else if((mProtVal!==null&&mProtVal>=3)||(bjpVal!==null&&bjpVal>=500)||(bmpcVal!==null&&bmpcVal>=10&&bmpcVal<60)){
+    } else if((mProtVal!==null&&mProtVal>=mProtThresh)||(bjpVal!==null&&bjpVal>=500)||(bmpcVal!==null&&bmpcVal>=10&&bmpcVal<60)){
       if(!anyCrab&&!anySlim&&d.amyloidosis!=='Confirmed'){
         classification='Smoldering Myeloma';
       } else if(anyCrab||anySlim){
@@ -785,10 +811,11 @@ function PageWorkup(props){
       }
     }
 
-    // ISS
+    // ISS — albumin threshold adapts to unit system (35 g/L UK, 3.5 g/dL US)
     if(d.b2m!==undefined&&d.b2m!==''&&d.albumin!==undefined&&d.albumin!==''){
       var b2mVal=parseFloat(d.b2m);var albVal=parseFloat(d.albumin);
-      if(b2mVal<3.5&&albVal>=3.5)iss='I';
+      var albThresh=isUK?U.albumin.threshUK_iss:U.albumin.threshUS_iss;
+      if(b2mVal<3.5&&albVal>=albThresh)iss='I';
       else if(b2mVal>=5.5)iss='III';
       else iss='II';
     }
@@ -918,7 +945,17 @@ function PageWorkup(props){
       )
     ),
 
-    e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis. Standard cytogenetics on unselected samples have low sensitivity due to low plasma cell proliferative index.'),
+    // Unit toggle
+    e('div',{className:'flex items-center justify-between mb-4'},
+      e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis.'),
+      e('div',{className:'flex items-center gap-2 flex-shrink-0 ml-4'},
+        e('span',{className:'text-xs font-medium text-slate-500'},'Units:'),
+        e('div',{className:'flex rounded-lg border border-slate-200 overflow-hidden'},
+          e('button',{className:'px-3 py-1.5 text-xs font-semibold transition-colors '+(isUK?'bg-blue-600 text-white':'bg-white text-slate-600 hover:bg-slate-50'),onClick:function(){setUnits('UK')}},'UK (SI)'),
+          e('button',{className:'px-3 py-1.5 text-xs font-semibold transition-colors '+(isUK?'bg-white text-slate-600 hover:bg-slate-50':'bg-blue-600 text-white'),onClick:function(){setUnits('US')}},'US')
+        )
+      )
+    ),
 
     // === PATIENT DATA ENTRY CARD ===
     e(Card,{className:'mt-4'},
@@ -928,15 +965,15 @@ function PageWorkup(props){
       e(Collapsible,{title:'Core Laboratory (Calcium, Creatinine, CrCl, Hb, Albumin, LDH, B2M)',defaultOpen:true},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
-            numInput('calcium','Calcium','mg/dL','e.g. 10.2'),
-            numInput('creatinine','Creatinine','mg/dL','e.g. 1.1'),
-            numInput('crcl','CrCl','mL/min','e.g. 85'),
-            numInput('haemoglobin','Haemoglobin','g/L','e.g. 120')
+            numInput('calcium','Calcium',isUK?U.calcium.UK:U.calcium.US,isUK?U.calcium.phUK:U.calcium.phUS),
+            numInput('creatinine','Creatinine',isUK?U.creatinine.UK:U.creatinine.US,isUK?U.creatinine.phUK:U.creatinine.phUS),
+            numInput('crcl','CrCl',U.crcl.unit,U.crcl.ph),
+            numInput('haemoglobin','Haemoglobin',isUK?U.haemoglobin.UK:U.haemoglobin.US,isUK?U.haemoglobin.phUK:U.haemoglobin.phUS)
           ),
           e('div',null,
-            numInput('albumin','Albumin','g/dL','e.g. 3.8'),
+            numInput('albumin','Albumin',isUK?U.albumin.UK:U.albumin.US,isUK?U.albumin.phUK:U.albumin.phUS),
             selInput('ldh','LDH',['Normal','Elevated above ULN']),
-            numInput('b2m','Beta-2 Microglobulin','mg/L','e.g. 3.2')
+            numInput('b2m','Beta-2 Microglobulin',U.b2m.unit,U.b2m.ph)
           )
         ),
         e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
@@ -952,8 +989,8 @@ function PageWorkup(props){
       e(Collapsible,{title:'Protein Studies (M-protein, BJP, FLC Ratio, Ig Levels)'},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
-            numInput('mProtein','Serum M-protein','g/dL','e.g. 2.5'),
-            numInput('bjp','Bence-Jones Protein','mg/24h','e.g. 350')
+            numInput('mProtein','Serum M-protein',isUK?U.mProtein.UK:U.mProtein.US,isUK?U.mProtein.phUK:U.mProtein.phUS),
+            numInput('bjp','Bence-Jones Protein',U.bjp.unit,U.bjp.ph)
           ),
           e('div',null,
             numInput('flcRatio','FLC Ratio','','e.g. 45.2')
@@ -1070,9 +1107,9 @@ function PageWorkup(props){
       e('div',{className:'grid md:grid-cols-2 gap-4'},
         e('div',null,
           e('div',{className:'text-xs font-bold text-slate-700 uppercase tracking-wider mb-2'},'CRAB Criteria'),
-          criterionRow('C - Hypercalcaemia (>11 mg/dL)',cx.crab.c,pd.calcium?pd.calcium+' mg/dL':null),
-          criterionRow('R - Renal insufficiency (Cr>2 or CrCl<40)',cx.crab.r,pd.creatinine?(pd.creatinine+' mg/dL'):pd.crcl?(pd.crcl+' mL/min'):null),
-          criterionRow('A - Anaemia (Hb <100 g/L)',cx.crab.a,pd.haemoglobin?pd.haemoglobin+' g/L':null),
+          criterionRow('C - Hypercalcaemia ('+(isUK?'>2.75 mmol/L':'>11 mg/dL')+')',cx.crab.c,pd.calcium?pd.calcium+' '+(isUK?U.calcium.UK:U.calcium.US):null),
+          criterionRow('R - Renal insufficiency ('+(isUK?'Cr>177 \u00b5mol/L':' Cr>2 mg/dL')+' or CrCl<40)',cx.crab.r,pd.creatinine?(pd.creatinine+' '+(isUK?U.creatinine.UK:U.creatinine.US)):pd.crcl?(pd.crcl+' mL/min'):null),
+          criterionRow('A - Anaemia (Hb '+(isUK?'<100 g/L':'<10 g/dL')+')',cx.crab.a,pd.haemoglobin?pd.haemoglobin+' '+(isUK?U.haemoglobin.UK:U.haemoglobin.US):null),
           criterionRow('B - Bone lesions',cx.crab.b,pd.boneLesions||null)
         ),
         e('div',null,
@@ -1088,7 +1125,7 @@ function PageWorkup(props){
         cx.iss?e('div',null,
           e('div',{className:'text-xs font-bold text-slate-700 uppercase tracking-wider mb-1'},'ISS Staging'),
           e('div',{className:'text-sm text-slate-700'},
-            'B2M: '+(pd.b2m||'-')+' mg/L, Albumin: '+(pd.albumin||'-')+' g/dL',
+            'B2M: '+(pd.b2m||'-')+' mg/L, Albumin: '+(pd.albumin||'-')+' '+(isUK?U.albumin.UK:U.albumin.US),
             e('span',{className:'ml-2 font-bold'},'Stage '+cx.iss)
           )
         ):null,
