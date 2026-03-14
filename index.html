@@ -330,14 +330,104 @@ var REGIMEN_DB = {
 };
 
 // Add generic entries for regimens without detailed data
+// Regimens promoted from generic to full detail are added to REGIMEN_DB above via Object.assign
+Object.assign(REGIMEN_DB, {
+  'Isa-KRd': {
+    full:'Isatuximab-irfc + Carfilzomib + Lenalidomide + Dexamethasone',
+    abbr:'Isa-KRd', setting:'Primary therapy (HCT candidates, Other Recommended; Non-HCT Useful in Certain Circumstances)', category:'Category 2A (HCT) / Category 2B (Non-HCT)',
+    drugs:[
+      {name:'Isatuximab-irfc',cls:'Anti-CD38 monoclonal antibody',dose:'10 mg/kg IV weekly (cycle 1), then every 2 weeks (cycles 2+)',route:'IV infusion',key:'Anti-CD38 targeting with direct Fc-dependent cytotoxicity, ADCC, ADCP, and CDC'},
+      {name:'Carfilzomib',cls:'Proteasome inhibitor (2nd generation, irreversible)',dose:'20 mg/m\u00b2 days 1-2 of cycle 1, then 56 mg/m\u00b2 on days 8, 9, 15, 16 of 28-day cycle (twice-weekly); OR 20/56\u201370 mg/m\u00b2 weekly on days 1, 8, 15',route:'IV infusion (10-30 minutes)',key:'Irreversible chymotrypsin-like site inhibition of the 20S proteasome'},
+      {name:'Lenalidomide',cls:'Immunomodulatory drug (IMiD)',dose:'25 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon E3 ubiquitin ligase modulation, T-cell co-stimulation, anti-angiogenic'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly (reduce to 20 mg if age >75 years)',route:'Oral or IV',key:'Direct anti-myeloma activity, anti-inflammatory, anti-emetic'}
+    ],
+    trials:'GMMG-CONCEPT trial (phase 2): Isa-KRd in high-risk NDMM. ORR after induction: 100%. \u2265VGPR: 90%. MRD-negative (10\u207b\u2075): 67% post-consolidation. Very promising for high-risk patients. IKEMA trial established isatuximab-carfilzomib backbone in relapsed setting; extension to frontline with lenalidomide adds the quadruplet benefit seen with Dara-VRd/Isa-VRd.',
+    sideEffects:'Infusion-related reactions (~38% first dose, decreasing with subsequent doses), neutropenia, thrombocytopenia, infections (pneumonia, URTIs), cardiac toxicity (from carfilzomib \u2014 heart failure, ischaemia, hypertension), fatigue, diarrhoea, peripheral oedema. Isatuximab interferes with indirect Coombs test and serum immunofixation (if IgG kappa M-protein).',
+    monitoring:'Echocardiogram at baseline and as clinically indicated; blood pressure monitoring each cycle; CBC with differential weekly during induction; serum creatinine and electrolytes; SPEP/SIFE/FLC each cycle; cardiac enzymes if symptoms develop; IV hydration before each carfilzomib dose (250-500 mL NS); VTE prophylaxis per IMPEDE/SAVED score',
+    special:'Type and screen MUST be performed BEFORE starting isatuximab-irfc (interferes with serologic testing). This quadruplet is particularly studied in high-risk cytogenetics. Carfilzomib cardiac monitoring is essential \u2014 avoid in patients with uncontrolled heart failure (NYHA III-IV) or recent MI. Weekly carfilzomib dosing (56-70 mg/m\u00b2) may be preferred over twice-weekly for convenience and potentially reduced cardiac events. Listed as Category 2B for non-HCT setting.',
+    evidence:{e:4,s:3,q:3,c:3,a:1}
+  },
+  'VCd': {
+    full:'Bortezomib + Cyclophosphamide + Dexamethasone',
+    abbr:'VCd', setting:'Primary therapy (Useful in Certain Circumstances); option for renal insufficiency and/or peripheral neuropathy', category:'Category 2A',
+    drugs:[
+      {name:'Bortezomib',cls:'Proteasome inhibitor (1st generation, reversible)',dose:'1.3 mg/m\u00b2 SC on days 1, 8, 15 of 21-day cycle (weekly preferred) or days 1, 4, 8, 11 (twice-weekly)',route:'SC (preferred) or IV',key:'Reversible inhibition of the 26S proteasome chymotrypsin-like activity'},
+      {name:'Cyclophosphamide',cls:'Alkylating agent',dose:'300 mg/m\u00b2 PO on days 1, 8, 15 of 21-day cycle; OR 500 mg PO on days 1, 8, 15',route:'Oral',key:'DNA cross-linking via alkylation, immunosuppressive'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO on days 1, 8, 15 (and day 22 in some protocols); reduce to 20 mg weekly if >75 years',route:'Oral',key:'Direct anti-myeloma activity, anti-inflammatory'}
+    ],
+    trials:'Multiple phase 2 studies have demonstrated VCd as an effective induction regimen. Reeder et al. (Blood 2009): VCd induction, ORR 88%, \u2265VGPR 61%. Particularly valuable when lenalidomide cannot be used (renal impairment with CrCL <30 mL/min, severe neuropathy concerns with thalidomide). Does NOT compromise stem cell harvest \u2014 cyclophosphamide at these doses is considered safe for future mobilisation.',
+    sideEffects:'Peripheral neuropathy (bortezomib-related, reduced with weekly SC), neutropenia, thrombocytopenia, GI disturbance (nausea, diarrhoea), fatigue, infections (HSV/VZV reactivation). Cyclophosphamide: risk of myelosuppression, haemorrhagic cystitis (rare at oral doses), alopecia (mild).',
+    monitoring:'CBC weekly during induction; neuropathy assessment each cycle (dose-reduce or switch to carfilzomib if grade \u22652); renal function; HSV/VZV prophylaxis mandatory; consider PJP prophylaxis if high-dose dexamethasone',
+    special:'Key regimen for patients with renal insufficiency \u2014 bortezomib and cyclophosphamide do NOT require renal dose adjustment (unlike lenalidomide). Also useful when peripheral neuropathy is a concern and lenalidomide is contraindicated. Cyclophosphamide at these doses does NOT significantly compromise stem cell reserve for future HCT. Consider as alternative when lenalidomide is unavailable or contraindicated.',
+    evidence:{e:3,s:3,q:3,c:3,a:3}
+  },
+  'KCd': {
+    full:'Carfilzomib + Cyclophosphamide + Dexamethasone',
+    abbr:'KCd', setting:'Primary therapy (Useful in Certain Circumstances); option for renal insufficiency and/or peripheral neuropathy', category:'Category 2A',
+    drugs:[
+      {name:'Carfilzomib',cls:'Proteasome inhibitor (2nd generation, irreversible)',dose:'20 mg/m\u00b2 days 1-2 cycle 1, then 36 mg/m\u00b2 on days 1, 2, 8, 9, 15, 16 of 28-day cycle (twice-weekly); OR 56 mg/m\u00b2 weekly on days 1, 8, 15',route:'IV infusion (10-30 minutes)',key:'Irreversible 20S proteasome inhibition; no significant peripheral neuropathy'},
+      {name:'Cyclophosphamide',cls:'Alkylating agent',dose:'300 mg/m\u00b2 PO days 1, 8, 15 of 28-day cycle',route:'Oral',key:'DNA alkylation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly (20 mg if >75 years)',route:'Oral or IV',key:'Anti-myeloma, anti-inflammatory'}
+    ],
+    trials:'Bringhen et al. (Blood 2014): KCd in elderly NDMM (phase 1/2, n=58). ORR 82%, \u2265VGPR 43%. 2-year PFS 76%. Carfilzomib provides advantage of no peripheral neuropathy compared to bortezomib-based alternatives, making this suitable for patients with pre-existing neuropathy.',
+    sideEffects:'Cardiac toxicity (carfilzomib \u2014 heart failure, hypertension, ischaemia), neutropenia, thrombocytopenia, fatigue, dyspnoea, renal toxicity. No significant peripheral neuropathy (advantage over VCd). Cyclophosphamide: mild myelosuppression.',
+    monitoring:'Echocardiogram at baseline; BP monitoring each cycle; CBC; renal function; cardiac enzymes if symptomatic; IV hydration protocol before carfilzomib',
+    special:'Preferred over VCd when pre-existing peripheral neuropathy is a concern, as carfilzomib does not cause significant neuropathy. Useful for renal insufficiency (neither carfilzomib nor cyclophosphamide require renal dose adjustment). Monitor cardiac function carefully, especially in elderly patients. Cyclophosphamide does not significantly compromise stem cell reserve.',
+    evidence:{e:3,s:3,q:2,c:2,a:2}
+  },
+  'Dara-VCd': {
+    full:'Daratumumab + Bortezomib + Cyclophosphamide + Dexamethasone',
+    abbr:'Dara-VCd', setting:'Primary therapy (Useful in Certain Circumstances, HCT and relapsed settings)', category:'Category 2A',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 monoclonal antibody',dose:'16 mg/kg IV weekly (cycles 1-2), every 2 weeks (cycles 3-6), every 4 weeks thereafter; OR daratumumab and hyaluronidase-fihj 1800 mg/30,000 units SC',route:'IV infusion or SC injection',key:'Anti-CD38 targeting via ADCC, CDC, ADCP, and direct apoptosis'},
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m\u00b2 SC days 1, 8, 15 of 21-day cycle',route:'SC (preferred)',key:'26S proteasome inhibition'},
+      {name:'Cyclophosphamide',cls:'Alkylating agent',dose:'300 mg/m\u00b2 PO days 1, 8, 15 of 21-day cycle',route:'Oral',key:'DNA alkylation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO weekly (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory, direct anti-myeloma'}
+    ],
+    trials:'Yimer et al. (Lancet Haematol 2022): Dara-VCd in transplant-eligible NDMM (LYRA study, phase 2). ORR 95.3%, \u2265CR 24.4%, MRD-negative (10\u207b\u2075): 34.9%. Successful stem cell mobilisation in 97.6% of patients. Demonstrates that adding daratumumab to VCd backbone is feasible and effective. Also studied in relapsed setting (Dara-VCd as re-induction).',
+    sideEffects:'Infusion reactions (daratumumab IV ~40% first dose, SC significantly less), neutropenia, thrombocytopenia, infections, peripheral neuropathy (bortezomib), GI disturbance. Type and screen BEFORE daratumumab.',
+    monitoring:'CBC weekly during induction; neuropathy assessment; renal function; SPEP/SIFE/FLC each cycle; VTE prophylaxis (though lower VTE risk than IMiD-containing regimens); HSV/VZV prophylaxis; type and screen before first daratumumab dose',
+    special:'This quadruplet avoids lenalidomide \u2014 useful for patients with renal insufficiency (CrCL <30 mL/min) where lenalidomide requires significant dose reduction or is contraindicated. Cyclophosphamide and bortezomib do not require renal dose adjustment. Also useful when lenalidomide is unavailable. Does not significantly compromise stem cell mobilisation. Can be considered for relapsed/refractory MM as well.',
+    evidence:{e:4,s:3,q:3,c:3,a:2}
+  },
+  'VTD-PACE': {
+    full:'Bortezomib + Thalidomide + Dexamethasone + Cisplatin + Doxorubicin + Cyclophosphamide + Etoposide',
+    abbr:'VTD-PACE', setting:'Aggressive/refractory MM, plasma cell leukaemia, primary refractory disease (Useful in Certain Circumstances)', category:'Category 2A',
+    drugs:[
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.0 mg/m\u00b2 IV on days 1, 4, 8, 11 of 28-day cycle',route:'IV push',key:'26S proteasome inhibition'},
+      {name:'Thalidomide',cls:'Immunomodulatory drug (1st generation)',dose:'200 mg PO daily (days 1-28, continuous)',route:'Oral',key:'Anti-angiogenic, immunomodulatory'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO on days 1-4 and 8-11',route:'Oral',key:'Anti-myeloma (high dose for aggressive disease)'},
+      {name:'Cisplatin',cls:'Platinum-based alkylating agent',dose:'10 mg/m\u00b2/day continuous IV infusion on days 1-4',route:'Continuous IV infusion',key:'DNA cross-linking, apoptosis induction'},
+      {name:'Doxorubicin',cls:'Anthracycline',dose:'10 mg/m\u00b2/day continuous IV infusion on days 1-4',route:'Continuous IV infusion',key:'Topoisomerase II inhibition, DNA intercalation'},
+      {name:'Cyclophosphamide',cls:'Alkylating agent',dose:'400 mg/m\u00b2/day continuous IV infusion on days 1-4',route:'Continuous IV infusion',key:'DNA alkylation'},
+      {name:'Etoposide',cls:'Topoisomerase II inhibitor',dose:'40 mg/m\u00b2/day continuous IV infusion on days 1-4',route:'Continuous IV infusion',key:'Topoisomerase II inhibition, cell cycle arrest'}
+    ],
+    trials:'Barlogie et al. (Total Therapy protocols): VTD-PACE used as part of total therapy approach for aggressive/high-risk MM. In primary refractory disease and plasma cell leukaemia, response rates of 60-75% have been reported. Generally reserved as salvage/aggressive therapy when standard regimens fail. DT-PACE (without bortezomib) was the predecessor regimen; adding bortezomib (VTD-PACE) improved response rates.',
+    sideEffects:'HIGHLY TOXIC regimen requiring inpatient administration. Severe myelosuppression (grade 3-4 neutropenia and thrombocytopenia expected in >90%), mucositis, nausea/vomiting, nephrotoxicity (cisplatin), cardiotoxicity (doxorubicin \u2014 monitor cumulative dose), peripheral neuropathy (bortezomib + thalidomide + cisplatin), VTE risk (thalidomide), infection risk (profound immunosuppression), alopecia, fatigue. Requires G-CSF support and often ICU-level monitoring.',
+    monitoring:'Inpatient monitoring required; daily CBC; renal function (cisplatin nephrotoxicity \u2014 aggressive hydration mandatory); cardiac monitoring (doxorubicin \u2014 ECHO/MUGA at baseline, monitor cumulative dose <450 mg/m\u00b2); electrolytes including Mg/K (cisplatin); neuropathy assessment; infection prophylaxis (broad-spectrum antibiotics, antiviral, antifungal); G-CSF from day 6 until neutrophil recovery',
+    special:'Generally reserved for treatment of aggressive MM (primary refractory, plasma cell leukaemia, extramedullary disease, rapidly progressing disease). DT-PACE (without bortezomib) \u00b1 bortezomib (VTD-PACE) is the most intensive myeloma regimen available. NOT for upfront use in standard-risk disease. Can significantly compromise future stem cell collection \u2014 consider harvesting BEFORE administering. Can be used as bridge to CAR T-cell therapy or allogeneic HCT in aggressive scenarios. Avoid if possible before planned CAR-T (alkylating agents impact T-cell collection).',
+    evidence:{e:3,s:1,q:2,c:2,a:2}
+  },
+  'Dara-KRd': {
+    full:'Daratumumab + Carfilzomib + Lenalidomide + Dexamethasone',
+    abbr:'Dara-KRd', setting:'Primary therapy for HCT candidates (Other Recommended)', category:'Category 2A',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 monoclonal antibody',dose:'16 mg/kg IV weekly (cycles 1-2), every 2 weeks (cycles 3-6), every 4 weeks thereafter; OR SC 1800 mg/30,000 units',route:'IV or SC',key:'Anti-CD38 targeting via multiple mechanisms'},
+      {name:'Carfilzomib',cls:'Proteasome inhibitor (2nd generation)',dose:'20 mg/m\u00b2 cycle 1 days 1-2, then 56 mg/m\u00b2 weekly (days 1, 8, 15) of 28-day cycle; OR 20/36 mg/m\u00b2 twice-weekly',route:'IV infusion',key:'Irreversible 20S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'Immunomodulatory drug',dose:'25 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon E3 ligase modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly (20 mg if >75 years)',route:'Oral or IV',key:'Anti-inflammatory, direct anti-myeloma'}
+    ],
+    trials:'MASTER trial (phase 2): Dara-KRd induction in NDMM (transplant-eligible). MRD-negative (10\u207b\u2075) rate: 80% at end of consolidation. MRD-guided treatment discontinuation in standard-risk patients showed promising early results. CARDAMON trial (UK, phase 2): Dara-KRd induction, ORR 97%, \u2265VGPR 90%. Demonstrates that this intensive quadruplet achieves very deep responses.',
+    sideEffects:'Cardiac toxicity (carfilzomib), infusion reactions (daratumumab), neutropenia, thrombocytopenia, infections, hypertension, dyspnoea, peripheral oedema, VTE risk (lenalidomide), GI toxicity, fatigue. Lab interference: daratumumab \u2192 false-positive Coombs; both daratumumab and carfilzomib can cause renal/cardiac issues.',
+    monitoring:'Echocardiogram at baseline; BP each cycle; CBC weekly during induction; renal function and electrolytes; SPEP/SIFE/FLC each cycle; cardiac enzymes if symptoms; type and screen BEFORE daratumumab; VTE prophylaxis; HSV/VZV prophylaxis; IV hydration before carfilzomib',
+    special:'This is the most intensive quadruplet available, combining two novel mechanism classes (anti-CD38 + irreversible PI) with IMiD. Most studied in MRD-driven treatment strategies (MASTER trial). Higher cardiac toxicity risk than Dara-VRd due to carfilzomib. Reserve for fit patients with good cardiac function. Stem cell harvest should be planned early (within first 6 cycles). Ixazomib may substitute for carfilzomib in select patients for intolerance or logistical reasons.',
+    evidence:{e:5,s:2,q:3,c:3,a:1}
+  },
+});
+
 var GENERIC_REGIMENS = {
-  'Dara-KRd':{full:'Daratumumab + Carfilzomib + Lenalidomide + Dexamethasone',setting:'HCT candidates',category:'Cat 2A'},
-  'Isa-KRd':{full:'Isatuximab-irfc + Carfilzomib + Lenalidomide + Dexamethasone',setting:'HCT/Non-HCT',category:'Cat 2A/2B'},
-  'VCd':{full:'Bortezomib + Cyclophosphamide + Dexamethasone',setting:'Renal impairment, neuropathy',category:'Cat 2A'},
-  'KCd':{full:'Carfilzomib + Cyclophosphamide + Dexamethasone',setting:'HCT candidates / renal insufficiency',category:'Cat 2A'},
-  'Dara-VCd':{full:'Daratumumab + Bortezomib + Cyclophosphamide + Dexamethasone',setting:'HCT / relapsed',category:'Cat 2A'},
-  'VTD-PACE':{full:'Bortezomib/Thalidomide/Dexamethasone/Cisplatin/Doxorubicin/Cyclophosphamide/Etoposide',setting:'Aggressive MM / PCL',category:'Cat 2A'},
   'Isa-Rd':{full:'Isatuximab-irfc + Lenalidomide + Dexamethasone',setting:'Non-HCT candidates',category:'Cat 2A'},
+  'VRd-lite':{full:'Bortezomib + Lenalidomide + Dexamethasone (dose-reduced)',setting:'Frail patients',category:'Cat 2A'},
   'Rd':{full:'Lenalidomide + Low-Dose Dexamethasone',setting:'Non-HCT candidates',category:'Cat 1'},
   'Vd':{full:'Bortezomib + Dexamethasone',setting:'Useful in certain circumstances',category:'Cat 1'},
   'KPd':{full:'Carfilzomib + Pomalidomide + Dexamethasone',setting:'Relapsed (anti-CD38 refractory)',category:'Cat 2A'},
