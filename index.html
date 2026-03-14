@@ -2078,6 +2078,210 @@ function PageEvidence(){
   );
 }
 
+// ─── FORMATTING HELPERS FOR REGIMEN DETAIL ───
+function splitSentences(text){
+  if(!text) return [];
+  // Split on period followed by space and uppercase, or on semicolons
+  return text.split(/\.\s+(?=[A-Z\u2265\u2264\u03B2])|;\s+/).map(function(s){return s.replace(/\.\s*$/,'').trim()}).filter(function(s){return s.length>3});
+}
+
+function formatTrials(text){
+  if(!text) return null;
+  // Split into individual trials by looking for trial names (WORD trial/study patterns)
+  var trials = [];
+  var parts = text.split(/(?=(?:[A-Z][A-Z0-9\-]+\s+(?:trial|study|phase)|Phase\s+[1-3IV]+))/i);
+  if(parts.length<=1) parts = splitSentences(text);
+
+  // Group into trial blocks
+  var blocks = [];
+  var current = null;
+  parts.forEach(function(p){
+    p = p.trim();
+    if(!p) return;
+    var trialMatch = p.match(/^([A-Z][A-Z0-9\-\/]+(?:\s+trial|\s+study)?)\s*\(([^)]+)\)/i) || p.match(/^([A-Z][A-Z0-9\-\/]+\s+(?:trial|study))\s*:/i);
+    if(trialMatch){
+      if(current) blocks.push(current);
+      current = {name:trialMatch[1].replace(/\s*:$/,''),design:trialMatch[2]||'',points:[]};
+      var rest = p.substring(trialMatch[0].length).replace(/^[\s:]+/,'');
+      if(rest) {
+        splitSentences(rest).forEach(function(s){current.points.push(s)});
+      }
+    } else {
+      if(!current) current = {name:'Key Evidence',design:'',points:[]};
+      splitSentences(p).forEach(function(s){current.points.push(s)});
+    }
+  });
+  if(current) blocks.push(current);
+
+  if(blocks.length===0){
+    return e('ul',{className:'list-disc ml-4 text-sm text-slate-700 space-y-1.5'},
+      splitSentences(text).map(function(s,i){return e('li',{key:i},s)})
+    );
+  }
+
+  return e('div',{className:'space-y-4'},
+    blocks.map(function(b,i){
+      return e('div',{key:i},
+        e('h4',{className:'font-bold text-sm text-blue-900 mb-1'},
+          b.name,
+          b.design ? e('span',{className:'font-normal text-blue-700 ml-1'},'('+b.design+')') : null
+        ),
+        e('ul',{className:'list-disc ml-4 text-sm text-slate-700 space-y-1'},
+          b.points.map(function(p,j){
+            // Bold key metrics
+            var formatted = p.replace(/(ORR|PFS|OS|sCR|CR|VGPR|MRD|HR|median\s+PFS|median\s+OS|P[<>=])/gi, function(m){return m});
+            return e('li',{key:j},highlightMetrics(p));
+          })
+        )
+      );
+    })
+  );
+}
+
+function highlightMetrics(text){
+  // Split text and highlight numeric outcomes
+  var parts = [];
+  var regex = /(\d+\.?\d*\s*%|\d+\.?\d*\s+months?|HR\s*[\d.]+|P\s*[<>=]\s*[\d.]+|ORR:?\s*\d+\.?\d*%|PFS:?\s*[\d.]+|OS:?\s*[\d.]+|MRD[- ]negativ[ey]\s*(?:\([^)]+\))?:?\s*[\d.]+\.?\d*%?)/gi;
+  var lastIdx = 0;
+  var match;
+  while((match = regex.exec(text)) !== null){
+    if(match.index > lastIdx) parts.push(text.substring(lastIdx, match.index));
+    parts.push(e('strong',{key:'m'+match.index,className:'text-blue-800'},match[0]));
+    lastIdx = match.index + match[0].length;
+  }
+  if(lastIdx < text.length) parts.push(text.substring(lastIdx));
+  if(parts.length === 0) return text;
+  return e(Fragment,null,parts);
+}
+
+function formatSideEffects(text){
+  if(!text) return null;
+  // Categorise side effects
+  var categories = {
+    'Haematological':[], 'Cardiac':[], 'Infectious':[], 'Neurological':[],
+    'Gastrointestinal':[], 'Dermatological':[], 'Other':[], 'Lab Interference':[], 'Warnings':[]
+  };
+
+  var items = text.split(/[,;]\s+|\.(?:\s+)(?=[A-Z])/);
+  items.forEach(function(item){
+    item = item.replace(/\.\s*$/,'').trim();
+    if(!item || item.length < 3) return;
+    var lower = item.toLowerCase();
+    if(lower.match(/neutrop|thrombocyto|cytopen|anaemi|pancytopen|myelosuppress/)) categories['Haematological'].push(item);
+    else if(lower.match(/cardiac|heart|hypertens|ischaemi|cardiotox|arrhythm|dyspnoea|pulmonary/)) categories['Cardiac'].push(item);
+    else if(lower.match(/infect|pneumon|hsv|vzv|sepsis|fungal|viral|reactivat/)) categories['Infectious'].push(item);
+    else if(lower.match(/neuropath|icans|neurotox|crs|cytokine|parkinson|movement|neurocognit|encephalop/)) categories['Neurological'].push(item);
+    else if(lower.match(/nausea|diarrh|vomit|mucosit|gi |gastrointestin|constipat/)) categories['Gastrointestinal'].push(item);
+    else if(lower.match(/rash|skin|alopecia|hyperpigment|nail|desquam/)) categories['Dermatological'].push(item);
+    else if(lower.match(/coombs|sife|interfere|false.?positive|type and screen|immunofixation/)) categories['Lab Interference'].push(item);
+    else if(lower.match(/risk of|secondary|malignan|warning|avoid|contraindic|fatal|life.?threaten/)) categories['Warnings'].push(item);
+    else categories['Other'].push(item);
+  });
+
+  var catIcons = {'Haematological':'\uD83E\uDE78','Cardiac':'\u2764\uFE0F','Infectious':'\uD83E\uDDA0','Neurological':'\uD83E\uDDE0','Gastrointestinal':'\uD83C\uDF7D\uFE0F','Dermatological':'\uD83D\uDC85','Lab Interference':'\uD83E\uDDEA','Warnings':'\u26A0\uFE0F','Other':'\uD83D\uDCCB'};
+  var catColors = {'Haematological':'text-red-800','Cardiac':'text-rose-800','Infectious':'text-orange-800','Neurological':'text-violet-800','Gastrointestinal':'text-amber-800','Dermatological':'text-pink-800','Lab Interference':'text-blue-800','Warnings':'text-red-900','Other':'text-slate-800'};
+
+  var rendered = Object.keys(categories).filter(function(k){return categories[k].length>0}).map(function(cat,i){
+    return e('div',{key:i,className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1 '+catColors[cat]},
+        e('span',null,catIcons[cat]||''),' ',cat
+      ),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},
+        categories[cat].map(function(item,j){
+          return e('li',{key:j},item);
+        })
+      )
+    );
+  });
+
+  return e('div',{className:'space-y-1'},rendered);
+}
+
+function formatMonitoring(text){
+  if(!text) return null;
+  var items = text.split(/[;]\s+/).map(function(s){return s.replace(/\.\s*$/,'').trim()}).filter(function(s){return s.length>3});
+
+  // Categorise
+  var baseline = [];
+  var ongoing = [];
+  var special = [];
+
+  items.forEach(function(item){
+    var lower = item.toLowerCase();
+    if(lower.match(/baseline|before start|before first|at baseline|prior to|echocardiogram at baseline/)) baseline.push(item);
+    else if(lower.match(/prophylax|screen|type and screen|hepatitis|vaccination/)) special.push(item);
+    else ongoing.push(item);
+  });
+
+  var sections = [];
+  if(baseline.length > 0){
+    sections.push(e('div',{key:'bl',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDCCB Baseline / Pre-Treatment'),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},baseline.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(ongoing.length > 0){
+    sections.push(e('div',{key:'on',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDD04 Ongoing Monitoring'),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},ongoing.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(special.length > 0){
+    sections.push(e('div',{key:'sp',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-emerald-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDEE1\uFE0F Prophylaxis & Screening'),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-0.5'},special.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(sections.length===0){
+    sections.push(e('ul',{key:'all',className:'list-disc ml-4 text-sm text-slate-700 space-y-1'},
+      items.map(function(i,j){return e('li',{key:j},i)})
+    ));
+  }
+  return e('div',{className:'space-y-1'},sections);
+}
+
+function formatSpecial(text){
+  if(!text) return null;
+  var items = text.split(/\.\s+(?=[A-Z\u2265\u2264])/).map(function(s){return s.replace(/\.\s*$/,'').trim()}).filter(function(s){return s.length>5});
+
+  var warnings = [];
+  var pearls = [];
+  var dosing = [];
+
+  items.forEach(function(item){
+    var lower = item.toLowerCase();
+    if(lower.match(/avoid|contraindic|do not|should not|caution|risk|warning|not recommend|never|impact|compromise/)) warnings.push(item);
+    else if(lower.match(/dose|dosing|mg|mg\/m|reduce|adjustment|weekly|twice|substitute|schedule/)) dosing.push(item);
+    else pearls.push(item);
+  });
+
+  var sections = [];
+  if(pearls.length > 0){
+    sections.push(e('div',{key:'p',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDCA1 Clinical Pearls'),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-1'},pearls.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(dosing.length > 0){
+    sections.push(e('div',{key:'d',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-purple-900 mb-1.5 flex items-center gap-1'},'\uD83D\uDC8A Dosing Notes'),
+      e('ul',{className:'list-disc ml-5 text-sm text-slate-700 space-y-1'},dosing.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(warnings.length > 0){
+    sections.push(e('div',{key:'w',className:'mb-3'},
+      e('h4',{className:'font-bold text-xs uppercase tracking-wider text-red-800 mb-1.5 flex items-center gap-1'},'\u26A0\uFE0F Important Warnings'),
+      e('ul',{className:'list-disc ml-5 text-sm text-red-700 space-y-1'},warnings.map(function(i,j){return e('li',{key:j},i)}))
+    ));
+  }
+  if(sections.length===0){
+    return e('ul',{className:'list-disc ml-4 text-sm text-slate-700 space-y-1'},
+      items.map(function(i,j){return e('li',{key:j},i)})
+    );
+  }
+  return e('div',{className:'space-y-1'},sections);
+}
+
 // ─── REGIMEN DETAIL PAGE ───
 function PageRegimenDetail(props){
   var abbr = props.regimen;
@@ -2159,28 +2363,36 @@ function PageRegimenDetail(props){
       )
     ),
 
-    // Key Trial Data
+    // Key Trial Data — structured
     e('div',{className:'card p-5 mb-4'},
       e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.star,{size:14}),' Key Trial Data'),
-      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-blue-50 rounded-lg p-4 border-l-4 border-l-blue-500'},r.trials)
+      e('div',{className:'bg-blue-50 rounded-lg p-4 border-l-4 border-l-blue-500'},
+        formatTrials(r.trials)
+      )
     ),
 
-    // Side Effects
+    // Adverse Effects — structured
     e('div',{className:'card p-5 mb-4'},
       e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.alert,{size:14}),' Adverse Effects & Toxicity'),
-      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-amber-50 rounded-lg p-4 border-l-4 border-l-amber-500'},r.sideEffects)
+      e('div',{className:'bg-amber-50 rounded-lg p-4 border-l-4 border-l-amber-500'},
+        formatSideEffects(r.sideEffects)
+      )
     ),
 
-    // Monitoring
+    // Monitoring — structured
     e('div',{className:'card p-5 mb-4'},
       e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.activity,{size:14}),' Monitoring Requirements'),
-      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-emerald-50 rounded-lg p-4 border-l-4 border-l-emerald-500'},r.monitoring)
+      e('div',{className:'bg-emerald-50 rounded-lg p-4 border-l-4 border-l-emerald-500'},
+        formatMonitoring(r.monitoring)
+      )
     ),
 
-    // Special Considerations
+    // Special Considerations — structured
     e('div',{className:'card p-5 mb-4'},
       e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.info,{size:14}),' Special Considerations & Clinical Pearls'),
-      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-purple-50 rounded-lg p-4 border-l-4 border-l-purple-500'},r.special)
+      e('div',{className:'bg-purple-50 rounded-lg p-4 border-l-4 border-l-purple-500'},
+        formatSpecial(r.special)
+      )
     ),
 
     // Evidence Block
