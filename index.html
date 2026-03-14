@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blood Doctor — Myeloma Management Hub | NCCN 2026</title>
-<meta name="description" content="Comprehensive Interactive NCCN 2026 Multiple Myeloma Guidelines — Diagnosis, Staging, Treatment, Supportive Care & Related Disorders">
+<title>Blood🩸Doctor — Myeloma Management Hub 2026</title>
+<meta name="description" content="Blood🩸Doctor Myeloma Management Hub — Comprehensive Interactive Multiple Myeloma Guidelines for Diagnosis, Staging, Treatment, Supportive Care & Related Disorders">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -95,6 +95,259 @@ var ICONS = {
   search:[{t:'circle',a:{cx:11,cy:11,r:8}},'m21 21-4.3-4.3'],
   star:['m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'],
   grid:[{t:'rect',a:{width:7,height:7,x:3,y:3,rx:1}},{t:'rect',a:{width:7,height:7,x:14,y:3,rx:1}},{t:'rect',a:{width:7,height:7,x:14,y:14,rx:1}},{t:'rect',a:{width:7,height:7,x:3,y:14,rx:1}}],
+};
+
+// ─── REGIMEN DATABASE ───
+var REGIMEN_DB = {
+  'Dara-VRd': {
+    full:'Daratumumab + Lenalidomide + Bortezomib + Dexamethasone',
+    abbr:'Dara-VRd', setting:'Primary therapy (HCT candidates and non-HCT <80 yrs, not frail)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 monoclonal antibody',dose:'16 mg/kg IV weekly (cycles 1-2), every 2 weeks (cycles 3-6), then every 4 weeks; OR daratumumab and hyaluronidase-fihj 1800 mg/30,000 units SC',route:'IV infusion or SC injection',key:'Anti-CD38 targeting'},
+      {name:'Lenalidomide',cls:'Immunomodulatory drug (IMiD)',dose:'25 mg PO days 1-14 of 21-day cycle (induction); 10-15 mg PO days 1-21 of 28-day cycle (maintenance)',route:'Oral',key:'Cereblon E3 ligase modulation'},
+      {name:'Bortezomib',cls:'Proteasome inhibitor (PI)',dose:'1.3 mg/m² SC weekly on days 1, 8, 15 of 21-day cycle',route:'SC (preferred) or IV',key:'26S proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly (20 mg if >75 years); consider discontinuing at earliest possible timepoint',route:'Oral or IV',key:'Anti-inflammatory, direct anti-myeloma'}
+    ],
+    trials:'GRIFFIN trial (phase 2): Dara-VRd vs VRd in transplant-eligible NDMM. sCR rate: 42.4% vs 32.0% (P=0.068). MRD-negative (10⁻⁵): 51.0% vs 20.4% (P<0.001). PERSEUS trial (phase 3): Dara-VRd vs VRd in transplant-eligible NDMM. PFS at 48 months: 84.3% vs 67.7% (HR 0.42, P<0.001). MRD-negative (10⁻⁵): 75.2% vs 47.5%.',
+    sideEffects:'Infusion reactions (daratumumab IV: ~40% first dose; SC formulation significantly less), neutropenia, thrombocytopenia, peripheral neuropathy (bortezomib), diarrhoea, fatigue, infections (HSV/VZV reactivation). Type and screen BEFORE daratumumab (interferes with indirect Coombs test). Risk of secondary malignancies with lenalidomide maintenance.',
+    monitoring:'CBC weekly during induction; SPEP/SIFE, FLC q cycle; VTE prophylaxis per IMPEDE score; HSV/VZV prophylaxis mandatory; hepatitis B screening; NT-proBNP if cardiac concern',
+    special:'Consider dose reduction of dexamethasone to 20 mg weekly in patients >75 years. Bortezomib: prefer weekly SC over twice-weekly to reduce neuropathy. Harvest stem cells within first 6 cycles before prolonged lenalidomide exposure.',
+    evidence:{e:5,s:3,q:5,c:4,a:1}
+  },
+  'Isa-VRd': {
+    full:'Isatuximab-irfc + Bortezomib + Lenalidomide + Dexamethasone',
+    abbr:'Isa-VRd', setting:'Primary therapy (HCT candidates and non-HCT <80 yrs, not frail)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Isatuximab-irfc',cls:'Anti-CD38 monoclonal antibody',dose:'10 mg/kg IV weekly (cycle 1), then every 2 weeks',route:'IV infusion',key:'Anti-CD38 targeting with direct apoptosis'},
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m² SC weekly days 1, 8, 15 of 21-day cycle',route:'SC (preferred)',key:'26S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-14 of 21-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly',route:'Oral or IV',key:'Anti-inflammatory'}
+    ],
+    trials:'GMMG-HD7/IsKia trial (phase 3): Isa-VRd vs VRd induction in transplant-eligible NDMM. MRD-negative rate (10⁻⁵) post-induction: 50.1% vs 35.6% (P<0.001). sCR: 44.0% vs 23.8%. IsKia: Isa-VRd continued superiority post-consolidation with MRD-negativity 77% vs 67%.',
+    sideEffects:'Infusion-related reactions (~38% first dose), neutropenia, infections, peripheral neuropathy, diarrhoea. Isatuximab-irfc also interferes with serologic testing (false-positive indirect Coombs). Type and screen before starting.',
+    monitoring:'CBC, metabolic panel q cycle; SPEP/SIFE/FLC for response; VTE prophylaxis; antiviral prophylaxis; hepatitis B screening',
+    special:'Similar to Dara-VRd. Isatuximab has different dosing schedule from daratumumab. Both anti-CD38 antibodies have comparable efficacy profiles.',
+    evidence:{e:5,s:3,q:5,c:4,a:1}
+  },
+  'VRd': {
+    full:'Bortezomib + Lenalidomide + Dexamethasone',
+    abbr:'VRd', setting:'Primary therapy (HCT and non-HCT candidates)', category:'Category 1',
+    drugs:[
+      {name:'Bortezomib',cls:'Proteasome inhibitor',dose:'1.3 mg/m² SC days 1, 4, 8, 11 (twice-weekly) or days 1, 8, 15 (weekly preferred) of 21-day cycle',route:'SC (preferred)',key:'26S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-14 of 21-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20-40 mg PO days 1, 2, 4, 5, 8, 9, 11, 12 (or weekly 40 mg)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'SWOG S0777 (phase 3): VRd vs Rd in NDMM. Median PFS: 43 vs 30 months (P<0.001). Median OS: 75 vs 64 months (P=0.025). IFM 2009 (phase 3): VRd + ASCT vs VRd alone. PFS: 50 vs 36 months (P<0.001). VRd remains backbone of myeloma therapy.',
+    sideEffects:'Peripheral neuropathy (dose-limiting; reduced with weekly SC), neutropenia, thrombocytopenia, GI toxicity, fatigue, VTE risk (requires prophylaxis)',
+    monitoring:'CBC, metabolic panel, neuropathy assessment each cycle; SPEP/SIFE/FLC; VTE prophylaxis per risk score',
+    special:'Weekly SC bortezomib achieves similar efficacy to twice-weekly with less neuropathy (ORR 93% vs 88%, VGPR 60% vs 61%). Modified VRd (weekly bortezomib) is now standard. VRd-lite available for frail patients.',
+    evidence:{e:4,s:3,q:5,c:5,a:2}
+  },
+  'KRd': {
+    full:'Carfilzomib + Lenalidomide + Dexamethasone',
+    abbr:'KRd', setting:'Primary therapy (HCT and non-HCT) and relapsed/refractory MM', category:'Category 2A (Other Recommended for 1L; Category 1 for relapsed)',
+    drugs:[
+      {name:'Carfilzomib',cls:'Proteasome inhibitor (2nd generation)',dose:'20 mg/m² cycle 1 days 1-2, then 27 mg/m² (or 36 mg/m² or 56 mg/m² once-weekly). Twice-weekly: days 1,2,8,9,15,16. Weekly (preferred): days 1,8,15 at 56 mg/m² or 70 mg/m²',route:'IV infusion (10-30 min)',key:'Irreversible 20S proteasome inhibition'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO/IV weekly (20 mg if >75 years)',route:'Oral or IV',key:'Anti-inflammatory'}
+    ],
+    trials:'ASPIRE (phase 3, relapsed): KRd vs Rd. Median PFS: 26.3 vs 17.6 months (HR 0.69, P=0.0001). Median OS: 48.3 vs 40.4 months (HR 0.79, P=0.0045). ENDURANCE (phase 3, NDMM): KRd vs VRd. PFS: 34.6 vs 34.4 months (NS). KRd caused more cardiac and renal toxicity.',
+    sideEffects:'Cardiac toxicity (heart failure, ischaemia — monitor carefully especially in elderly), renal toxicity, hypertension, pulmonary toxicity (dyspnoea, pulmonary hypertension), thrombocytopenia. No significant peripheral neuropathy (advantage over bortezomib).',
+    monitoring:'Echocardiogram at baseline and as indicated; BP monitoring; renal function each cycle; cardiac enzymes if symptoms; hydration before each dose',
+    special:'Carfilzomib can potentially cause cardiac, renal, and pulmonary toxicity especially in older patients. Weekly dosing (preferred) at 56-70 mg/m² is non-inferior to twice-weekly with better convenience. Can substitute ixazomib for carfilzomib in select patients for intolerance/logistical reasons.',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'Dara-Rd': {
+    full:'Daratumumab + Lenalidomide + Dexamethasone',
+    abbr:'Dara-Rd', setting:'Primary therapy (Non-HCT candidates)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 monoclonal antibody',dose:'16 mg/kg IV weekly (cycles 1-2), every 2 weeks (cycles 3-6), every 4 weeks thereafter; OR SC 1800 mg/30,000 units',route:'IV or SC',key:'Anti-CD38 targeting'},
+      {name:'Lenalidomide',cls:'IMiD',dose:'25 mg PO days 1-21 of 28-day cycle, continue until progression',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg PO weekly (20 mg if >75 years); discontinue at response plateau or toxicity',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'MAIA trial (phase 3): Dara-Rd vs Rd in transplant-ineligible NDMM. Median PFS: 61.9 vs 34.4 months (HR 0.55, P<0.0001). 5-year OS: 66.3% vs 53.1% (HR 0.68, P=0.0013). ORR: 92.9% vs 81.3%. MRD-negative (10⁻⁵): 32.1% vs 11.1%.',
+    sideEffects:'Infusion reactions, neutropenia, pneumonia, diarrhoea. Generally well-tolerated. Continue until progression with dose modifications as needed.',
+    monitoring:'CBC with differential q4 weeks; metabolic panel; SPEP/SIFE/FLC q cycle; VTE prophylaxis mandatory (IMiD-based)',
+    special:'For non-transplant patients, continue primary therapy until progression with de-escalation of therapy as needed. An FDA-approved biosimilar is an appropriate substitute for daratumumab.',
+    evidence:{e:4,s:4,q:5,c:4,a:1}
+  },
+  'Lenalidomide-maintenance': {
+    full:'Lenalidomide (Maintenance)',
+    abbr:'Lenalidomide', setting:'Maintenance therapy post-transplant and non-transplant', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Lenalidomide',cls:'IMiD',dose:'10-15 mg PO days 1-21 of 28-day cycle (post-transplant); continuous in non-transplant setting. Start after recovery from ASCT (approximately day 100).',route:'Oral',key:'Cereblon modulation, immune modulation'}
+    ],
+    trials:'CALGB 100104: Lenalidomide vs placebo maintenance post-ASCT. Median TTP: 46 vs 27 months (P<0.001). OS benefit confirmed. Meta-analysis (3 RCTs, n=1208): Lenalidomide maintenance improves PFS (HR 0.47) and OS (HR 0.75, P=0.001). Myeloma XI: Lenalidomide maintenance improves PFS in both transplant and non-transplant settings.',
+    sideEffects:'Neutropenia (most common), fatigue, diarrhoea, rash. Increased risk of secondary primary malignancies (SPMs) including haematological malignancies and solid tumours. Risk of VTE. Benefits vs risks should be discussed with patients.',
+    monitoring:'CBC monthly initially then q2-3 months; monitor for SPMs; VTE prophylaxis; annual skin examination',
+    special:'Two-drug maintenance (adding bortezomib, carfilzomib, or daratumumab to lenalidomide) is recommended for high-risk MM. The length of therapy should be balanced with toxicity and depth of response. Consider collection of stem cells for 2 transplants if appropriate.',
+    evidence:{e:4,s:4,q:5,c:5,a:2}
+  },
+  'Cilta-cel': {
+    full:'Ciltacabtagene autoleucel (Cilta-cel)',
+    abbr:'Cilta-cel', setting:'Relapsed/refractory MM after ≥1 prior line (including IMiD + PI, lenalidomide-refractory); also after ≥3 prior lines', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Ciltacabtagene autoleucel',cls:'BCMA-directed CAR T-cell therapy',dose:'Target dose: 0.5-1.0 × 10⁶ CAR+ viable T cells/kg (range 0.5-1.0 × 10⁶). Single IV infusion after lymphodepleting chemotherapy (cyclophosphamide 300 mg/m² + fludarabine 30 mg/m² IV daily × 3 days).',route:'IV infusion (single dose)',key:'BCMA-targeting chimeric antigen receptor T cells with two BCMA-binding domains'}
+    ],
+    trials:'CARTITUDE-1 (phase 1b/2): Cilta-cel in RRMM (median 6 prior lines). ORR: 97.9%, sCR: 82.5%. Median PFS: 34.9 months. 27-month OS: 70.4%. CARTITUDE-4 (phase 3): Cilta-cel vs PVd or Dara-Pd after 1-3 prior lines (lenalidomide-refractory). PFS at 16 months: 75.9% vs 44.2% (HR 0.26, P<0.001). ORR: 84.6% vs 67.3%.',
+    sideEffects:'Cytokine release syndrome (CRS: 95% any grade, 4% grade ≥3), immune effector cell-associated neurotoxicity (ICANS: 17%), movement and neurocognitive treatment-emergent adverse events (MNTs, including Parkinsonism: 5%), prolonged cytopenias, hypogammaglobulinaemia, infections. Delayed neurotoxicity is a unique concern.',
+    monitoring:'Inpatient monitoring for minimum 10 days post-infusion; CRS monitoring with tocilizumab availability; ICANS assessment (ICE score); neurocognitive monitoring for MNTs (onset can be delayed weeks-months); CBC, Ig levels, infection surveillance; IVIG replacement if IgG <400',
+    special:'Bendamustine and other alkylating agents can impact ability to collect T cells — avoid before leukapheresis if possible. Bridging therapy may be needed during manufacturing. A history of treated CNS disease should NOT preclude CAR-T. Prophylactic tocilizumab may be considered prior to first dose to reduce CRS risk. Revaccination starting 3-6 months after treatment.',
+    evidence:{e:5,s:2,q:4,c:4,a:1}
+  },
+  'Ide-cel': {
+    full:'Idecabtagene vicleucel (Ide-cel)',
+    abbr:'Ide-cel', setting:'Relapsed/refractory MM after ≥2 prior lines (including IMiD + anti-CD38 mAb + PI); also after ≥3 prior lines', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Idecabtagene vicleucel',cls:'BCMA-directed CAR T-cell therapy',dose:'Target dose: 150-450 × 10⁶ CAR+ T cells. Single IV infusion after lymphodepleting chemotherapy (cyclophosphamide 300 mg/m² + fludarabine 30 mg/m² IV daily × 3 days).',route:'IV infusion (single dose)',key:'BCMA-targeting CAR T cells with single BCMA-binding domain'}
+    ],
+    trials:'KarMMa (phase 2): Ide-cel in RRMM (median 6 prior lines). ORR: 73%, CR: 33%. Median PFS: 8.8 months (all doses), 12.1 months (450×10⁶ dose). KarMMa-3 (phase 3): Ide-cel vs standard regimens after 2-4 prior lines. Median PFS: 13.3 vs 4.4 months (HR 0.49, P<0.001). ORR: 71% vs 42%.',
+    sideEffects:'CRS (84% any grade, 5% grade ≥3), ICANS (18%), cytopenias (prolonged in some), infections, hypogammaglobulinaemia. Lower incidence of delayed neurotoxicity compared to cilta-cel.',
+    monitoring:'Inpatient monitoring post-infusion; CRS/ICANS monitoring; CBC; immunoglobulin levels; infection surveillance',
+    special:'Similar considerations to cilta-cel. Patients can receive more than one BCMA-targeted therapy, but immediate follow-on with second BCMA-directed therapy may have lower response rates.',
+    evidence:{e:4,s:2,q:4,c:4,a:1}
+  },
+  'Dara-Kd': {
+    full:'Daratumumab + Carfilzomib + Dexamethasone',
+    abbr:'Dara-Kd', setting:'Relapsed/refractory MM (bortezomib and/or lenalidomide refractory)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 mAb',dose:'16 mg/kg IV (or SC) weekly cycles 1-2, every 2 weeks cycles 3-6, every 4 weeks thereafter',route:'IV or SC',key:'Anti-CD38'},
+      {name:'Carfilzomib',cls:'PI (2nd gen)',dose:'20 mg/m² day 1 cycle 1, then 56 mg/m² days 1, 8, 15 (weekly) of 28-day cycle; or 20/70 mg/m² weekly',route:'IV',key:'Irreversible proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg weekly (20 mg if >75 years)',route:'Oral/IV',key:'Anti-inflammatory'}
+    ],
+    trials:'CANDOR (phase 3): Dara-Kd vs Kd in RRMM (1-3 prior lines). Median PFS: 28.6 vs 15.2 months (HR 0.59, P<0.0001). ORR: 84.3% vs 74.7%. MRD-negativity (10⁻⁵): 29% vs 10%.',
+    sideEffects:'Hypertension, dyspnoea, pneumonia, thrombocytopenia, cardiac events, infusion reactions. Monitor cardiac function closely.',
+    monitoring:'Echocardiogram at baseline; BP each cycle; renal function; CBC; hydration protocol before carfilzomib',
+    special:'Carfilzomib weekly (56-70 mg/m²) is preferred over twice-weekly for convenience. Monitor cardiac function carefully especially in elderly and those with cardiac history.',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'Isa-Kd': {
+    full:'Isatuximab-irfc + Carfilzomib + Dexamethasone',
+    abbr:'Isa-Kd', setting:'Relapsed/refractory MM (bortezomib and/or lenalidomide refractory)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Isatuximab-irfc',cls:'Anti-CD38 mAb',dose:'10 mg/kg IV weekly (cycle 1), then every 2 weeks',route:'IV',key:'Anti-CD38 with direct cytotoxicity'},
+      {name:'Carfilzomib',cls:'PI',dose:'20 mg/m² days 1-2, then 56 mg/m² days 8,9,15,16 of 28-day cycle',route:'IV',key:'Irreversible proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg days 1,2,8,9,15,16,22,23',route:'Oral/IV',key:'Anti-inflammatory'}
+    ],
+    trials:'IKEMA (phase 3): Isa-Kd vs Kd in RRMM (1-3 prior lines). Median PFS: 35.7 vs 19.2 months (HR 0.58, P=0.0007). ORR: 86.6% vs 82.9%. MRD-negativity (10⁻⁵): 33.5% vs 15.4%.',
+    sideEffects:'Infusion reactions, respiratory infections, hypertension, cardiac events, fatigue, diarrhoea',
+    monitoring:'Similar to Dara-Kd. Cardiac monitoring, BP, renal function.',
+    special:'Type and screen before starting (interferes with Coombs test, similar to daratumumab).',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'PVd': {
+    full:'Pomalidomide + Bortezomib + Dexamethasone',
+    abbr:'PVd', setting:'Relapsed/refractory MM (lenalidomide and/or anti-CD38 refractory)', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Pomalidomide',cls:'IMiD (3rd generation)',dose:'4 mg PO days 1-14 of 21-day cycle',route:'Oral',key:'Cereblon modulation, more potent than lenalidomide'},
+      {name:'Bortezomib',cls:'PI',dose:'1.3 mg/m² SC days 1, 8, 15 of 21-day cycle',route:'SC',key:'26S proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO days 1,2,8,9,15,16',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'OPTIMISMM (phase 3): PVd vs Vd in RRMM (1-3 prior lines, lenalidomide-exposed). Median PFS: 11.2 vs 7.1 months (HR 0.61, P<0.001). Benefit most pronounced in lenalidomide-refractory patients.',
+    sideEffects:'Neutropenia, infections, VTE, peripheral neuropathy, fatigue. VTE prophylaxis required (IMiD-based regimen).',
+    monitoring:'CBC weekly initially; neuropathy assessment; VTE prophylaxis; antiviral prophylaxis',
+    special:'Key option for lenalidomide-refractory patients. Pomalidomide retains activity in lenalidomide-refractory disease.',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'Dara-Pd': {
+    full:'Daratumumab + Pomalidomide + Dexamethasone',
+    abbr:'Dara-Pd', setting:'Relapsed/refractory MM after ≥1 prior therapy including lenalidomide and a PI', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Daratumumab',cls:'Anti-CD38 mAb',dose:'16 mg/kg IV (or SC) per standard schedule',route:'IV or SC',key:'Anti-CD38'},
+      {name:'Pomalidomide',cls:'IMiD',dose:'4 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg weekly (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'APOLLO (phase 3): Dara-Pd vs Pd in RRMM (≥1 prior line including lenalidomide and PI). Median PFS: 12.4 vs 6.9 months (HR 0.63, P=0.0018). ORR: 69% vs 46%. Well-tolerated combination.',
+    sideEffects:'Neutropenia, pneumonia, fatigue, infusion reactions. VTE prophylaxis required.',
+    monitoring:'CBC; SPEP/SIFE/FLC; VTE prophylaxis; antiviral prophylaxis; infection monitoring',
+    special:'Standard triplet for lenalidomide-refractory patients after first relapse. SC daratumumab preferred for convenience.',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'Isa-Pd': {
+    full:'Isatuximab-irfc + Pomalidomide + Dexamethasone',
+    abbr:'Isa-Pd', setting:'Relapsed/refractory MM after ≥2 prior therapies including lenalidomide and a PI', category:'Category 1 (Preferred)',
+    drugs:[
+      {name:'Isatuximab-irfc',cls:'Anti-CD38 mAb',dose:'10 mg/kg IV weekly (cycle 1), then every 2 weeks',route:'IV',key:'Anti-CD38'},
+      {name:'Pomalidomide',cls:'IMiD',dose:'4 mg PO days 1-21 of 28-day cycle',route:'Oral',key:'Cereblon modulation'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'40 mg weekly (20 mg if >75 years)',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'ICARIA-MM (phase 3): Isa-Pd vs Pd in RRMM (≥2 prior lines). Median PFS: 11.5 vs 6.5 months (HR 0.596, P=0.001). ORR: 60.4% vs 35.3%.',
+    sideEffects:'Infusion reactions, neutropenia, upper respiratory infections, pneumonia',
+    monitoring:'CBC; infection monitoring; type and screen before starting',
+    special:'After two prior therapies including lenalidomide and a PI.',
+    evidence:{e:4,s:3,q:4,c:4,a:1}
+  },
+  'Teclistamab': {
+    full:'Teclistamab-cqyv',
+    abbr:'Teclistamab', setting:'Relapsed/refractory MM after ≥4 prior therapies including anti-CD38, PI, and IMiD', category:'Preferred (Bispecific Antibody)',
+    drugs:[
+      {name:'Teclistamab-cqyv',cls:'BCMA × CD3 bispecific antibody',dose:'Step-up dosing: 0.06 mg/kg SC day 1, 0.3 mg/kg SC day 4, then 1.5 mg/kg SC weekly from day 7. Administer first 3 doses in hospital.',route:'SC injection',key:'Redirects T cells to BCMA-expressing myeloma cells'}
+    ],
+    trials:'MajesTEC-1 (phase 1/2): Teclistamab in RRMM (median 5 prior lines, 77% triple-refractory). ORR: 63.0%, CR: 39.4%. Median PFS: 11.3 months. Median DOR: 18.4 months.',
+    sideEffects:'CRS (72%, mostly grade 1-2), ICANS (14.5%), neutropenia (71%), infections (76%), hypogammaglobulinaemia. Step-up dosing mitigates CRS severity.',
+    monitoring:'Inpatient for first 3 doses (step-up); CRS monitoring; ICANS assessment; CBC weekly initially; immunoglobulin levels; infection prophylaxis (antiviral, antibacterial, PJP prophylaxis)',
+    special:'Prophylactic tocilizumab may be considered prior to first dose to reduce CRS risk. Ongoing therapy indefinitely until progression. Patients can receive >1 BCMA-targeted therapy.',
+    evidence:{e:4,s:2,q:3,c:3,a:1}
+  },
+  'Elranatamab': {
+    full:'Elranatamab-bcmm',
+    abbr:'Elranatamab', setting:'Relapsed/refractory MM after ≥4 prior therapies', category:'Preferred (Bispecific Antibody)',
+    drugs:[
+      {name:'Elranatamab-bcmm',cls:'BCMA × CD3 bispecific antibody',dose:'Step-up: 12 mg SC day 1, 32 mg SC day 4, then 76 mg SC weekly (cycles 1-6) then every 2 weeks',route:'SC injection',key:'T-cell engagement against BCMA'}
+    ],
+    trials:'MagnetisMM-3 (phase 2): Elranatamab in RRMM (median 5 prior lines, triple-refractory). ORR: 61.0%, sCR+CR: 35%. Median DOR: not reached at 14.7 months.',
+    sideEffects:'CRS (58%, mostly grade 1-2), injection site reactions, infections, cytopenias, hypogammaglobulinaemia',
+    monitoring:'Inpatient for step-up doses; CRS/ICANS monitoring; infection prophylaxis; IVIG if IgG <400',
+    special:'Every-2-week dosing after cycle 6 offers convenience. Can extend to monthly dosing in patients with sustained response.',
+    evidence:{e:4,s:3,q:3,c:3,a:1}
+  },
+  'Talquetamab': {
+    full:'Talquetamab-tgvs',
+    abbr:'Talquetamab', setting:'Relapsed/refractory MM after ≥4 prior therapies', category:'Preferred (Bispecific Antibody)',
+    drugs:[
+      {name:'Talquetamab-tgvs',cls:'GPRC5D × CD3 bispecific antibody',dose:'Step-up dosing, then 0.4 mg/kg SC weekly or 0.8 mg/kg SC every 2 weeks',route:'SC injection',key:'Novel target GPRC5D (non-BCMA) on myeloma cells'}
+    ],
+    trials:'MonumenTAL-1 (phase 1/2): Talquetamab in RRMM. ORR: 73% (0.4 mg/kg weekly), 74% (0.8 mg/kg Q2W). Median DOR: ~9-10 months. Unique activity as non-BCMA target allows sequencing after BCMA-targeted therapies.',
+    sideEffects:'CRS (77%), skin-related toxicities (dysgeusia, nail changes, skin rash/peeling — 56-67%, related to GPRC5D expression in skin/taste buds), weight loss. GPRC5D-specific side effects are unique.',
+    monitoring:'CRS monitoring for step-up doses; skin examination; weight monitoring; nutritional assessment for dysgeusia; infection prophylaxis',
+    special:'GPRC5D is a novel target distinct from BCMA — allows use after BCMA-directed therapy failure. Combination talquetamab + teclistamab (dual BsAb) is listed as useful in certain circumstances.',
+    evidence:{e:4,s:2,q:3,c:3,a:1}
+  },
+  'Selinexor-Vd': {
+    full:'Selinexor + Bortezomib + Dexamethasone',
+    abbr:'SVd', setting:'Relapsed/refractory MM after ≥1 prior therapy', category:'Category 1 (Other Recommended)',
+    drugs:[
+      {name:'Selinexor',cls:'Selective inhibitor of nuclear export (SINE)',dose:'100 mg PO once weekly (day 1 of each week)',route:'Oral',key:'XPO1 (CRM1) inhibition — blocks nuclear export of tumour suppressors'},
+      {name:'Bortezomib',cls:'PI',dose:'1.3 mg/m² SC once weekly',route:'SC',key:'Proteasome inhibition'},
+      {name:'Dexamethasone',cls:'Corticosteroid',dose:'20 mg PO twice weekly',route:'Oral',key:'Anti-inflammatory'}
+    ],
+    trials:'BOSTON (phase 3): SVd vs Vd in RRMM (1-3 prior lines). Median PFS: 13.93 vs 9.46 months (HR 0.70, P=0.0066). ORR: 76.4% vs 62.3%. Weekly bortezomib with selinexor maintained efficacy with less neuropathy.',
+    sideEffects:'Thrombocytopenia (most common), nausea, fatigue, diarrhoea, decreased appetite, weight loss, hyponatraemia. Manage nausea proactively with 5-HT3 antagonists.',
+    monitoring:'CBC weekly initially; electrolytes (especially sodium); weight; nutritional status; anti-emetic prophylaxis',
+    special:'Selinexor can penetrate blood-brain barrier but has not been tested in CNS myeloma management.',
+    evidence:{e:4,s:3,q:4,c:3,a:1}
+  },
+};
+
+// Add generic entries for regimens without detailed data
+var GENERIC_REGIMENS = {
+  'Dara-KRd':{full:'Daratumumab + Carfilzomib + Lenalidomide + Dexamethasone',setting:'HCT candidates',category:'Cat 2A'},
+  'Isa-KRd':{full:'Isatuximab-irfc + Carfilzomib + Lenalidomide + Dexamethasone',setting:'HCT/Non-HCT',category:'Cat 2A/2B'},
+  'VCd':{full:'Bortezomib + Cyclophosphamide + Dexamethasone',setting:'Renal impairment, neuropathy',category:'Cat 2A'},
+  'KCd':{full:'Carfilzomib + Cyclophosphamide + Dexamethasone',setting:'HCT candidates / renal insufficiency',category:'Cat 2A'},
+  'Dara-VCd':{full:'Daratumumab + Bortezomib + Cyclophosphamide + Dexamethasone',setting:'HCT / relapsed',category:'Cat 2A'},
+  'VTD-PACE':{full:'Bortezomib/Thalidomide/Dexamethasone/Cisplatin/Doxorubicin/Cyclophosphamide/Etoposide',setting:'Aggressive MM / PCL',category:'Cat 2A'},
+  'Isa-Rd':{full:'Isatuximab-irfc + Lenalidomide + Dexamethasone',setting:'Non-HCT candidates',category:'Cat 2A'},
+  'Rd':{full:'Lenalidomide + Low-Dose Dexamethasone',setting:'Non-HCT candidates',category:'Cat 1'},
+  'Vd':{full:'Bortezomib + Dexamethasone',setting:'Useful in certain circumstances',category:'Cat 1'},
+  'KPd':{full:'Carfilzomib + Pomalidomide + Dexamethasone',setting:'Relapsed (anti-CD38 refractory)',category:'Cat 2A'},
+  'Dara-Vd':{full:'Daratumumab + Bortezomib + Dexamethasone',setting:'Relapsed (lenalidomide refractory)',category:'Cat 1'},
+  'Elo-Pd':{full:'Elotuzumab + Pomalidomide + Dexamethasone',setting:'Relapsed after 2 prior (Len+PI)',category:'Cat 2A'},
+  'Ixa-Pd':{full:'Ixazomib + Pomalidomide + Dexamethasone',setting:'Relapsed after 2 prior, progression within 60 days',category:'Cat 2A'},
+  'Elo-Rd':{full:'Elotuzumab + Lenalidomide + Dexamethasone',setting:'Relapsed/refractory',category:'Cat 1'},
+  'Ixa-Rd':{full:'Ixazomib + Lenalidomide + Dexamethasone',setting:'Relapsed/refractory',category:'Cat 1'},
+  'Linvoseltamab':{full:'Linvoseltamab-gcpt (BCMA x CD3 bispecific)',setting:'After ≥4 prior lines',category:'Preferred'},
+  'Selinexor-d':{full:'Selinexor + Dexamethasone',setting:'Penta-refractory (≥4 prior lines)',category:'Other Recommended'},
 };
 
 // ─── NAV ITEMS ───
@@ -204,8 +457,8 @@ function StatCard(props){
 function PageDashboard(props){
   return e('div',{className:'fade-in'},
     e('div',{className:'mb-6'},
-      e('h1',{className:'text-2xl font-extrabold text-slate-900'},'NCCN Myeloma Guidelines 2026'),
-      e('p',{className:'text-sm text-slate-500 mt-1'},'Version 2.2026 \u2014 Comprehensive Interactive Reference for Haematologists')
+      e('h1',{className:'text-2xl font-extrabold text-slate-900'},'Blood\uD83E\uDE78Doctor Myeloma Management Hub'),
+      e('p',{className:'text-sm text-slate-500 mt-1'},'Evidence-Based Multiple Myeloma Guidelines 2026 \u2014 Comprehensive Interactive Reference for Haematologists')
     ),
     e('div',{className:'grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6'},
       e(StatCard,{value:'18',label:'Sections',icon:'grid',bg:'#eff6ff',iconColor:'text-blue-600'}),
@@ -213,7 +466,7 @@ function PageDashboard(props){
       e(StatCard,{value:'4',label:'Staging Systems',icon:'layers',bg:'#fef3c7',iconColor:'text-amber-600'}),
       e(StatCard,{value:'5',label:'Related Disorders',icon:'link',bg:'#fce7f3',iconColor:'text-pink-600'})
     ),
-    e(AlertBox,{type:'info',title:'About this tool:'},'An interactive reference covering NCCN Clinical Practice Guidelines in Oncology for Multiple Myeloma v2.2026. Includes diagnostic workup, full IMWG definitions, ISS/R-ISS/R2-ISS staging, all treatment regimens with NCCN categories, response criteria, VTE/renal/infection management, CNS disease, and related plasma cell disorders (MGRS, MIDD, MGNS, POEMS). Evidence Blocks for all regimens included.'),
+    e(AlertBox,{type:'info',title:'About this tool:'},'Blood\uD83E\uDE78Doctor interactive reference for Multiple Myeloma management (2026 guidelines). Includes diagnostic workup, full IMWG definitions, ISS/R-ISS/R2-ISS staging, all treatment regimens with evidence categories, response criteria, VTE/renal/infection management, CNS disease, and related plasma cell disorders (MGRS, MIDD, MGNS, POEMS). Click any treatment regimen for detailed drug information, dosing schedules, and key trial data.'),
     e('div',{className:'grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4'},
       NAV.slice(1).map(function(n){
         return e('div',{key:n.id,className:'card p-3 cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all',onClick:function(){props.nav(n.id)}},
@@ -673,7 +926,8 @@ function PageCalculators(){
 }
 
 // === TREATMENT ===
-function PageTreatment(){
+function PageTreatment(props){
+  var onSelectRegimen = props && props.onSelectRegimen ? props.onSelectRegimen : function(){};
   var regCat = function(cat){
     if(cat==='Cat 1')return e(Badge,{type:'cat1'},'Category 1');
     if(cat==='Cat 2B')return e(Badge,{type:'2b'},'Category 2B');
@@ -681,12 +935,44 @@ function PageTreatment(){
   };
 
   function RegimenCard(props){
-    return e('div',{className:'border border-slate-200 rounded-lg p-3 mb-2 hover:border-blue-300 transition-colors'},
+    var abbr = extractAbbr(props.name);
+    var hasDetail = abbr && (REGIMEN_DB[abbr] || GENERIC_REGIMENS[abbr]);
+    return e('div',{className:'border border-slate-200 rounded-lg p-3 mb-2 transition-colors '+(hasDetail?'hover:border-blue-500 hover:shadow-md cursor-pointer hover:bg-blue-50/30':'hover:border-blue-300'),onClick:hasDetail?function(){onSelectRegimen(abbr)}:undefined},
       e('div',{className:'flex items-start justify-between gap-2 flex-wrap'},
-        e('span',{className:'font-medium text-sm text-slate-900'},props.name),
-        e('div',{className:'flex gap-1 flex-wrap'},props.cat?regCat(props.cat):null,props.note?e('span',{className:'text-xs text-slate-500'},props.note):null)
+        e('div',{className:'flex items-center gap-2'},
+          hasDetail?e('span',{className:'text-blue-500 flex-shrink-0'},Ico(ICONS.chevRight,{size:12})):null,
+          e('span',{className:'font-medium text-sm '+(hasDetail?'text-blue-800':'text-slate-900')},props.name)
+        ),
+        e('div',{className:'flex gap-1 flex-wrap items-center'},
+          props.cat?regCat(props.cat):null,
+          props.note?e('span',{className:'text-xs text-slate-500'},props.note):null,
+          hasDetail?e('span',{className:'badge bg-blue-50 text-blue-600 text-[9px]'},'Details →'):null
+        )
       )
     );
+  }
+
+  function extractAbbr(name){
+    if(!name) return null;
+    var m = name.match(/\(([^)]+)\)\s*$/);
+    if(m){
+      var a = m[1].replace(/^dose-reduced\s+/i,'');
+      if(REGIMEN_DB[a]||GENERIC_REGIMENS[a]) return a;
+    }
+    // Try matching known keys
+    var keys = Object.keys(REGIMEN_DB).concat(Object.keys(GENERIC_REGIMENS));
+    for(var i=0;i<keys.length;i++){
+      if(name.indexOf(keys[i])!==-1 || name.toLowerCase().indexOf(keys[i].toLowerCase())!==-1) return keys[i];
+    }
+    // Special cases
+    if(name.indexOf('Ciltacabtagene')!==-1||name.indexOf('Cilta-cel')!==-1) return 'Cilta-cel';
+    if(name.indexOf('Idecabtagene')!==-1||name.indexOf('Ide-cel')!==-1) return 'Ide-cel';
+    if(name.indexOf('Teclistamab')!==-1) return 'Teclistamab';
+    if(name.indexOf('Elranatamab')!==-1) return 'Elranatamab';
+    if(name.indexOf('Talquetamab')!==-1&&name.indexOf('Teclistamab')===-1) return 'Talquetamab';
+    if(name.indexOf('Linvoseltamab')!==-1) return 'Linvoseltamab';
+    if(name.indexOf('Lenalidomide')!==-1&&name.indexOf('/')===-1&&name.indexOf('+')===-1) return 'Lenalidomide-maintenance';
+    return null;
   }
 
   function RegimenSection(props){
@@ -1403,7 +1689,7 @@ function PageEvidence(){
   }
 
   return e('div',{className:'fade-in'},
-    e(SectionTitle,{code:'EB-1\u20136'},'NCCN Evidence Blocks'),
+    e(SectionTitle,{code:'EB-1\u20136'},'Evidence Blocks'),
     e(AlertBox,{type:'info'},'Evidence Blocks rate each regimen on 5 dimensions (1\u20135 scale): Efficacy (E), Safety (S), Quality of Evidence (Q), Consistency (C), Affordability (A). Scores shown where available; "TBD" = development in progress.'),
 
     e(Collapsible,{title:'EB-1: Primary Therapy for HCT Candidates & Maintenance',defaultOpen:true},
@@ -1580,12 +1866,142 @@ function PageEvidence(){
   );
 }
 
+// ─── REGIMEN DETAIL PAGE ───
+function PageRegimenDetail(props){
+  var abbr = props.regimen;
+  var r = REGIMEN_DB[abbr];
+  var g = GENERIC_REGIMENS[abbr];
+  if(!r && !g) return e('div',{className:'fade-in'},e('p',null,'Regimen not found.'),e('button',{className:'btn bg-blue-600 text-white mt-3',onClick:props.goBack},'← Back'));
+
+  if(!r && g){
+    // Generic regimen page
+    return e('div',{className:'fade-in'},
+      e('button',{className:'text-sm text-blue-600 hover:text-blue-800 font-medium mb-4 flex items-center gap-1 cursor-pointer',onClick:props.goBack},Ico(ICONS.chevLeft,{size:14}),' Back to Treatment Navigator'),
+      e('div',{className:'mb-6'},
+        e('div',{className:'flex items-center gap-3 mb-2'},
+          e('span',{className:'text-3xl'},'💊'),
+          e('div',null,
+            e('h1',{className:'text-xl font-extrabold text-slate-900'},g.full),
+            e('div',{className:'flex gap-2 mt-1'},
+              e('span',{className:'badge bg-blue-100 text-blue-800'},abbr),
+              e('span',{className:'badge bg-slate-100 text-slate-600'},g.category)
+            )
+          )
+        )
+      ),
+      e(Card,null,
+        e('h3',{className:'font-bold text-sm text-slate-700 mb-2'},'Setting'),
+        e('p',{className:'text-sm text-slate-600'},g.setting)
+      ),
+      e(AlertBox,{type:'info'},'Detailed regimen information with dosing schedules, trial data, and monitoring recommendations will be expanded in future updates. Click individual drug names in main regimen pages for comprehensive drug monographs.'),
+      e('p',{className:'text-center text-xs text-slate-400 mt-6'},'Blood\uD83E\uDE78Doctor \u2014 #BloodDoctor')
+    );
+  }
+
+  // Full regimen detail page
+  var blockColors = {e:'bg-blue-500',s:'bg-emerald-500',q:'bg-purple-500',c:'bg-amber-500',a:'bg-rose-500'};
+  return e('div',{className:'fade-in'},
+    e('button',{className:'text-sm text-blue-600 hover:text-blue-800 font-medium mb-4 flex items-center gap-1 cursor-pointer',onClick:props.goBack},Ico(ICONS.chevLeft,{size:14}),' Back to Treatment Navigator'),
+
+    // Header
+    e('div',{className:'card p-5 mb-4 border-l-4 border-l-blue-600'},
+      e('div',{className:'flex items-start gap-3'},
+        e('span',{className:'text-3xl'},'💊'),
+        e('div',{className:'flex-1'},
+          e('h1',{className:'text-xl font-extrabold text-slate-900'},r.full),
+          e('div',{className:'flex flex-wrap gap-2 mt-2'},
+            e('span',{className:'badge bg-blue-800 text-white'},r.abbr),
+            e('span',{className:'badge bg-emerald-100 text-emerald-800'},r.category),
+            e('span',{className:'badge bg-slate-100 text-slate-600'},r.setting)
+          )
+        )
+      )
+    ),
+
+    // Drugs table
+    e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.pill,{size:14}),' Drug Components & Dosing'),
+      e('div',{className:'space-y-3'},
+        r.drugs.map(function(d,i){
+          return e('div',{key:i,className:'border border-slate-200 rounded-lg p-4 hover:bg-slate-50'},
+            e('div',{className:'flex items-start justify-between flex-wrap gap-2 mb-2'},
+              e('h3',{className:'font-bold text-blue-800'},d.name),
+              e('span',{className:'badge bg-purple-50 text-purple-700'},d.cls)
+            ),
+            e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-3 text-sm'},
+              e('div',null,
+                e('p',{className:'text-xs font-semibold text-slate-500 uppercase'},'Dose'),
+                e('p',{className:'text-slate-700 mt-0.5'},d.dose)
+              ),
+              e('div',null,
+                e('p',{className:'text-xs font-semibold text-slate-500 uppercase'},'Route'),
+                e('p',{className:'text-slate-700 mt-0.5'},d.route)
+              ),
+              e('div',null,
+                e('p',{className:'text-xs font-semibold text-slate-500 uppercase'},'Mechanism'),
+                e('p',{className:'text-slate-700 mt-0.5'},d.key)
+              )
+            )
+          );
+        })
+      )
+    ),
+
+    // Key Trial Data
+    e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.star,{size:14}),' Key Trial Data'),
+      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-blue-50 rounded-lg p-4 border-l-4 border-l-blue-500'},r.trials)
+    ),
+
+    // Side Effects
+    e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.alert,{size:14}),' Adverse Effects & Toxicity'),
+      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-amber-50 rounded-lg p-4 border-l-4 border-l-amber-500'},r.sideEffects)
+    ),
+
+    // Monitoring
+    e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.activity,{size:14}),' Monitoring Requirements'),
+      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-emerald-50 rounded-lg p-4 border-l-4 border-l-emerald-500'},r.monitoring)
+    ),
+
+    // Special Considerations
+    e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.info,{size:14}),' Special Considerations & Clinical Pearls'),
+      e('div',{className:'text-sm text-slate-700 leading-relaxed bg-purple-50 rounded-lg p-4 border-l-4 border-l-purple-500'},r.special)
+    ),
+
+    // Evidence Block
+    r.evidence ? e('div',{className:'card p-5 mb-4'},
+      e('h2',{className:'text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2'},Ico(ICONS.bar,{size:14}),' Evidence Block Rating'),
+      e('div',{className:'grid grid-cols-5 gap-4'},
+        [{k:'E',l:'Efficacy',v:r.evidence.e,c:'blue'},{k:'S',l:'Safety',v:r.evidence.s,c:'emerald'},{k:'Q',l:'Quality',v:r.evidence.q,c:'purple'},{k:'C',l:'Consistency',v:r.evidence.c,c:'amber'},{k:'A',l:'Affordability',v:r.evidence.a,c:'rose'}].map(function(b){
+          return e('div',{key:b.k,className:'text-center'},
+            e('div',{className:'flex flex-col-reverse gap-1 items-center mb-1'},
+              [1,2,3,4,5].map(function(n){
+                return e('div',{key:n,className:'w-full h-4 rounded '+(n<=b.v?'bg-'+b.c+'-500':'bg-slate-100'),style:{maxWidth:'60px'}});
+              })
+            ),
+            e('p',{className:'text-xs font-bold text-'+b.c+'-700'},b.v+'/5'),
+            e('p',{className:'text-[10px] text-slate-500'},b.l)
+          );
+        })
+      )
+    ) : null,
+
+    e('p',{className:'text-center text-xs text-slate-400 mt-6'},'Blood\uD83E\uDE78Doctor \u2014 #BloodDoctor')
+  );
+}
+
 // ─── MAIN APP ───
 function App(){
   var st=useState('dashboard');var page=st[0];var setPage=st[1];
   var mob=useState(false);var mobileOpen=mob[0];var setMobileOpen=mob[1];
+  var reg=useState(null);var selectedRegimen=reg[0];var setSelectedRegimen=reg[1];
 
-  function navigate(id){setPage(id);setMobileOpen(false);window.scrollTo(0,0);}
+  function navigate(id){setPage(id);setMobileOpen(false);setSelectedRegimen(null);window.scrollTo(0,0);}
+  function openRegimen(abbr){setSelectedRegimen(abbr);window.scrollTo(0,0);}
+  function closeRegimen(){setSelectedRegimen(null);window.scrollTo(0,0);}
 
   function Sidebar(props){
     return e('nav',{className:props.className||''},
@@ -1597,7 +2013,7 @@ function App(){
             e('div',{className:'text-xs text-slate-500'},'Myeloma Hub')
           )
         ),
-        e('div',{className:'text-xs text-slate-400 mt-1'},'NCCN v2.2026')
+        e('div',{className:'text-xs text-slate-400 mt-1'},'Myeloma Guidelines 2026')
       ),
       e('div',{className:'p-2 overflow-y-auto',style:{maxHeight:'calc(100vh - 100px)'}},
         NAV.map(function(n){
@@ -1620,7 +2036,7 @@ function App(){
     imaging:e(PageImaging),
     radiation:e(PageRadiation),
     calculators:e(PageCalculators),
-    treatment:e(PageTreatment),
+    treatment:e(PageTreatment,{onSelectRegimen:openRegimen}),
     therapy:e(PageTherapy),
     response:e(PageResponse),
     supportive:e(PageSupportive),
@@ -1656,12 +2072,12 @@ function App(){
     // Main content
     e('div',{className:'lg:ml-60 xl:ml-64 pt-14 lg:pt-0'},
       e('div',{className:'max-w-5xl mx-auto p-4 lg:p-6'},
-        pages[page]||e('div',null,'Page not found'),
+        selectedRegimen ? e(PageRegimenDetail,{regimen:selectedRegimen,goBack:closeRegimen}) : (pages[page]||e('div',null,'Page not found')),
         // Footer
         e('div',{className:'mt-8 pt-4 border-t border-slate-200 text-center'},
-          e('p',{className:'text-xs text-slate-400'},'Based on NCCN Clinical Practice Guidelines in Oncology \u2014 Multiple Myeloma, Version 2.2026 (July 16, 2025)'),
-          e('p',{className:'text-xs text-slate-400 mt-1'},'\u00A9 2025 NCCN. All rights reserved. This tool is for educational reference only.'),
-          e('p',{className:'text-xs font-semibold text-slate-500 mt-2'},'#BloodDoctor \u2014 Built by Dr Abdul Mannan')
+          e('p',{className:'text-sm font-bold text-slate-700'},'Blood\uD83E\uDE78Doctor \u2014 Myeloma Management Hub'),
+          e('p',{className:'text-xs text-slate-400 mt-1'},'Evidence-based interactive reference for multiple myeloma. For educational purposes only \u2014 not a substitute for clinical judgment.'),
+          e('p',{className:'text-xs font-semibold text-blue-600 mt-2'},'#BloodDoctor \u2014 Built by Dr Abdul Mannan')
         )
       )
     )
