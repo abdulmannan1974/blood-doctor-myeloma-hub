@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blood🩸Doctor — Myeloma Management Hub | NCCN 2026</title>
 <meta name="description" content="Interactive NCCN 2026 Multiple Myeloma Guidelines — Evaluation, Management & Follow-up">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
@@ -16,1221 +15,957 @@ tailwind.config = {
   theme: {
     extend: {
       fontFamily: { sans: ['Inter', 'sans-serif'] },
-      colors: {
-        border: 'hsl(214.3 31.8% 91.4%)',
-        input: 'hsl(214.3 31.8% 91.4%)',
-        ring: 'hsl(221.2 83.2% 53.3%)',
-        background: 'hsl(0 0% 100%)',
-        foreground: 'hsl(222.2 84% 4.9%)',
-        primary: { DEFAULT: 'hsl(221.2 83.2% 53.3%)', foreground: 'hsl(210 40% 98%)' },
-        secondary: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(222.2 47.4% 11.2%)' },
-        destructive: { DEFAULT: 'hsl(0 84.2% 60.2%)', foreground: 'hsl(210 40% 98%)' },
-        muted: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(215.4 16.3% 46.9%)' },
-        accent: { DEFAULT: 'hsl(210 40% 96.1%)', foreground: 'hsl(222.2 47.4% 11.2%)' },
-        card: { DEFAULT: 'hsl(0 0% 100%)', foreground: 'hsl(222.2 84% 4.9%)' },
-        popover: { DEFAULT: 'hsl(0 0% 100%)', foreground: 'hsl(222.2 84% 4.9%)' },
-        myeloma: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a5f' },
-        amber: { 50: '#fffbeb', 100: '#fef3c7', 500: '#f59e0b', 600: '#d97706' },
-        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669' },
-        rose: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 600: '#e11d48' },
-      }
     }
   }
 }
 </script>
 <style>
-* { box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: hsl(210 40% 96.1%); }
-.card { background: white; border: 1px solid hsl(214.3 31.8% 91.4%); border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
-.card-hover:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.1); transform: translateY(-1px); transition: all 0.2s; }
-.badge { display: inline-flex; align-items: center; border-radius: 9999px; padding: 0.125rem 0.625rem; font-size: 0.75rem; font-weight: 600; }
-.btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; transition: all 0.15s; cursor: pointer; border: none; }
-.btn-primary { background: hsl(221.2 83.2% 53.3%); color: white; }
-.btn-primary:hover { background: hsl(221.2 83.2% 46%); }
-.btn-outline { background: transparent; border: 1px solid hsl(214.3 31.8% 91.4%); color: hsl(222.2 47.4% 11.2%); }
-.btn-outline:hover { background: hsl(210 40% 96.1%); }
-.btn-ghost { background: transparent; color: hsl(215.4 16.3% 46.9%); }
-.btn-ghost:hover { background: hsl(210 40% 96.1%); }
-.sidebar-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; color: hsl(215.4 16.3% 46.9%); transition: all 0.15s; }
-.sidebar-item:hover { background: hsl(210 40% 96.1%); color: hsl(222.2 47.4% 11.2%); }
-.sidebar-item.active { background: hsl(221.2 83.2% 53.3%); color: white; }
-.algorithm-node { border: 2px solid hsl(214.3 31.8% 91.4%); border-radius: 0.75rem; padding: 1rem; background: white; cursor: pointer; transition: all 0.2s; }
-.algorithm-node:hover { border-color: hsl(221.2 83.2% 53.3%); box-shadow: 0 0 0 3px hsl(221.2 83.2% 53.3% / 0.1); }
-.algorithm-node.selected { border-color: hsl(221.2 83.2% 53.3%); background: hsl(221.2 83.2% 53.3% / 0.05); }
-.algorithm-arrow { display: flex; justify-content: center; padding: 0.5rem 0; color: hsl(215.4 16.3% 46.9%); }
-.tab-trigger { padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: hsl(215.4 16.3% 46.9%); border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.tab-trigger:hover { color: hsl(222.2 47.4% 11.2%); }
-.tab-trigger.active { color: hsl(221.2 83.2% 53.3%); border-bottom-color: hsl(221.2 83.2% 53.3%); }
-.evidence-bar { height: 1.25rem; border-radius: 0.25rem; }
-.checklist-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.375rem 0; }
-.checklist-item input[type="checkbox"] { margin-top: 0.25rem; accent-color: hsl(221.2 83.2% 53.3%); width: 1rem; height: 1rem; }
-.tooltip { position: relative; }
-.tooltip .tooltip-text { visibility: hidden; background: hsl(222.2 84% 4.9%); color: white; padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-size: 0.75rem; position: absolute; z-index: 50; bottom: 125%; left: 50%; transform: translateX(-50%); white-space: nowrap; }
-.tooltip:hover .tooltip-text { visibility: visible; }
-.progress-ring { transform: rotate(-90deg); }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.fade-in { animation: fadeIn 0.3s ease-out; }
-.scrollbar-thin::-webkit-scrollbar { width: 6px; }
-.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(214.3 31.8% 91.4%); border-radius: 3px; }
-@media (max-width: 768px) {
-  .sidebar-desktop { display: none; }
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+.sidebar-item { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0.75rem; border-radius:0.5rem; cursor:pointer; font-size:0.875rem; font-weight:500; color:#64748b; transition:all 0.15s; }
+.sidebar-item:hover { background:#f1f5f9; color:#1e293b; }
+.sidebar-item.active { background:#2563eb; color:white; }
+.card { background:white; border:1px solid #e2e8f0; border-radius:0.75rem; box-shadow:0 1px 3px rgb(0 0 0/0.06); }
+.card-hover:hover { box-shadow:0 4px 12px rgb(0 0 0/0.1); transform:translateY(-1px); transition:all 0.2s; }
+.badge { display:inline-flex; align-items:center; border-radius:9999px; padding:0.125rem 0.625rem; font-size:0.75rem; font-weight:600; }
+.btn { display:inline-flex; align-items:center; justify-content:center; border-radius:0.5rem; padding:0.5rem 1rem; font-size:0.875rem; font-weight:500; cursor:pointer; border:none; transition:all 0.15s; }
+.tab-trigger { padding:0.5rem 1rem; font-size:0.875rem; font-weight:500; color:#64748b; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+.tab-trigger:hover { color:#1e293b; }
+.tab-trigger.active { color:#2563eb; border-bottom-color:#2563eb; }
+.algorithm-node { border:2px solid #e2e8f0; border-radius:0.75rem; padding:1rem; background:white; cursor:pointer; transition:all 0.2s; }
+.algorithm-node:hover { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+.algorithm-node.selected { border-color:#2563eb; background:rgba(37,99,235,0.03); }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation:fadeIn 0.3s ease-out; }
+.checklist-item input[type="checkbox"] { accent-color:#2563eb; width:1rem; height:1rem; margin-top:0.2rem; cursor:pointer; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
+@media(max-width:768px) { .sidebar-desktop{display:none!important;} }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useCallback, useMemo, Fragment } = React;
+<script>
+const e = React.createElement;
+const { useState, useEffect, useCallback, Fragment } = React;
 
-// ─── ICONS (inline SVG) ───
-const Icons = {
-  Activity: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>,
-  Search: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
-  Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
-  Pill: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>,
-  ClipboardCheck: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>,
-  BarChart: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>,
-  Heart: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
-  Shield: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>,
-  Calculator: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>,
-  Brain: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>,
-  ArrowRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>,
-  ArrowDown: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>,
-  Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>,
-  ChevronRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
-  AlertTriangle: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
-  Info: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>,
-  Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
-  X: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
-  Kidney: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M9 12c0 3 2.5 5 5 5"/><path d="M15 7c-2.5 0-5 2-5 5"/></svg>,
-  Bone: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18.6 9.82c-.52-.8-1.07-1.53-1.6-2.12a4.8 4.8 0 0 0-.78-.78c-.6-.52-1.27-.93-2.02-1.22A5.3 5.3 0 0 0 12 5.2a5.3 5.3 0 0 0-2.2.5c-.75.3-1.43.7-2.02 1.22-.27.23-.54.49-.78.78-.53.6-1.08 1.32-1.6 2.12C4.53 11.1 4 12.5 4 14c0 1.93.78 3.27 2.15 4.08.98.57 2.2.92 3.55.92h4.6c1.35 0 2.57-.35 3.55-.92C19.22 17.27 20 15.93 20 14c0-1.5-.53-2.9-1.4-4.18z"/></svg>,
-  FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>,
-  Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>,
-  Stethoscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>,
-};
+// ─── SVG Icons as components ───
+function IconSvg(paths, vb) {
+  return function(props) {
+    return e('svg', { xmlns:'http://www.w3.org/2000/svg', width:props?.size||18, height:props?.size||18, viewBox:vb||'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:2, strokeLinecap:'round', strokeLinejoin:'round', className:props?.className||'' },
+      ...paths.map(function(p,i){ return typeof p === 'string' ? e('path',{key:i,d:p}) : e(p.tag,{key:i,...p.attrs}) })
+    );
+  }
+}
+
+const IcoHome = IconSvg(['M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8','M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z']);
+const IcoMicroscope = IconSvg(['M6 18h8','M3 22h18','M14 22a7 7 0 1 0 0-14h-1','M9 14h2','M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z','M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3']);
+const IcoActivity = IconSvg(['M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2']);
+const IcoBarChart = IconSvg([{tag:'line',attrs:{x1:12,x2:12,y1:20,y2:10}},{tag:'line',attrs:{x1:18,x2:18,y1:20,y2:4}},{tag:'line',attrs:{x1:6,x2:6,y1:20,y2:16}}]);
+const IcoCalculator = IconSvg([{tag:'rect',attrs:{width:16,height:20,x:4,y:2,rx:2}},{tag:'line',attrs:{x1:8,x2:16,y1:6,y2:6}},{tag:'line',attrs:{x1:16,x2:16,y1:14,y2:18}}]);
+const IcoPill = IconSvg(['m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z','m8.5 8.5 7 7']);
+const IcoClipboard = IconSvg([{tag:'rect',attrs:{width:8,height:4,x:8,y:2,rx:1,ry:1}},'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2','m9 14 2 2 4-4']);
+const IcoHeart = IconSvg(['M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z']);
+const IcoShield = IconSvg(['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z']);
+const IcoBrain = IconSvg(['M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z','M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z','M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4']);
+const IcoChevron = IconSvg(['m9 18 6-6-6-6']);
+const IcoArrowDown = IconSvg(['M12 5v14','m19 12-7 7-7-7']);
+const IcoCheck = IconSvg(['M20 6 9 17l-5-5']);
+const IcoMenu = IconSvg([{tag:'line',attrs:{x1:4,x2:20,y1:12,y2:12}},{tag:'line',attrs:{x1:4,x2:20,y1:6,y2:6}},{tag:'line',attrs:{x1:4,x2:20,y1:18,y2:18}}]);
+const IcoX = IconSvg(['M18 6 6 18','m6 6 12 12']);
+const IcoAlert = IconSvg(['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3','M12 9v4','M12 17h.01']);
+const IcoInfo = IconSvg([{tag:'circle',attrs:{cx:12,cy:12,r:10}},'M12 16v-4','M12 8h.01']);
 
 // ─── DATA ───
-const WORKUP_ITEMS = {
-  essential: [
-    { id:'hp', label:'History and physical (H&P) exam', category:'Clinical' },
-    { id:'cbc', label:'CBC, differential, and platelet count', category:'Blood' },
-    { id:'smear', label:'Peripheral blood smear', category:'Blood' },
-    { id:'chem', label:'Serum BUN/creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, beta-2 microglobulin', category:'Chemistry' },
-    { id:'crcl', label:'Creatinine clearance (calculated or measured)', category:'Chemistry' },
-    { id:'spep', label:'Serum quantitative immunoglobulins, SPEP, and SIFE', category:'Protein' },
-    { id:'urine', label:'24-h urine for total protein, UPEP, and UIFE', category:'Protein' },
-    { id:'flc', label:'Serum free light chain (FLC) assay', category:'Protein' },
-    { id:'pet', label:'Whole-body FDG-PET/CT (preferred) or low-dose CT', category:'Imaging' },
-    { id:'bm', label:'Bone marrow aspirate and biopsy with IHC and/or multiparameter flow cytometry', category:'Pathology' },
-    { id:'fish', label:'FISH panel: del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amp, 1p deletion', category:'Genetics' },
-    { id:'ngs', label:'NGS to assess for TP53 mutation', category:'Genetics' },
-    { id:'bnp', label:'NT-proBNP/BNP', category:'Cardiac' },
-  ],
-  useful: [
-    { id:'mri', label:'Whole-body MRI without contrast (if PET/CT negative)', category:'Imaging' },
-    { id:'biopsy', label:'Tissue biopsy to confirm suspected plasmacytoma', category:'Pathology' },
-    { id:'echo', label:'Echocardiogram', category:'Cardiac' },
-    { id:'amyloid', label:'Evaluation for light chain amyloidosis', category:'Special' },
-    { id:'mrd', label:'Baseline clonotype identification or store aspirate for future MRD testing', category:'Genetics' },
-    { id:'visc', label:'Serum viscosity', category:'Special' },
-    { id:'hep', label:'Hepatitis B/C testing and HIV screening', category:'Viral' },
-    { id:'cpc', label:'Assess for circulating plasma cells', category:'Blood' },
-    { id:'renal', label:'Renal biopsy if albuminuria or abnormal renal function', category:'Renal' },
-  ],
-};
-
-const STAGING_DATA = {
-  iss: [
-    { stage:'I', criteria:'β2M <3.5 mg/L AND albumin ≥3.5 g/dL', prognosis:'Median OS: 62 months' },
-    { stage:'II', criteria:'Not stage I or III', prognosis:'Median OS: 44 months' },
-    { stage:'III', criteria:'β2M ≥5.5 mg/L', prognosis:'Median OS: 29 months' },
-  ],
-  riss: [
-    { stage:'I', criteria:'ISS I + standard-risk cytogenetics + LDH ≤ ULN', prognosis:'5-yr OS: ~82%' },
-    { stage:'II', criteria:'Not R-ISS I or III', prognosis:'5-yr OS: ~62%' },
-    { stage:'III', criteria:'ISS III + [del(17p) or t(4;14) or t(14;16) or LDH > ULN]', prognosis:'5-yr OS: ~40%' },
-  ],
-  r2iss: [
-    { group:'Low-risk', points:'0 points', factors:'Not ISS II/III, LDH ≤ ULN, no del(17p)/t(4;14)/1q+' },
-    { group:'Low-intermediate', points:'0.5–1 points', factors:'ISS II or LDH > ULN or del(17p)/t(4;14)/1q+' },
-    { group:'Intermediate-high', points:'1.5–2.5 points', factors:'Combination of high-risk features' },
-    { group:'High-risk', points:'3–5 points', factors:'Multiple high-risk features combined' },
-  ]
-};
-
-const TREATMENT_HCT = {
-  preferred: [
-    { name:'Dara-VRd', full:'Daratumumab/Lenalidomide/Bortezomib/Dexamethasone', cat:'Category 1', evidence:{e:4,s:3,q:4,c:4,a:1} },
-    { name:'Isa-VRd', full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone', cat:'Category 1', evidence:{e:4,s:3,q:4,c:4,a:1} },
-  ],
-  other: [
-    { name:'VRd', full:'Bortezomib/Lenalidomide/Dexamethasone', cat:'Category 1', evidence:{e:4,s:3,q:4,c:4,a:2} },
-    { name:'KRd', full:'Carfilzomib/Lenalidomide/Dexamethasone', cat:'Category 2A', evidence:{e:4,s:3,q:3,c:3,a:1} },
-    { name:'Dara-KRd', full:'Daratumumab/Carfilzomib/Lenalidomide/Dexamethasone', cat:'Category 2A', evidence:{e:4,s:3,q:3,c:3,a:1} },
-    { name:'Isa-KRd', full:'Isatuximab-irfc/Carfilzomib/Lenalidomide/Dexamethasone', cat:'Category 2A', evidence:{e:4,s:3,q:3,c:3,a:1} },
-  ],
-  useful: [
-    { name:'VCd', full:'Bortezomib/Cyclophosphamide/Dexamethasone', cat:'Category 2A', evidence:{e:3,s:3,q:3,c:3,a:3} },
-    { name:'KCd', full:'Carfilzomib/Cyclophosphamide/Dexamethasone', cat:'Category 2A', evidence:{e:3,s:3,q:2,c:2,a:2} },
-    { name:'VTD-PACE', full:'VTD-PACE (aggressive MM)', cat:'Category 2A', evidence:{e:3,s:2,q:2,c:2,a:2} },
-  ]
-};
-
-const TREATMENT_NON_HCT = {
-  preferred: [
-    { name:'Dara-Rd', full:'Daratumumab/Lenalidomide/Dexamethasone', cat:'Category 1', evidence:{e:4,s:4,q:4,c:4,a:1} },
-    { name:'Dara-VRd', full:'Daratumumab/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)', cat:'Category 1', evidence:{e:4,s:3,q:4,c:3,a:1} },
-    { name:'Isa-VRd', full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)', cat:'Category 1', evidence:{e:4,s:3,q:4,c:3,a:1} },
-  ],
-  other: [
-    { name:'KRd', full:'Carfilzomib/Lenalidomide/Dexamethasone', cat:'Category 2A', evidence:{e:4,s:3,q:3,c:3,a:1} },
-    { name:'VRd', full:'Bortezomib/Lenalidomide/Dexamethasone', cat:'Category 1', evidence:{e:4,s:3,q:4,c:4,a:2} },
-    { name:'Isa-Rd', full:'Isatuximab-irfc/Lenalidomide/Dexamethasone', cat:'Category 2A', evidence:{e:3,s:4,q:3,c:3,a:1} },
-  ],
-};
-
-const MAINTENANCE = {
-  preferred: [{ name:'Lenalidomide', cat:'Category 1', note:'Standard maintenance post-HCT and non-HCT' }],
-  other: [
-    { name:'Carfilzomib/Lenalidomide', cat:'Category 2A', note:'Two-drug maintenance for high-risk MM' },
-    { name:'Daratumumab/Lenalidomide', cat:'Category 2A', note:'Two-drug maintenance for high-risk MM' },
-  ],
-  useful: [
-    { name:'Bortezomib ± Lenalidomide', cat:'Category 2A', note:'Useful in certain circumstances' },
-    { name:'Daratumumab', cat:'Category 2A', note:'Single agent' },
-    { name:'Ixazomib', cat:'Category 2B', note:'Oral option' },
-  ]
-};
-
-const RELAPSED_PREFERRED = [
-  { name:'KRd', full:'Carfilzomib/Lenalidomide/Dexamethasone', context:'Anti-CD38/Bortezomib refractory', cat:'Category 1' },
-  { name:'Dara-Kd', full:'Daratumumab/Carfilzomib/Dexamethasone', context:'Bortezomib/Lenalidomide refractory', cat:'Category 1' },
-  { name:'Isa-Kd', full:'Isatuximab-irfc/Carfilzomib/Dexamethasone', context:'Bortezomib/Lenalidomide refractory', cat:'Category 1' },
-  { name:'PVd', full:'Pomalidomide/Bortezomib/Dexamethasone', context:'Anti-CD38/Lenalidomide refractory', cat:'Category 1' },
-  { name:'Dara-Pd', full:'Daratumumab/Pomalidomide/Dexamethasone', context:'After 1 prior (Len + PI)', cat:'Category 1' },
-  { name:'Isa-Pd', full:'Isatuximab-irfc/Pomalidomide/Dexamethasone', context:'After 2 prior (Len + PI)', cat:'Category 1' },
-  { name:'Cilta-cel', full:'Ciltacabtagene autoleucel (CAR-T)', context:'After 1 prior (IMiD + PI), Len-refractory', cat:'Category 1' },
-  { name:'Ide-cel', full:'Idecabtagene vicleucel (CAR-T)', context:'After 2 prior (IMiD + anti-CD38 + PI)', cat:'Category 1' },
+var WORKUP_ESSENTIAL = [
+  {id:'hp', label:'History and physical (H&P) exam', cat:'Clinical'},
+  {id:'cbc', label:'CBC, differential, and platelet count', cat:'Blood'},
+  {id:'smear', label:'Peripheral blood smear', cat:'Blood'},
+  {id:'chem', label:'Serum BUN/creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, beta-2 microglobulin', cat:'Chemistry'},
+  {id:'crcl', label:'Creatinine clearance (calculated or measured)', cat:'Chemistry'},
+  {id:'spep', label:'Serum quantitative immunoglobulins, SPEP, and SIFE', cat:'Protein'},
+  {id:'urine', label:'24-h urine for total protein, UPEP, and UIFE', cat:'Protein'},
+  {id:'flc', label:'Serum free light chain (FLC) assay', cat:'Protein'},
+  {id:'pet', label:'Whole-body FDG-PET/CT (preferred) or low-dose CT', cat:'Imaging'},
+  {id:'bm', label:'Bone marrow aspirate and biopsy with IHC and/or multiparameter flow cytometry', cat:'Pathology'},
+  {id:'fish', label:'FISH panel: del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amp, 1p deletion', cat:'Genetics'},
+  {id:'ngs', label:'NGS to assess for TP53 mutation', cat:'Genetics'},
+  {id:'bnp', label:'NT-proBNP/BNP', cat:'Cardiac'},
 ];
 
-const LATE_LINE = [
-  { name:'Ciltacabtagene autoleucel', type:'CAR T-cell', cat:'Preferred' },
-  { name:'Idecabtagene vicleucel', type:'CAR T-cell', cat:'Preferred' },
-  { name:'Elranatamab-bcmm', type:'Bispecific (BCMA)', cat:'Preferred (≥4 prior)' },
-  { name:'Linvoseltamab-gcpt', type:'Bispecific (BCMA)', cat:'Preferred (≥4 prior)' },
-  { name:'Talquetamab-tgvs', type:'Bispecific (GPRC5D)', cat:'Preferred (≥4 prior)' },
-  { name:'Teclistamab-cqyv', type:'Bispecific (BCMA)', cat:'Preferred (≥4 prior)' },
-  { name:'Selinexor/Dexamethasone', type:'XPO1 inhibitor', cat:'Other recommended (≥4 prior, penta-refractory)' },
+var WORKUP_USEFUL = [
+  {id:'mri', label:'Whole-body MRI without contrast (if PET/CT negative)', cat:'Imaging'},
+  {id:'biopsy', label:'Tissue biopsy to confirm suspected plasmacytoma', cat:'Pathology'},
+  {id:'echo', label:'Echocardiogram', cat:'Cardiac'},
+  {id:'amyloid', label:'Evaluation for light chain amyloidosis', cat:'Special'},
+  {id:'mrd', label:'Baseline clonotype identification or store aspirate for future MRD testing', cat:'Genetics'},
+  {id:'visc', label:'Serum viscosity', cat:'Special'},
+  {id:'hep', label:'Hepatitis B/C testing and HIV screening', cat:'Viral'},
+  {id:'cpc', label:'Assess for circulating plasma cells', cat:'Blood'},
+  {id:'renal', label:'Renal biopsy if albuminuria or abnormal renal function', cat:'Renal'},
 ];
 
-const RESPONSE_CRITERIA = [
-  { cat:'Sustained MRD-negative', def:'MRD negativity confirmed ≥1 year apart by NGF, NGS, or both, and by imaging', depth:'deepest' },
-  { cat:'Flow MRD-negative', def:'Absence of aberrant clonal plasma cells by NGF (EuroFlow, sensitivity 1 in 10⁵)', depth:'deepest' },
-  { cat:'Sequencing MRD-negative', def:'Absence of clonal plasma cells by NGS (sensitivity 1 in 10⁵ or higher)', depth:'deepest' },
-  { cat:'Stringent CR (sCR)', def:'CR + normal FLC ratio + absence of clonal cells by IHC (κ/λ ≤4:1 or ≥1:2)', depth:'deep' },
-  { cat:'Complete Response (CR)', def:'Negative immunofixation serum and urine, disappearance of soft tissue plasmacytomas, <5% BMPCs', depth:'deep' },
-  { cat:'Very Good PR (VGPR)', def:'M-protein detectable by immunofixation but not electrophoresis, OR ≥90% reduction in serum M-protein + urine <100 mg/24h', depth:'good' },
-  { cat:'Partial Response (PR)', def:'≥50% reduction serum M-protein + ≥90% reduction 24-h urinary M-protein or to <200 mg/24h', depth:'good' },
-  { cat:'Minimal Response (MR)', def:'≥25% but ≤49% reduction of serum M-protein + 50-89% reduction in urine M-protein', depth:'minimal' },
-  { cat:'Stable Disease (SD)', def:'Not meeting criteria for any response category or progressive disease', depth:'none' },
-  { cat:'Progressive Disease (PD)', def:'25% increase from lowest confirmed response + absolute increase criteria met', depth:'progression' },
+var IMPEDE_FACTORS = [
+  {factor:'Central venous catheter/tunneled line', points:2},
+  {factor:'Pelvic, hip, or femur fracture', points:4},
+  {factor:'Obesity (BMI ≥25)', points:1},
+  {factor:'Previous VTE', points:5},
+  {factor:'Immunomodulatory drug (IMiD)', points:4},
+  {factor:'Erythropoiesis-stimulating agent', points:1},
+  {factor:'Dexamethasone ≤160 mg/month', points:2},
+  {factor:'Dexamethasone >160 mg/month', points:4},
+  {factor:'Doxorubicin or multiagent chemo', points:3},
+  {factor:'Asian/Pacific Islander', points:-3},
+  {factor:'Prophylactic LMWH or aspirin', points:-3},
+  {factor:'Therapeutic LMWH or warfarin', points:-4},
 ];
 
-const IMPEDE_FACTORS = [
-  { factor:'Central venous catheter/tunneled line', points:2, type:'positive' },
-  { factor:'Pelvic, hip, or femur fracture', points:4, type:'positive' },
-  { factor:'Obesity (BMI ≥25)', points:1, type:'positive' },
-  { factor:'Previous VTE', points:5, type:'positive' },
-  { factor:'Immunomodulatory drug (IMiD)', points:4, type:'myeloma' },
-  { factor:'Erythropoiesis-stimulating agent', points:1, type:'myeloma' },
-  { factor:'Dexamethasone ≤160 mg/month', points:2, type:'myeloma' },
-  { factor:'Dexamethasone >160 mg/month', points:4, type:'myeloma' },
-  { factor:'Doxorubicin or multiagent chemo', points:3, type:'myeloma' },
-  { factor:'Asian/Pacific Islander', points:-3, type:'negative' },
-  { factor:'Prophylactic LMWH or aspirin', points:-3, type:'negative' },
-  { factor:'Therapeutic LMWH or warfarin', points:-4, type:'negative' },
+var RESPONSE_CRITERIA = [
+  {cat:'Sustained MRD-negative', def:'MRD negativity confirmed ≥1 year apart by NGF, NGS, or both, and by imaging', depth:'mrd'},
+  {cat:'Flow MRD-negative', def:'Absence of aberrant clonal plasma cells by NGF (EuroFlow, sensitivity 1 in 10⁵)', depth:'mrd'},
+  {cat:'Sequencing MRD-negative', def:'Absence of clonal plasma cells by NGS (sensitivity 1 in 10⁵ or higher)', depth:'mrd'},
+  {cat:'Stringent CR (sCR)', def:'CR + normal FLC ratio + absence of clonal cells by IHC (κ/λ ≤4:1 or ≥1:2)', depth:'cr'},
+  {cat:'Complete Response (CR)', def:'Negative immunofixation serum and urine, disappearance of soft tissue plasmacytomas, <5% BMPCs', depth:'cr'},
+  {cat:'Very Good PR (VGPR)', def:'M-protein detectable by immunofixation but not electrophoresis, OR ≥90% reduction serum M-protein + urine <100 mg/24h', depth:'pr'},
+  {cat:'Partial Response (PR)', def:'≥50% reduction serum M-protein + ≥90% reduction 24-h urinary M-protein or to <200 mg/24h', depth:'pr'},
+  {cat:'Minimal Response (MR)', def:'≥25% but ≤49% reduction serum M-protein + 50-89% reduction urine M-protein', depth:'mr'},
+  {cat:'Stable Disease (SD)', def:'Not meeting criteria for any response category or progressive disease', depth:'sd'},
+  {cat:'Progressive Disease (PD)', def:'25% increase from lowest confirmed response + absolute increase criteria met', depth:'pd'},
 ];
 
-const SUPPORTIVE_CARE = [
-  { title:'Bone Disease', icon:'🦴', items:['Bisphosphonates (category 1) or denosumab for ALL patients','Baseline dental exam strongly recommended','Assess vitamin D status','Monitor for osteonecrosis of the jaw','Continue bone-targeting treatment up to 2 years','DEXA scans NOT useful for myeloma bone disease','Vertebroplasty/kyphoplasty for symptomatic compression fractures'] },
-  { title:'Hypercalcemia', icon:'⚡', items:['Hydration','Bisphosphonates (zoledronic acid preferred)','Denosumab','Steroids and/or calcitonin'] },
-  { title:'Infections', icon:'🦠', items:['Levofloxacin 500mg PO daily (consider 12 weeks post-diagnosis)','Acyclovir 400-800mg PO BID for HSV/VZV prophylaxis','IgG replacement if <400 mg/dL','PJP prophylaxis with TMP-SMX','Pneumococcal vaccination (PCV20 or PCV15 + PPSV23)','Fluconazole for yeast when ANC <500'] },
-  { title:'VTE Prophylaxis', icon:'🩸', items:['Use IMPEDE or SAVED score for risk stratification','Low risk (≤3 IMPEDE): Aspirin 81-325 mg daily','High risk (≥4 IMPEDE): LMWH, rivaroxaban, apixaban, fondaparinux, or warfarin','Indefinite while on myeloma therapy'] },
-  { title:'Renal Management', icon:'🫘', items:['Hydration (goal urine output 100-150 cc/h)','Bortezomib-based regimens preferred','Lenalidomide dose adjustment by CrCL','Discontinue nephrotoxic medications','Dialysis for refractory electrolyte issues'] },
-  { title:'Anemia', icon:'💉', items:['Consider erythropoietin for anemic patients','Monitor for VTE risk with ESA use'] },
+var SUPPORTIVE = [
+  {title:'Bone Disease', emoji:'🦴', items:['Bisphosphonates (category 1) or denosumab for ALL patients','Baseline dental exam strongly recommended','Assess vitamin D status','Monitor for osteonecrosis of the jaw','Continue bone-targeting treatment up to 2 years','DEXA scans NOT useful for myeloma bone disease','Vertebroplasty/kyphoplasty for compression fractures']},
+  {title:'Hypercalcemia', emoji:'⚡', items:['Hydration','Bisphosphonates (zoledronic acid preferred)','Denosumab','Steroids and/or calcitonin']},
+  {title:'Infections', emoji:'🦠', items:['Levofloxacin 500mg PO daily (consider 12 weeks post-dx)','Acyclovir 400-800mg PO BID for HSV/VZV','IgG replacement if <400 mg/dL','PJP prophylaxis with TMP-SMX','Pneumococcal vaccination (PCV20 or PCV15+PPSV23)','Fluconazole for yeast when ANC <500']},
+  {title:'VTE Prophylaxis', emoji:'🩸', items:['Use IMPEDE or SAVED score for stratification','Low risk (≤3 IMPEDE): Aspirin 81-325 mg daily','High risk (≥4 IMPEDE): LMWH, rivaroxaban, apixaban, fondaparinux, or warfarin','Indefinite while on myeloma therapy']},
+  {title:'Renal Management', emoji:'🫘', items:['Hydration (goal urine output 100-150 cc/h)','Bortezomib-based regimens preferred','Lenalidomide dose adjustment by CrCL','Discontinue nephrotoxic medications','Dialysis for refractory electrolyte issues']},
+  {title:'Anemia', emoji:'💉', items:['Consider erythropoietin for anemic patients','Monitor for VTE risk with ESA use']},
 ];
 
-// ─── COMPONENTS ───
-function App() {
-  const [page, setPage] = useState('dashboard');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+// ─── PAGES ───
 
-  const navItems = [
-    { id:'dashboard', label:'Dashboard', icon:<Icons.Home/> },
-    { id:'workup', label:'Diagnostic Workup', icon:<Icons.Microscope/> },
-    { id:'algorithm', label:'Clinical Pathway', icon:<Icons.Activity/> },
-    { id:'staging', label:'Staging & Risk', icon:<Icons.BarChart/> },
-    { id:'calculator', label:'Risk Calculators', icon:<Icons.Calculator/> },
-    { id:'treatment', label:'Treatment', icon:<Icons.Pill/> },
-    { id:'response', label:'Response Criteria', icon:<Icons.ClipboardCheck/> },
-    { id:'supportive', label:'Supportive Care', icon:<Icons.Heart/> },
-    { id:'evidence', label:'Evidence Blocks', icon:<Icons.Shield/> },
-    { id:'related', label:'Related Disorders', icon:<Icons.Brain/> },
+function Dashboard(props) {
+  var setPage = props.setPage;
+  var cards = [
+    {title:'Diagnostic Workup', desc:'13 essential + 9 useful tests', color:'bg-blue-50 text-blue-700', ico:IcoMicroscope, pg:'workup'},
+    {title:'Clinical Pathway', desc:'MYEL-1 → MYEL-6 interactive algorithm', color:'bg-emerald-50 text-emerald-700', ico:IcoActivity, pg:'algorithm'},
+    {title:'Staging & Risk', desc:'ISS, R-ISS, R2-ISS, IMS-IMWG', color:'bg-purple-50 text-purple-700', ico:IcoBarChart, pg:'staging'},
+    {title:'Risk Calculators', desc:'IMPEDE & SAVED VTE scores', color:'bg-amber-50 text-amber-700', ico:IcoCalculator, pg:'calculator'},
+    {title:'Treatment Navigator', desc:'HCT, non-HCT, relapsed, CAR-T', color:'bg-rose-50 text-rose-700', ico:IcoPill, pg:'treatment'},
+    {title:'Response Assessment', desc:'IMWG criteria including MRD', color:'bg-cyan-50 text-cyan-700', ico:IcoClipboard, pg:'response'},
+    {title:'Supportive Care', desc:'Bone, infections, VTE, renal', color:'bg-pink-50 text-pink-700', ico:IcoHeart, pg:'supportive'},
+    {title:'Evidence Blocks', desc:'Efficacy, safety, quality ratings', color:'bg-indigo-50 text-indigo-700', ico:IcoShield, pg:'evidence'},
   ];
 
-  const renderPage = () => {
-    switch(page) {
-      case 'dashboard': return <Dashboard setPage={setPage}/>;
-      case 'workup': return <WorkupPage/>;
-      case 'algorithm': return <AlgorithmPage setPage={setPage}/>;
-      case 'staging': return <StagingPage/>;
-      case 'calculator': return <CalculatorPage/>;
-      case 'treatment': return <TreatmentPage/>;
-      case 'response': return <ResponsePage/>;
-      case 'supportive': return <SupportivePage/>;
-      case 'evidence': return <EvidencePage/>;
-      case 'related': return <RelatedPage/>;
-      default: return <Dashboard setPage={setPage}/>;
-    }
-  };
+  var stats = [
+    {label:'Preferred Regimens (HCT)', value:'2', sub:'Dara-VRd, Isa-VRd', cl:'text-blue-600'},
+    {label:'CAR-T Products', value:'2', sub:'Cilta-cel, Ide-cel', cl:'text-emerald-600'},
+    {label:'Bispecific Abs', value:'4', sub:'After ≥4 prior lines', cl:'text-purple-600'},
+    {label:'Risk Scores', value:'5', sub:'ISS, R-ISS, R2-ISS, IMPEDE, SAVED', cl:'text-amber-600'},
+  ];
 
-  return (
-    <div className="min-h-screen bg-secondary flex">
-      {/* Desktop Sidebar */}
-      <aside className="sidebar-desktop w-64 bg-white border-r border-border fixed h-full overflow-y-auto scrollbar-thin z-40">
-        <div className="p-4 border-b border-border">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🩸</span>
-            <div>
-              <h1 className="font-bold text-sm text-foreground">Blood Doctor</h1>
-              <p className="text-[10px] text-muted-foreground font-medium">MYELOMA HUB — NCCN 2026</p>
-            </div>
-          </div>
-        </div>
-        <nav className="p-3 space-y-1">
-          {navItems.map(item => (
-            <div key={item.id} className={`sidebar-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
-              {item.icon}<span>{item.label}</span>
-            </div>
-          ))}
-        </nav>
-        <div className="p-4 border-t border-border mt-auto">
-          <div className="text-[10px] text-muted-foreground">
-            <p className="font-semibold">NCCN Guidelines® v2.2026</p>
-            <p>All recommendations Category 2A unless noted</p>
-            <p className="mt-1 font-medium text-primary">#BloodDoctor</p>
-          </div>
-        </div>
-      </aside>
-
-      {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-border z-50 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🩸</span>
-          <span className="font-bold text-sm">Myeloma Hub</span>
-        </div>
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="btn-ghost p-1">
-          {mobileMenuOpen ? <Icons.X/> : <Icons.Menu/>}
-        </button>
-      </div>
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setMobileMenuOpen(false)}>
-          <div className="bg-white w-64 h-full overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-border"><span className="font-bold text-sm">Navigation</span></div>
-            <nav className="p-3 space-y-1">
-              {navItems.map(item => (
-                <div key={item.id} className={`sidebar-item ${page === item.id ? 'active' : ''}`} onClick={() => {setPage(item.id); setMobileMenuOpen(false);}}>
-                  {item.icon}<span>{item.label}</span>
-                </div>
-              ))}
-            </nav>
-          </div>
-        </div>
-      )}
-
-      {/* Main content */}
-      <main className="md:ml-64 flex-1 min-h-screen pt-14 md:pt-0">
-        <div className="p-4 md:p-6 max-w-7xl mx-auto fade-in" key={page}>
-          {renderPage()}
-        </div>
-      </main>
-    </div>
+  return e('div', null,
+    e('div', {className:'mb-6'},
+      e('h1', {className:'text-2xl font-bold'}, 'Multiple Myeloma Management Hub'),
+      e('p', {className:'text-slate-500 text-sm mt-1'}, 'NCCN Clinical Practice Guidelines v2.2026 — Interactive Clinical Decision Support')
+    ),
+    e('div', {className:'grid grid-cols-2 md:grid-cols-4 gap-3 mb-6'},
+      stats.map(function(s,i) {
+        return e('div', {key:i, className:'card p-4'},
+          e('p', {className:'text-xs text-slate-500 font-medium'}, s.label),
+          e('p', {className:'text-2xl font-bold mt-1 '+s.cl}, s.value),
+          e('p', {className:'text-xs text-slate-400 mt-0.5'}, s.sub)
+        );
+      })
+    ),
+    e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6'},
+      cards.map(function(c,i) {
+        return e('div', {key:i, className:'card card-hover p-5 cursor-pointer', onClick:function(){setPage(c.pg)}},
+          e('div', {className:'w-10 h-10 rounded-lg flex items-center justify-center mb-3 '+c.color}, e(c.ico)),
+          e('h3', {className:'font-semibold text-sm'}, c.title),
+          e('p', {className:'text-xs text-slate-500 mt-1'}, c.desc),
+          e('div', {className:'flex items-center gap-1 mt-3 text-blue-600 text-xs font-medium'},
+            e('span', null, 'Open'), e(IcoChevron, {size:14})
+          )
+        );
+      })
+    ),
+    e('div', {className:'card p-5'},
+      e('h3', {className:'font-semibold mb-4'}, 'Clinical Pathway Overview'),
+      e('div', {className:'flex flex-wrap gap-2 items-center text-xs'},
+        ['MYEL-1: Workup','→','Classify','→','Solitary (MYEL-2) | Smoldering (MYEL-3) | Active MM (MYEL-4)','→','Treat','→','Response (MYEL-5)','→','Relapse (MYEL-6)'].map(function(s,i) {
+          return s === '→' ? e('span', {key:i, className:'text-slate-400 font-bold'}, '→') :
+            e('span', {key:i, className:'badge bg-slate-100 text-slate-700 py-1 px-2'}, s);
+        })
+      )
+    ),
+    e('p', {className:'mt-4 text-center text-xs text-slate-400'}, '© 2025 NCCN® — For educational reference only. Not a substitute for clinical judgment. ', e('span',{className:'font-semibold text-blue-600'},'#BloodDoctor'))
   );
 }
 
-// ─── DASHBOARD ───
-function Dashboard({ setPage }) {
-  const cards = [
-    { title:'Diagnostic Workup', desc:'13 essential + 9 useful tests', icon:<Icons.Microscope/>, color:'bg-blue-50 text-blue-700', page:'workup' },
-    { title:'Clinical Pathway', desc:'MYEL-1 → MYEL-6 interactive algorithm', icon:<Icons.Activity/>, color:'bg-emerald-50 text-emerald-700', page:'algorithm' },
-    { title:'Staging & Risk', desc:'ISS, R-ISS, R2-ISS, IMS-IMWG', icon:<Icons.BarChart/>, color:'bg-purple-50 text-purple-700', page:'staging' },
-    { title:'Risk Calculators', desc:'IMPEDE & SAVED VTE scores', icon:<Icons.Calculator/>, color:'bg-amber-50 text-amber-700', page:'calculator' },
-    { title:'Treatment Navigator', desc:'HCT, non-HCT, relapsed, CAR-T', icon:<Icons.Pill/>, color:'bg-rose-50 text-rose-700', page:'treatment' },
-    { title:'Response Assessment', desc:'IMWG criteria including MRD', icon:<Icons.ClipboardCheck/>, color:'bg-cyan-50 text-cyan-700', page:'response' },
-    { title:'Supportive Care', desc:'Bone, infections, VTE, renal', icon:<Icons.Heart/>, color:'bg-pink-50 text-pink-700', page:'supportive' },
-    { title:'Evidence Blocks', desc:'Efficacy, safety, quality ratings', icon:<Icons.Shield/>, color:'bg-indigo-50 text-indigo-700', page:'evidence' },
-  ];
-
-  return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Multiple Myeloma Management Hub</h1>
-        <p className="text-muted-foreground text-sm mt-1">NCCN Clinical Practice Guidelines v2.2026 — Interactive Clinical Decision Support</p>
-      </div>
-
-      {/* Quick stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        {[
-          { label:'Preferred Regimens (HCT)', value:'2', sub:'Dara-VRd, Isa-VRd', color:'text-blue-600' },
-          { label:'CAR-T Products', value:'2', sub:'Cilta-cel, Ide-cel', color:'text-emerald-600' },
-          { label:'Bispecific Abs', value:'4', sub:'After ≥4 prior lines', color:'text-purple-600' },
-          { label:'Risk Scores', value:'5', sub:'ISS, R-ISS, R2-ISS, IMPEDE, SAVED', color:'text-amber-600' },
-        ].map((s,i) => (
-          <div key={i} className="card p-4">
-            <p className="text-xs text-muted-foreground font-medium">{s.label}</p>
-            <p className={`text-2xl font-bold ${s.color} mt-1`}>{s.value}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{s.sub}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Main grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {cards.map((c,i) => (
-          <div key={i} className="card card-hover p-5 cursor-pointer" onClick={() => setPage(c.page)}>
-            <div className={`w-10 h-10 rounded-lg ${c.color} flex items-center justify-center mb-3`}>{c.icon}</div>
-            <h3 className="font-semibold text-sm text-foreground">{c.title}</h3>
-            <p className="text-xs text-muted-foreground mt-1">{c.desc}</p>
-            <div className="flex items-center gap-1 mt-3 text-primary text-xs font-medium"><span>Open</span><Icons.ChevronRight/></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick Algorithm Overview */}
-      <div className="card p-5">
-        <h3 className="font-semibold text-foreground mb-4">Clinical Pathway Overview</h3>
-        <div className="flex flex-wrap gap-2 items-center text-xs">
-          {['MYEL-1: Workup','→','Classify','→','Solitary (MYEL-2)','Smoldering (MYEL-3)','Active MM (MYEL-4)','→','Treat','→','Response (MYEL-5)','→','Relapse (MYEL-6)'].map((s,i) =>
-            s === '→' ? <span key={i} className="text-muted-foreground">→</span> :
-            <span key={i} className="badge bg-secondary text-secondary-foreground py-1">{s}</span>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4 text-center text-xs text-muted-foreground">
-        <p>© 2025 NCCN® — For educational reference only. Not a substitute for clinical judgment. <span className="font-semibold text-primary">#BloodDoctor</span></p>
-      </div>
-    </div>
-  );
-}
-
-// ─── WORKUP PAGE ───
 function WorkupPage() {
-  const [checked, setChecked] = useState({});
-  const toggle = id => setChecked(p => ({...p, [id]: !p[id]}));
-  const essentialDone = WORKUP_ITEMS.essential.filter(i => checked[i.id]).length;
-  const totalEssential = WORKUP_ITEMS.essential.length;
-  const pct = Math.round((essentialDone / totalEssential) * 100);
+  var _s = useState({}); var checked = _s[0]; var setChecked = _s[1];
+  function toggle(id) { setChecked(function(p) { var n = Object.assign({},p); n[id] = !n[id]; return n; }); }
+  var done = WORKUP_ESSENTIAL.filter(function(i){return checked[i.id]}).length;
+  var total = WORKUP_ESSENTIAL.length;
+  var pct = Math.round((done/total)*100);
 
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-bold text-foreground">MYEL-1: Initial Diagnostic Workup</h2>
-          <p className="text-sm text-muted-foreground">Complete workup checklist for suspected myeloma</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-2xl font-bold text-primary">{pct}%</p>
-          <p className="text-xs text-muted-foreground">Complete</p>
-        </div>
-      </div>
+  function renderList(items, label, badgeClass) {
+    return e('div', {className:'card p-5'},
+      e('h3', {className:'font-semibold mb-3 flex items-center gap-2'},
+        e('span', {className:'badge '+badgeClass}, label),
+        ' Investigations'
+      ),
+      e('div', {className:'space-y-1'},
+        items.map(function(item) {
+          return e('label', {key:item.id, className:'flex items-start gap-2 py-1 cursor-pointer'},
+            e('input', {type:'checkbox', checked:!!checked[item.id], onChange:function(){toggle(item.id)}, className:'checklist-item mt-1'}),
+            e('div', null,
+              e('span', {className:'text-sm '+(checked[item.id]?'line-through text-slate-400':'')}, item.label),
+              e('span', {className:'ml-2 badge bg-slate-100 text-slate-500 text-[10px]'}, item.cat)
+            )
+          );
+        })
+      )
+    );
+  }
 
-      {/* Progress bar */}
-      <div className="card p-4 mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Essential Investigations</span>
-          <span className="text-sm text-muted-foreground">{essentialDone}/{totalEssential}</span>
-        </div>
-        <div className="w-full bg-secondary rounded-full h-2.5">
-          <div className="bg-primary rounded-full h-2.5 transition-all" style={{width:`${pct}%`}}></div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card p-5">
-          <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-            <span className="badge bg-primary text-white">Essential</span> Mandatory Investigations
-          </h3>
-          <div className="space-y-1">
-            {WORKUP_ITEMS.essential.map(item => (
-              <div key={item.id} className="checklist-item">
-                <input type="checkbox" checked={!!checked[item.id]} onChange={() => toggle(item.id)} />
-                <div>
-                  <span className={`text-sm ${checked[item.id] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{item.label}</span>
-                  <span className="ml-2 badge bg-secondary text-muted-foreground text-[10px]">{item.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="card p-5">
-          <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-            <span className="badge bg-amber-100 text-amber-700">Useful</span> In Certain Circumstances
-          </h3>
-          <div className="space-y-1">
-            {WORKUP_ITEMS.useful.map(item => (
-              <div key={item.id} className="checklist-item">
-                <input type="checkbox" checked={!!checked[item.id]} onChange={() => toggle(item.id)} />
-                <div>
-                  <span className={`text-sm ${checked[item.id] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{item.label}</span>
-                  <span className="ml-2 badge bg-secondary text-muted-foreground text-[10px]">{item.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-xs font-medium text-amber-800 flex items-center gap-1"><Icons.AlertTriangle/> Important Notes</p>
-            <ul className="text-xs text-amber-700 mt-1 space-y-1">
-              <li>• Frailty assessment for older adults</li>
-              <li>• CD138-positive selected sample recommended for optimized FISH yield</li>
-              <li>• 1q21 amplification = ≥4 copies by FISH; gain = 3 copies</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+  return e('div', null,
+    e('div', {className:'flex items-center justify-between mb-6'},
+      e('div', null,
+        e('h2', {className:'text-xl font-bold'}, 'MYEL-1: Initial Diagnostic Workup'),
+        e('p', {className:'text-sm text-slate-500'}, 'Complete workup checklist for suspected myeloma')
+      ),
+      e('div', {className:'card p-3 text-center'},
+        e('p', {className:'text-2xl font-bold text-blue-600'}, pct+'%'),
+        e('p', {className:'text-xs text-slate-500'}, 'Complete')
+      )
+    ),
+    e('div', {className:'card p-4 mb-4'},
+      e('div', {className:'flex items-center justify-between mb-2'},
+        e('span', {className:'text-sm font-medium'}, 'Essential Investigations'),
+        e('span', {className:'text-sm text-slate-500'}, done+'/'+total)
+      ),
+      e('div', {className:'w-full bg-slate-200 rounded-full h-2.5'},
+        e('div', {className:'bg-blue-600 rounded-full h-2.5 transition-all', style:{width:pct+'%'}})
+      )
+    ),
+    e('div', {className:'grid grid-cols-1 lg:grid-cols-2 gap-4'},
+      renderList(WORKUP_ESSENTIAL, 'Essential', 'bg-blue-600 text-white'),
+      e('div', null,
+        renderList(WORKUP_USEFUL, 'Useful in Certain Circumstances', 'bg-amber-100 text-amber-700'),
+        e('div', {className:'mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg'},
+          e('p', {className:'text-xs font-medium text-amber-800 flex items-center gap-1'}, e(IcoAlert,{size:14}), ' Important Notes'),
+          e('ul', {className:'text-xs text-amber-700 mt-1 space-y-1'},
+            e('li', null, '• Frailty assessment for older adults'),
+            e('li', null, '• CD138-positive selected sample recommended for optimized FISH yield'),
+            e('li', null, '• 1q21 amplification = ≥4 copies by FISH; gain = 3 copies')
+          )
+        )
+      )
+    )
   );
 }
 
-// ─── ALGORITHM PAGE ───
-function AlgorithmPage({ setPage }) {
-  const [step, setStep] = useState('workup');
+function AlgorithmPage(props) {
+  var _s = useState('workup'); var step = _s[0]; var setStep = _s[1];
+  var setPage = props.setPage;
 
-  const nodes = {
-    workup: { title:'MYEL-1: Initial Workup', desc:'Complete diagnostic evaluation', next:['solitary','smoldering','active','mgcs'] },
-    solitary: { title:'MYEL-2: Solitary Plasmacytoma', desc:'RT ± surgery → Follow q3-6mo', next:['response_sol'] },
-    smoldering: { title:'MYEL-3: Smoldering Myeloma', desc:'Risk-stratify → Observe or treat high-risk', next:['progression'] },
-    active: { title:'MYEL-4: Active (Symptomatic) MM', desc:'Initiate therapy + bone-targeting + assess HCT candidacy', next:['response_active'] },
-    mgcs: { title:'Related Disorders', desc:'MGRS, MIDD, MGNS, POEMS', next:[] },
-    response_sol: { title:'Solitary Follow-up', desc:'Progressive disease → Restage → MYEL-4', next:['active'] },
-    progression: { title:'Progression', desc:'Smoldering → Symptomatic myeloma', next:['active'] },
-    response_active: { title:'MYEL-5: Response After Primary Therapy', desc:'Auto HCT / Maintenance / Continuous therapy', next:['relapse'] },
-    relapse: { title:'MYEL-6: Relapse/Progressive Disease', desc:'Clinical trial / Previously treated regimens / CAR-T / Allogeneic HCT', next:[] },
+  var nodes = {
+    workup: {title:'MYEL-1: Initial Workup', desc:'Complete diagnostic evaluation', next:['solitary','smoldering','active']},
+    solitary: {title:'MYEL-2: Solitary Plasmacytoma', desc:'RT ± surgery → Follow q3-6mo → If progressive → restage', next:['active']},
+    smoldering: {title:'MYEL-3: Smoldering Myeloma', desc:'Low risk: observe q3-6mo | High risk: clinical trial (preferred) or Dara (cat 1) or Len (cat 2B)', next:['active']},
+    active: {title:'MYEL-4: Active (Symptomatic) MM', desc:'Initiate myeloma therapy + bone-targeting + assess HCT candidacy + supportive care', next:['response']},
+    response: {title:'MYEL-5: Response After Primary Therapy', desc:'Auto HCT (cat 1) → Maintenance (cat 1) | Continuous therapy | Tandem HCT for high-risk', next:['relapse']},
+    relapse: {title:'MYEL-6: Relapse/Progressive Disease', desc:'Clinical trial | Therapy for previously treated MM | CAR-T | Bispecific Abs | Allogeneic HCT | Palliative care', next:[]},
   };
 
-  const current = nodes[step];
+  var current = nodes[step];
+  var stepKeys = Object.keys(nodes);
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">Clinical Pathway Navigator</h2>
-      <p className="text-sm text-muted-foreground mb-6">Interactive NCCN algorithm flow — click nodes to navigate</p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main flow */}
-        <div className="lg:col-span-2">
-          <div className="card p-5">
-            <div className={`algorithm-node selected`}>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="badge bg-primary text-white text-xs">Current</span>
-                <h3 className="font-semibold text-foreground">{current.title}</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">{current.desc}</p>
-            </div>
-
-            {current.next.length > 0 && (
-              <>
-                <div className="algorithm-arrow"><Icons.ArrowDown/></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {current.next.map(n => (
-                    <div key={n} className="algorithm-node" onClick={() => setStep(n)}>
-                      <h4 className="font-medium text-sm text-foreground">{nodes[n].title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{nodes[n].desc}</p>
-                      <div className="flex items-center gap-1 mt-2 text-primary text-xs"><span>Navigate</span><Icons.ChevronRight/></div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Specific content per step */}
-          {step === 'active' && (
-            <div className="card p-5 mt-4">
-              <h3 className="font-semibold mb-3">MYEL-4: Primary Treatment Approach</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="font-medium text-sm text-blue-800">1. Initiate Myeloma Therapy</p>
-                  <p className="text-xs text-blue-700 mt-1">See MYEL-G for regimen selection</p>
-                </div>
-                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="font-medium text-sm text-blue-800">2. Bone-Targeting Treatment</p>
-                  <p className="text-xs text-blue-700 mt-1">Bisphosphonates or denosumab</p>
-                </div>
-                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="font-medium text-sm text-blue-800">3. Supportive Care</p>
-                  <p className="text-xs text-blue-700 mt-1">Symptom management (MYEL-I)</p>
-                </div>
-                <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                  <p className="font-medium text-sm text-emerald-800">4. Assess HCT Candidacy</p>
-                  <p className="text-xs text-emerald-700 mt-1">Refer to HCT center, harvest stem cells</p>
-                </div>
-              </div>
-              <button className="btn btn-primary mt-4 text-sm" onClick={() => setPage('treatment')}>View Treatment Options →</button>
-            </div>
-          )}
-
-          {step === 'relapse' && (
-            <div className="card p-5 mt-4">
-              <h3 className="font-semibold mb-3">MYEL-6: Treatment at Relapse/Progression</h3>
-              <div className="space-y-2">
-                <div className="p-3 bg-secondary rounded-lg flex items-center justify-between">
-                  <div><p className="font-medium text-sm">Consider CAR T-cell therapy referral</p><p className="text-xs text-muted-foreground">Cilta-cel (after 1 prior) or Ide-cel (after 2 prior)</p></div>
-                  <span className="badge bg-emerald-100 text-emerald-700">Category 1</span>
-                </div>
-                <div className="p-3 bg-secondary rounded-lg flex items-center justify-between">
-                  <div><p className="font-medium text-sm">Bispecific antibodies (≥4 prior lines)</p><p className="text-xs text-muted-foreground">Elranatamab, Linvoseltamab, Talquetamab, Teclistamab</p></div>
-                  <span className="badge bg-blue-100 text-blue-700">Preferred</span>
-                </div>
-                <div className="p-3 bg-secondary rounded-lg flex items-center justify-between">
-                  <div><p className="font-medium text-sm">Palliative care and supportive care</p><p className="text-xs text-muted-foreground">Discuss goals of care; consider hospice if refractory</p></div>
-                  <span className="badge bg-amber-100 text-amber-700">Always</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Sidebar nav */}
-        <div className="card p-4 h-fit">
-          <h3 className="font-semibold text-sm mb-3">Algorithm Steps</h3>
-          <div className="space-y-1">
-            {Object.entries(nodes).map(([key, node]) => (
-              <div key={key} className={`sidebar-item text-xs ${step === key ? 'active' : ''}`} onClick={() => setStep(key)}>
-                <span>{node.title}</span>
-              </div>
-            ))}
-          </div>
-          <button className="btn btn-outline w-full mt-4 text-xs" onClick={() => setStep('workup')}>Reset to Start</button>
-        </div>
-      </div>
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'Clinical Pathway Navigator'),
+    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Interactive NCCN algorithm — click nodes to navigate'),
+    e('div', {className:'grid grid-cols-1 lg:grid-cols-3 gap-6'},
+      e('div', {className:'lg:col-span-2'},
+        e('div', {className:'card p-5'},
+          e('div', {className:'algorithm-node selected'},
+            e('div', {className:'flex items-center gap-2 mb-2'},
+              e('span', {className:'badge bg-blue-600 text-white text-xs'}, 'Current'),
+              e('h3', {className:'font-semibold'}, current.title)
+            ),
+            e('p', {className:'text-sm text-slate-500'}, current.desc)
+          ),
+          current.next.length > 0 ? e(Fragment, null,
+            e('div', {className:'flex justify-center py-2 text-slate-400'}, e(IcoArrowDown)),
+            e('div', {className:'grid grid-cols-1 sm:grid-cols-'+Math.min(current.next.length,2)+' gap-3'},
+              current.next.map(function(n) {
+                return e('div', {key:n, className:'algorithm-node', onClick:function(){setStep(n)}},
+                  e('h4', {className:'font-medium text-sm'}, nodes[n].title),
+                  e('p', {className:'text-xs text-slate-500 mt-1'}, nodes[n].desc),
+                  e('div', {className:'flex items-center gap-1 mt-2 text-blue-600 text-xs'}, 'Navigate →')
+                );
+              })
+            )
+          ) : null
+        ),
+        step === 'active' ? e('div', {className:'card p-5 mt-4'},
+          e('h3', {className:'font-semibold mb-3'}, 'MYEL-4: Primary Treatment Approach'),
+          e('div', {className:'grid grid-cols-1 sm:grid-cols-2 gap-3'},
+            [{t:'1. Initiate Myeloma Therapy',s:'See MYEL-G for regimen selection',c:'bg-blue-50 border-blue-200 text-blue-800'},
+             {t:'2. Bone-Targeting Treatment',s:'Bisphosphonates or denosumab',c:'bg-blue-50 border-blue-200 text-blue-800'},
+             {t:'3. Supportive Care',s:'Symptom management (MYEL-I)',c:'bg-blue-50 border-blue-200 text-blue-800'},
+             {t:'4. Assess HCT Candidacy',s:'Refer to HCT center, harvest stem cells',c:'bg-emerald-50 border-emerald-200 text-emerald-800'}
+            ].map(function(b,i) {
+              return e('div', {key:i, className:'p-3 rounded-lg border '+b.c},
+                e('p', {className:'font-medium text-sm'}, b.t),
+                e('p', {className:'text-xs mt-1 opacity-80'}, b.s)
+              );
+            })
+          ),
+          e('button', {className:'btn bg-blue-600 text-white mt-4 text-sm', onClick:function(){setPage('treatment')}}, 'View Treatment Options →')
+        ) : null,
+        step === 'relapse' ? e('div', {className:'card p-5 mt-4'},
+          e('h3', {className:'font-semibold mb-3'}, 'MYEL-6: Treatment at Relapse/Progression'),
+          e('div', {className:'space-y-2'},
+            [{t:'Consider CAR T-cell therapy referral',s:'Cilta-cel (after 1 prior) or Ide-cel (after 2 prior)',b:'bg-emerald-100 text-emerald-700',bl:'Category 1'},
+             {t:'Bispecific antibodies (≥4 prior lines)',s:'Elranatamab, Linvoseltamab, Talquetamab, Teclistamab',b:'bg-blue-100 text-blue-700',bl:'Preferred'},
+             {t:'Palliative + supportive care',s:'Discuss goals; consider hospice if refractory',b:'bg-amber-100 text-amber-700',bl:'Always'}
+            ].map(function(r,i) {
+              return e('div', {key:i, className:'p-3 bg-slate-50 rounded-lg flex items-center justify-between'},
+                e('div', null,
+                  e('p', {className:'font-medium text-sm'}, r.t),
+                  e('p', {className:'text-xs text-slate-500'}, r.s)
+                ),
+                e('span', {className:'badge '+r.b}, r.bl)
+              );
+            })
+          )
+        ) : null
+      ),
+      e('div', {className:'card p-4 h-fit'},
+        e('h3', {className:'font-semibold text-sm mb-3'}, 'Algorithm Steps'),
+        e('div', {className:'space-y-1'},
+          stepKeys.map(function(key) {
+            return e('div', {key:key, className:'sidebar-item text-xs '+(step===key?'active':''), onClick:function(){setStep(key)}},
+              nodes[key].title
+            );
+          })
+        ),
+        e('button', {className:'btn bg-white border border-slate-200 text-slate-700 w-full mt-4 text-xs', onClick:function(){setStep('workup')}}, 'Reset to Start')
+      )
+    )
   );
 }
 
-// ─── STAGING PAGE ───
 function StagingPage() {
-  const [tab, setTab] = useState('iss');
+  var _s = useState('iss'); var tab = _s[0]; var setTab = _s[1];
+  var tabs = [{id:'iss',label:'ISS'},{id:'riss',label:'R-ISS'},{id:'r2iss',label:'R2-ISS'},{id:'hr',label:'High-Risk Factors'}];
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">MYEL-B: Disease Staging & Risk Stratification</h2>
-      <p className="text-sm text-muted-foreground mb-4">ISS, R-ISS, R2-ISS, and IMS-IMWG high-risk criteria</p>
+  var issData = [
+    {stage:'I',criteria:'β2M <3.5 mg/L AND albumin ≥3.5 g/dL',prog:'Median OS: 62 months',cl:'bg-emerald-500'},
+    {stage:'II',criteria:'Not stage I or III',prog:'Median OS: 44 months',cl:'bg-amber-500'},
+    {stage:'III',criteria:'β2M ≥5.5 mg/L',prog:'Median OS: 29 months',cl:'bg-rose-500'},
+  ];
+  var rissData = [
+    {stage:'I',criteria:'ISS I + standard-risk cytogenetics + LDH ≤ ULN',prog:'5-yr OS: ~82%',cl:'bg-emerald-500'},
+    {stage:'II',criteria:'Not R-ISS I or III',prog:'5-yr OS: ~62%',cl:'bg-amber-500'},
+    {stage:'III',criteria:'ISS III + [del(17p) or t(4;14) or t(14;16) or LDH > ULN]',prog:'5-yr OS: ~40%',cl:'bg-rose-500'},
+  ];
+  var r2Data = [
+    {g:'Low-risk',p:'0 points',f:'Not ISS II/III, LDH ≤ ULN, no del(17p)/t(4;14)/1q+',cl:'bg-emerald-500'},
+    {g:'Low-intermediate',p:'0.5–1 pts',f:'ISS II or LDH > ULN or del(17p)/t(4;14)/1q+',cl:'bg-blue-500'},
+    {g:'Intermediate-high',p:'1.5–2.5 pts',f:'Combination of high-risk features',cl:'bg-amber-500'},
+    {g:'High-risk',p:'3–5 pts',f:'Multiple high-risk features combined',cl:'bg-rose-500'},
+  ];
 
-      <div className="flex gap-1 border-b border-border mb-4 overflow-x-auto">
-        {[{id:'iss',label:'ISS'},{id:'riss',label:'R-ISS'},{id:'r2iss',label:'R2-ISS'},{id:'highrisk',label:'High-Risk Factors'}].map(t =>
-          <div key={t.id} className={`tab-trigger ${tab===t.id?'active':''}`} onClick={() => setTab(t.id)}>{t.label}</div>
-        )}
-      </div>
-
-      {tab === 'iss' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-4">International Staging System (ISS)</h3>
-          <div className="space-y-3">
-            {STAGING_DATA.iss.map((s,i) => (
-              <div key={i} className="p-4 rounded-lg border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <span className={`badge text-white ${i===0?'bg-emerald-500':i===1?'bg-amber-500':'bg-rose-500'} text-base px-3 py-1`}>Stage {s.stage}</span>
-                  <p className="text-sm">{s.criteria}</p>
-                </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">{s.prognosis}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {tab === 'riss' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-4">Revised International Staging System (R-ISS)</h3>
-          <div className="space-y-3">
-            {STAGING_DATA.riss.map((s,i) => (
-              <div key={i} className="p-4 rounded-lg border border-border">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className={`badge text-white ${i===0?'bg-emerald-500':i===1?'bg-amber-500':'bg-rose-500'} px-3 py-1`}>R-ISS {s.stage}</span>
-                  <span className="text-xs text-muted-foreground">{s.prognosis}</span>
-                </div>
-                <p className="text-sm text-foreground">{s.criteria}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {tab === 'r2iss' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-4">Second Revision of ISS (R2-ISS)</h3>
-          <p className="text-xs text-muted-foreground mb-4">Only validated for newly diagnosed MM. Each risk factor assigned numerical value based on OS impact.</p>
-          <div className="space-y-3">
-            {STAGING_DATA.r2iss.map((s,i) => (
-              <div key={i} className="p-4 rounded-lg border border-border">
-                <div className="flex items-center gap-3 mb-1">
-                  <span className={`badge text-white ${i===0?'bg-emerald-500':i===1?'bg-blue-500':i===2?'bg-amber-500':'bg-rose-500'} px-3 py-1`}>{s.group}</span>
-                  <span className="text-sm font-medium">{s.points}</span>
-                </div>
-                <p className="text-xs text-muted-foreground">{s.factors}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-800">
-            <p className="font-medium">Point Assignment:</p>
-            <p>ISS-III = 1.5 pts | ISS-II = 1 pt | del(17p) = 1 pt | t(4;14) = 1 pt | 1q+ = 0.5 pts | LDH {'>'} ULN = 1 pt</p>
-          </div>
-        </div>
-      )}
-
-      {tab === 'highrisk' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="card p-5">
-            <h3 className="font-semibold mb-3 flex items-center gap-2"><span className="badge bg-rose-100 text-rose-700">New Dx</span> Newly Diagnosed MM</h3>
-            <ul className="space-y-2 text-sm">
-              {['R-ISS III','Extramedullary disease','Circulating plasma cells','Del(1p32)','t(4;14), t(14;16), t(14;20)','Del(17p)/monosomy 17/TP53 mutation','1q21 gain/1q21 amplification','MYC translocation','High-risk gene expression profile','High proliferation rate'].map((f,i) =>
-                <li key={i} className="flex items-start gap-2"><span className="text-rose-500 mt-0.5">•</span>{f}</li>
-              )}
-            </ul>
-          </div>
-          <div className="card p-5">
-            <h3 className="font-semibold mb-3 flex items-center gap-2"><span className="badge bg-amber-100 text-amber-700">Relapsed</span> Relapsed MM</h3>
-            <ul className="space-y-2 text-sm">
-              {['Relapse within 2 years of transplant + maintenance','Relapse within 18 months of non-transplant treatment','Acquisition of 1q gain/amp and/or del(17p)/TP53','Extramedullary disease at relapse','Circulating plasma cells at relapse'].map((f,i) =>
-                <li key={i} className="flex items-start gap-2"><span className="text-amber-500 mt-0.5">•</span>{f}</li>
-              )}
-            </ul>
-          </div>
-          <div className="card p-5 md:col-span-2">
-            <h3 className="font-semibold mb-3">IMS-IMWG High-Risk Definition (2025)</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-                <p className="font-medium text-rose-800">Del(17p) {'>'} 20% of plasma cells and/or TP53 mutation</p>
-              </div>
-              <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-                <p className="font-medium text-rose-800">Translocations co-occurring with 1q+ and/or del(1p32): t(4;14), t(14;16), t(14;20)</p>
-              </div>
-              <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-                <p className="font-medium text-rose-800">Monoallelic del(1p32) + 1q+ or biallelic del(1p32)</p>
-              </div>
-              <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-                <p className="font-medium text-rose-800">High β2M ({'>'}5.5 mg/dL) with normal creatinine ({'<'}1.2 mg/dL)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-B: Disease Staging & Risk Stratification'),
+    e('p', {className:'text-sm text-slate-500 mb-4'}, 'ISS, R-ISS, R2-ISS, and IMS-IMWG high-risk criteria'),
+    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
+      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.label)})
+    ),
+    tab==='iss' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-4'},'International Staging System (ISS)'),
+      e('div',{className:'space-y-3'}, issData.map(function(s,i){
+        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2'},
+          e('div',{className:'flex items-center gap-3'},
+            e('span',{className:'badge text-white px-3 py-1 '+s.cl},'Stage '+s.stage),
+            e('p',{className:'text-sm'},s.criteria)
+          ),
+          e('span',{className:'text-xs text-slate-500 whitespace-nowrap'},s.prog)
+        );
+      }))
+    ) : null,
+    tab==='riss' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-4'},'Revised ISS (R-ISS)'),
+      e('div',{className:'space-y-3'}, rissData.map(function(s,i){
+        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200'},
+          e('div',{className:'flex items-center gap-3 mb-1'},
+            e('span',{className:'badge text-white px-3 py-1 '+s.cl},'R-ISS '+s.stage),
+            e('span',{className:'text-xs text-slate-500'},s.prog)
+          ),
+          e('p',{className:'text-sm'},s.criteria)
+        );
+      }))
+    ) : null,
+    tab==='r2iss' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-4'},'Second Revision of ISS (R2-ISS)'),
+      e('p',{className:'text-xs text-slate-500 mb-4'},'Only validated for newly diagnosed MM. Each risk factor assigned numerical value based on OS impact.'),
+      e('div',{className:'space-y-3'}, r2Data.map(function(s,i){
+        return e('div',{key:i,className:'p-4 rounded-lg border border-slate-200'},
+          e('div',{className:'flex items-center gap-3 mb-1'},
+            e('span',{className:'badge text-white px-3 py-1 '+s.cl},s.g),
+            e('span',{className:'text-sm font-medium'},s.p)
+          ),
+          e('p',{className:'text-xs text-slate-500'},s.f)
+        );
+      })),
+      e('div',{className:'mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-800'},
+        e('p',{className:'font-medium'},'Point Assignment:'),
+        e('p',null,'ISS-III = 1.5 pts | ISS-II = 1 pt | del(17p) = 1 pt | t(4;14) = 1 pt | 1q+ = 0.5 pts | LDH > ULN = 1 pt')
+      )
+    ) : null,
+    tab==='hr' ? e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
+      e('div',{className:'card p-5'},
+        e('h3',{className:'font-semibold mb-3 flex items-center gap-2'},e('span',{className:'badge bg-rose-100 text-rose-700'},'New Dx'),' Newly Diagnosed MM'),
+        e('ul',{className:'space-y-2 text-sm'},
+          ['R-ISS III','Extramedullary disease','Circulating plasma cells','Del(1p32)','t(4;14), t(14;16), t(14;20)','Del(17p)/monosomy 17/TP53 mutation','1q21 gain/1q21 amplification','MYC translocation','High-risk gene expression profile'].map(function(f,i){
+            return e('li',{key:i,className:'flex items-start gap-2'},e('span',{className:'text-rose-500'},'•'),f);
+          })
+        )
+      ),
+      e('div',{className:'card p-5'},
+        e('h3',{className:'font-semibold mb-3 flex items-center gap-2'},e('span',{className:'badge bg-amber-100 text-amber-700'},'Relapsed'),' Relapsed MM'),
+        e('ul',{className:'space-y-2 text-sm'},
+          ['Relapse within 2 years of transplant + maintenance','Relapse within 18 months of non-transplant tx','Acquisition of 1q gain/amp and/or del(17p)/TP53','Extramedullary disease at relapse','Circulating plasma cells at relapse'].map(function(f,i){
+            return e('li',{key:i,className:'flex items-start gap-2'},e('span',{className:'text-amber-500'},'•'),f);
+          })
+        )
+      ),
+      e('div',{className:'card p-5 md:col-span-2'},
+        e('h3',{className:'font-semibold mb-3'},'IMS-IMWG High-Risk Definition (2025)'),
+        e('div',{className:'grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm'},
+          ['Del(17p) >20% of plasma cells and/or TP53 mutation',
+           'Translocations co-occurring with 1q+ and/or del(1p32): t(4;14), t(14;16), t(14;20)',
+           'Monoallelic del(1p32) + 1q+ or biallelic del(1p32)',
+           'High β2M (>5.5 mg/dL) with normal creatinine (<1.2 mg/dL)'
+          ].map(function(f,i){
+            return e('div',{key:i,className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
+              e('p',{className:'font-medium text-rose-800'},f)
+            );
+          })
+        )
+      )
+    ) : null
   );
 }
 
-// ─── CALCULATOR PAGE ───
 function CalculatorPage() {
-  const [impedeChecked, setImpedeChecked] = useState({});
-  const toggleImpede = idx => setImpedeChecked(p => ({...p, [idx]: !p[idx]}));
+  var _s = useState({}); var checked = _s[0]; var setChecked = _s[1];
+  function toggle(i) { setChecked(function(p) { var n=Object.assign({},p); n[i]=!n[i]; return n; }); }
 
-  const impedeScore = IMPEDE_FACTORS.reduce((sum, f, i) => sum + (impedeChecked[i] ? f.points : 0), 0);
-  const impedeRisk = impedeScore >= 4 ? 'High Risk' : 'Low Risk';
-  const impedeColor = impedeScore >= 4 ? 'text-rose-600' : 'text-emerald-600';
+  var score = IMPEDE_FACTORS.reduce(function(sum,f,i){ return sum + (checked[i] ? f.points : 0); }, 0);
+  var isHigh = score >= 4;
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">MYEL-K: VTE Risk Calculator</h2>
-      <p className="text-sm text-muted-foreground mb-6">IMPEDE score for VTE risk stratification in myeloma</p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 card p-5">
-          <h3 className="font-semibold mb-4">IMPEDE Score Calculator</h3>
-          <div className="space-y-2">
-            {IMPEDE_FACTORS.map((f, i) => (
-              <label key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary cursor-pointer">
-                <input type="checkbox" checked={!!impedeChecked[i]} onChange={() => toggleImpede(i)} className="w-4 h-4" />
-                <span className="flex-1 text-sm">{f.factor}</span>
-                <span className={`badge ${f.points > 0 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'} text-xs`}>
-                  {f.points > 0 ? '+' : ''}{f.points}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="card p-5 text-center">
-            <p className="text-sm text-muted-foreground mb-1">IMPEDE Score</p>
-            <p className={`text-4xl font-bold ${impedeColor}`}>{impedeScore}</p>
-            <p className={`text-sm font-semibold mt-1 ${impedeColor}`}>{impedeRisk}</p>
-            <div className="mt-3 text-xs text-muted-foreground">
-              <p>≤3 points = Low risk</p>
-              <p>≥4 points = High risk</p>
-            </div>
-          </div>
-
-          <div className="card p-5">
-            <h4 className="font-semibold text-sm mb-3">VTE Prophylaxis Recommendation</h4>
-            {impedeScore >= 4 ? (
-              <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-                <p className="font-medium text-sm text-rose-800">Anticoagulation Required</p>
-                <ul className="text-xs text-rose-700 mt-2 space-y-1">
-                  <li>• LMWH (enoxaparin 40 mg daily)</li>
-                  <li>• OR Rivaroxaban 10 mg daily</li>
-                  <li>• OR Apixaban 2.5 mg BID</li>
-                  <li>• OR Fondaparinux 2.5 mg daily</li>
-                  <li>• OR Warfarin (INR 2.0-3.0)</li>
-                </ul>
-              </div>
-            ) : (
-              <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                <p className="font-medium text-sm text-emerald-800">Aspirin Prophylaxis</p>
-                <p className="text-xs text-emerald-700 mt-1">Aspirin 81–325 mg once daily</p>
-              </div>
-            )}
-            <p className="text-xs text-muted-foreground mt-3">Duration: Indefinite while on myeloma therapy; 3–6 months then aspirin</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-K: VTE Risk Calculator'),
+    e('p', {className:'text-sm text-slate-500 mb-6'}, 'IMPEDE score for VTE risk stratification in myeloma'),
+    e('div', {className:'grid grid-cols-1 lg:grid-cols-3 gap-6'},
+      e('div', {className:'lg:col-span-2 card p-5'},
+        e('h3', {className:'font-semibold mb-4'}, 'IMPEDE Score Calculator'),
+        e('div', {className:'space-y-2'},
+          IMPEDE_FACTORS.map(function(f,i) {
+            return e('label', {key:i, className:'flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer'},
+              e('input', {type:'checkbox', checked:!!checked[i], onChange:function(){toggle(i)}, className:'w-4 h-4', style:{accentColor:'#2563eb'}}),
+              e('span', {className:'flex-1 text-sm'}, f.factor),
+              e('span', {className:'badge text-xs '+(f.points>0?'bg-rose-100 text-rose-700':'bg-emerald-100 text-emerald-700')},
+                (f.points>0?'+':'')+f.points)
+            );
+          })
+        )
+      ),
+      e('div', {className:'space-y-4'},
+        e('div', {className:'card p-5 text-center'},
+          e('p', {className:'text-sm text-slate-500 mb-1'}, 'IMPEDE Score'),
+          e('p', {className:'text-5xl font-bold '+(isHigh?'text-rose-600':'text-emerald-600')}, score),
+          e('p', {className:'text-sm font-semibold mt-1 '+(isHigh?'text-rose-600':'text-emerald-600')}, isHigh?'High Risk':'Low Risk'),
+          e('div', {className:'mt-3 text-xs text-slate-500'},
+            e('p', null, '≤3 points = Low risk'),
+            e('p', null, '≥4 points = High risk')
+          )
+        ),
+        e('div', {className:'card p-5'},
+          e('h4', {className:'font-semibold text-sm mb-3'}, 'VTE Prophylaxis Recommendation'),
+          isHigh ?
+            e('div', {className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
+              e('p', {className:'font-medium text-sm text-rose-800'}, 'Anticoagulation Required'),
+              e('ul', {className:'text-xs text-rose-700 mt-2 space-y-1'},
+                e('li',null,'• LMWH (enoxaparin 40 mg daily)'),
+                e('li',null,'• OR Rivaroxaban 10 mg daily'),
+                e('li',null,'• OR Apixaban 2.5 mg BID'),
+                e('li',null,'• OR Fondaparinux 2.5 mg daily'),
+                e('li',null,'• OR Warfarin (INR 2.0-3.0)')
+              )
+            ) :
+            e('div', {className:'p-3 bg-emerald-50 rounded-lg border border-emerald-200'},
+              e('p', {className:'font-medium text-sm text-emerald-800'}, 'Aspirin Prophylaxis'),
+              e('p', {className:'text-xs text-emerald-700 mt-1'}, 'Aspirin 81–325 mg once daily')
+            ),
+          e('p', {className:'text-xs text-slate-500 mt-3'}, 'Duration: Indefinite while on myeloma therapy')
+        )
+      )
+    )
   );
 }
 
-// ─── TREATMENT PAGE ───
 function TreatmentPage() {
-  const [tab, setTab] = useState('hct');
+  var _s = useState('hct'); var tab = _s[0]; var setTab = _s[1];
+  var tabs = [{id:'hct',l:'HCT Candidates'},{id:'nonhct',l:'Non-HCT'},{id:'maint',l:'Maintenance'},{id:'rel',l:'Relapsed 1-3'},{id:'late',l:'≥3 Prior Lines'}];
 
-  const renderRegimens = (data, title) => (
-    <div className="space-y-4">
-      {Object.entries(data).map(([key, regimens]) => (
-        <div key={key}>
-          <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
-            <span className={`badge ${key==='preferred'?'bg-primary text-white':key==='other'?'bg-blue-100 text-blue-700':'bg-amber-100 text-amber-700'}`}>
-              {key === 'preferred' ? 'Preferred' : key === 'other' ? 'Other Recommended' : 'Useful in Certain Circumstances'}
-            </span>
-          </h4>
-          <div className="space-y-2">
-            {regimens.map((r, i) => (
-              <div key={i} className="p-3 border border-border rounded-lg hover:border-primary/30 transition-colors">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div>
-                    <p className="font-medium text-sm">{r.name || r.full}</p>
-                    {r.full && r.name !== r.full && <p className="text-xs text-muted-foreground">{r.full}</p>}
-                    {r.note && <p className="text-xs text-muted-foreground">{r.note}</p>}
-                    {r.context && <p className="text-xs text-muted-foreground">{r.context}</p>}
-                  </div>
-                  <span className="badge bg-secondary text-secondary-foreground text-xs">{r.cat}</span>
-                </div>
-                {r.evidence && (
-                  <div className="flex gap-1 mt-2">
-                    {Object.entries(r.evidence).map(([k,v]) => (
-                      <div key={k} className="flex flex-col items-center">
-                        <div className="w-8 h-6 bg-primary/10 rounded flex items-center justify-center">
-                          <span className="text-xs font-bold text-primary">{v}</span>
-                        </div>
-                        <span className="text-[9px] text-muted-foreground uppercase mt-0.5">{k}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  function Regimen(props) {
+    var r = props.r;
+    return e('div', {className:'p-3 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors'},
+      e('div', {className:'flex items-center justify-between flex-wrap gap-2'},
+        e('div', null,
+          e('p', {className:'font-medium text-sm'}, r.name),
+          r.full ? e('p',{className:'text-xs text-slate-500'},r.full) : null,
+          r.context ? e('p',{className:'text-xs text-blue-600 mt-0.5'},r.context) : null,
+          r.note ? e('p',{className:'text-xs text-slate-500'},r.note) : null
+        ),
+        e('span', {className:'badge bg-slate-100 text-slate-600 text-xs'}, r.cat)
+      )
+    );
+  }
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">MYEL-G: Myeloma Therapy</h2>
-      <p className="text-sm text-muted-foreground mb-4">Treatment regimens by setting and line of therapy</p>
+  function Section(props) {
+    return e('div', {className:'mb-4'},
+      e('h4', {className:'font-semibold text-sm mb-2 flex items-center gap-2'},
+        e('span', {className:'badge '+props.badgeCl}, props.label)
+      ),
+      e('div', {className:'space-y-2'}, props.items.map(function(r,i){ return e(Regimen,{key:i,r:r}); }))
+    );
+  }
 
-      <div className="flex gap-1 border-b border-border mb-4 overflow-x-auto">
-        {[
-          {id:'hct',label:'HCT Candidates'},
-          {id:'nonhct',label:'Non-HCT'},
-          {id:'maintenance',label:'Maintenance'},
-          {id:'relapsed',label:'Relapsed 1-3 Prior'},
-          {id:'lateline',label:'≥3 Prior Lines'},
-        ].map(t => <div key={t.id} className={`tab-trigger ${tab===t.id?'active':''}`} onClick={() => setTab(t.id)}>{t.label}</div>)}
-      </div>
+  var hctPref = [{name:'Dara-VRd',full:'Daratumumab/Lenalidomide/Bortezomib/Dexamethasone',cat:'Category 1'},
+    {name:'Isa-VRd',full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'}];
+  var hctOther = [{name:'VRd',full:'Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'},
+    {name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
+    {name:'Dara-KRd',full:'Daratumumab/Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
+    {name:'Isa-KRd',full:'Isatuximab-irfc/Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'}];
+  var hctUseful = [{name:'VCd',full:'Bortezomib/Cyclophosphamide/Dexamethasone',cat:'Cat 2A'},
+    {name:'VTD-PACE',full:'For aggressive MM',cat:'Cat 2A'}];
 
-      {tab === 'hct' && renderRegimens(TREATMENT_HCT, 'Primary Therapy for HCT Candidates')}
-      {tab === 'nonhct' && renderRegimens(TREATMENT_NON_HCT, 'Primary Therapy if HCT-Deferred or Not Indicated')}
-      {tab === 'maintenance' && renderRegimens(MAINTENANCE, 'Maintenance Therapy')}
+  var nonPref = [{name:'Dara-Rd',full:'Daratumumab/Lenalidomide/Dexamethasone',cat:'Category 1'},
+    {name:'Dara-VRd',full:'Daratumumab/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)',cat:'Category 1'},
+    {name:'Isa-VRd',full:'Isatuximab-irfc/Bortezomib/Lenalidomide/Dexamethasone (age <80, not frail)',cat:'Category 1'}];
+  var nonOther = [{name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',cat:'Cat 2A'},
+    {name:'VRd',full:'Bortezomib/Lenalidomide/Dexamethasone',cat:'Category 1'},
+    {name:'Isa-Rd',full:'Isatuximab-irfc/Lenalidomide/Dexamethasone',cat:'Cat 2A'}];
 
-      {tab === 'relapsed' && (
-        <div className="space-y-3">
-          <h4 className="font-semibold text-sm flex items-center gap-2">
-            <span className="badge bg-primary text-white">Preferred</span> Relapsed/Refractory After 1–3 Prior Therapies
-          </h4>
-          <p className="text-xs text-muted-foreground italic">Order does not indicate comparative efficacy. Selection based on refractoriness to prior agents.</p>
-          {RELAPSED_PREFERRED.map((r, i) => (
-            <div key={i} className="p-3 border border-border rounded-lg">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                  <p className="font-medium text-sm">{r.name}</p>
-                  <p className="text-xs text-muted-foreground">{r.full}</p>
-                  <p className="text-xs text-blue-600 mt-1">{r.context}</p>
-                </div>
-                <span className="badge bg-emerald-100 text-emerald-700 text-xs">{r.cat}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+  var maintPref = [{name:'Lenalidomide',cat:'Category 1',note:'Standard maintenance post-HCT and non-HCT'}];
+  var maintOther = [{name:'Carfilzomib/Lenalidomide',cat:'Cat 2A',note:'Two-drug for high-risk MM'},
+    {name:'Daratumumab/Lenalidomide',cat:'Cat 2A',note:'Two-drug for high-risk MM'}];
+  var maintUseful = [{name:'Bortezomib ± Lenalidomide',cat:'Cat 2A'},{name:'Daratumumab',cat:'Cat 2A'},{name:'Ixazomib',cat:'Cat 2B',note:'Oral option'}];
 
-      {tab === 'lateline' && (
-        <div className="space-y-3">
-          <h4 className="font-semibold text-sm">After ≥3 Prior Lines of Therapy</h4>
-          {LATE_LINE.map((r, i) => (
-            <div key={i} className="p-3 border border-border rounded-lg">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                  <p className="font-medium text-sm">{r.name}</p>
-                  <span className="badge bg-purple-100 text-purple-700 text-[10px] mr-2">{r.type}</span>
-                </div>
-                <span className="badge bg-secondary text-secondary-foreground text-xs">{r.cat}</span>
-              </div>
-            </div>
-          ))}
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 mt-4">
-            <p className="text-xs text-blue-800"><strong>Note:</strong> Patients can receive more than one BCMA-targeted therapy. Optimal sequencing unknown; immediate follow-on with second BCMA-directed therapy after relapse may have lower response rates. Prophylactic tocilizumab may be considered prior to first bispecific antibody dose to reduce CRS risk.</p>
-          </div>
-        </div>
-      )}
-    </div>
+  var relapsed = [
+    {name:'KRd',full:'Carfilzomib/Lenalidomide/Dexamethasone',context:'Anti-CD38/Bortezomib refractory',cat:'Category 1'},
+    {name:'Dara-Kd',full:'Daratumumab/Carfilzomib/Dexamethasone',context:'Bortezomib/Len refractory',cat:'Category 1'},
+    {name:'Isa-Kd',full:'Isatuximab-irfc/Carfilzomib/Dexamethasone',context:'Bortezomib/Len refractory',cat:'Category 1'},
+    {name:'PVd',full:'Pomalidomide/Bortezomib/Dexamethasone',context:'Anti-CD38/Len refractory',cat:'Category 1'},
+    {name:'Dara-Pd',full:'Daratumumab/Pomalidomide/Dexamethasone',context:'After 1 prior (Len + PI)',cat:'Category 1'},
+    {name:'Isa-Pd',full:'Isatuximab-irfc/Pomalidomide/Dexamethasone',context:'After 2 prior (Len + PI)',cat:'Category 1'},
+    {name:'Cilta-cel',full:'Ciltacabtagene autoleucel (CAR-T)',context:'After 1 prior (IMiD+PI), Len-refractory',cat:'Category 1'},
+    {name:'Ide-cel',full:'Idecabtagene vicleucel (CAR-T)',context:'After 2 prior (IMiD+anti-CD38+PI)',cat:'Category 1'},
+  ];
+
+  var lateLine = [
+    {name:'Ciltacabtagene autoleucel',cat:'Preferred',context:'CAR T-cell therapy'},
+    {name:'Idecabtagene vicleucel',cat:'Preferred',context:'CAR T-cell therapy'},
+    {name:'Elranatamab-bcmm',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
+    {name:'Linvoseltamab-gcpt',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
+    {name:'Talquetamab-tgvs',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (GPRC5D)'},
+    {name:'Teclistamab-cqyv',cat:'Preferred (≥4 prior)',context:'Bispecific antibody (BCMA)'},
+    {name:'Selinexor/Dexamethasone',cat:'Other (≥4, penta-ref)',context:'XPO1 inhibitor'},
+  ];
+
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-G: Myeloma Therapy'),
+    e('p', {className:'text-sm text-slate-500 mb-4'}, 'Treatment regimens by setting and line of therapy'),
+    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
+      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.l)})
+    ),
+    tab==='hct' ? e(Fragment,null,
+      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:hctPref}),
+      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:hctOther}),
+      e(Section,{label:'Useful in Certain Circumstances',badgeCl:'bg-amber-100 text-amber-700',items:hctUseful})
+    ) : null,
+    tab==='nonhct' ? e(Fragment,null,
+      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:nonPref}),
+      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:nonOther})
+    ) : null,
+    tab==='maint' ? e(Fragment,null,
+      e(Section,{label:'Preferred',badgeCl:'bg-blue-600 text-white',items:maintPref}),
+      e(Section,{label:'Other Recommended',badgeCl:'bg-blue-100 text-blue-700',items:maintOther}),
+      e(Section,{label:'Useful in Certain Circumstances',badgeCl:'bg-amber-100 text-amber-700',items:maintUseful})
+    ) : null,
+    tab==='rel' ? e('div', {className:'space-y-2'},
+      e('h4',{className:'font-semibold text-sm flex items-center gap-2'},e('span',{className:'badge bg-blue-600 text-white'},'Preferred'),' Relapsed/Refractory After 1–3 Prior'),
+      e('p',{className:'text-xs text-slate-500 italic mb-2'},'Order does not indicate comparative efficacy. Selection based on refractoriness.'),
+      relapsed.map(function(r,i){return e(Regimen,{key:i,r:r});})
+    ) : null,
+    tab==='late' ? e('div', {className:'space-y-2'},
+      e('h4',{className:'font-semibold text-sm mb-2'},'After ≥3 Prior Lines of Therapy'),
+      lateLine.map(function(r,i){return e(Regimen,{key:i,r:r});}),
+      e('div',{className:'p-3 bg-blue-50 rounded-lg border border-blue-200 mt-4'},
+        e('p',{className:'text-xs text-blue-800'},e('strong',null,'Note: '),'Patients can receive >1 BCMA-targeted therapy. Immediate follow-on with 2nd BCMA therapy may have lower response rates. Consider prophylactic tocilizumab before 1st BsAb dose to reduce CRS risk.')
+      )
+    ) : null
   );
 }
 
-// ─── RESPONSE PAGE ───
 function ResponsePage() {
-  const depthColors = { deepest:'bg-emerald-500', deep:'bg-emerald-400', good:'bg-blue-500', minimal:'bg-amber-500', none:'bg-gray-400', progression:'bg-rose-500' };
-
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">MYEL-E: Response Criteria (IMWG)</h2>
-      <p className="text-sm text-muted-foreground mb-6">Including MRD criteria — revised by International Myeloma Working Group</p>
-
-      <div className="space-y-3">
-        {RESPONSE_CRITERIA.map((r, i) => (
-          <div key={i} className="card p-4">
-            <div className="flex items-start gap-3">
-              <div className={`w-1.5 rounded-full self-stretch ${depthColors[r.depth]}`}></div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="font-semibold text-sm">{r.cat}</h4>
-                  {r.depth === 'deepest' && <span className="badge bg-emerald-100 text-emerald-700 text-[10px]">MRD Criteria</span>}
-                  {r.depth === 'progression' && <span className="badge bg-rose-100 text-rose-700 text-[10px]">Progression</span>}
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">{r.def}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="card p-4 mt-4">
-        <h4 className="font-semibold text-sm mb-2">Key Notes</h4>
-        <ul className="text-xs text-muted-foreground space-y-1">
-          <li>• All response categories require two consecutive assessments made any time before starting new therapy</li>
-          <li>• For MRD: no need for two consecutive assessments, but information on MRD after each treatment stage recommended</li>
-          <li>• MRD tests should be initiated only at time of suspected complete response</li>
-          <li>• Reference NGF method: eight-color two-tube approach (EuroFlow)</li>
-          <li>• Sustained MRD-negativity should annotate the method used (e.g., sustained flow MRD-negative)</li>
-        </ul>
-      </div>
-    </div>
+  var colors = {mrd:'bg-emerald-500',cr:'bg-emerald-400',pr:'bg-blue-500',mr:'bg-amber-500',sd:'bg-slate-400',pd:'bg-rose-500'};
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-E: Response Criteria (IMWG)'),
+    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Including MRD criteria — revised by International Myeloma Working Group'),
+    e('div', {className:'space-y-3'},
+      RESPONSE_CRITERIA.map(function(r,i) {
+        return e('div', {key:i, className:'card p-4'},
+          e('div', {className:'flex items-start gap-3'},
+            e('div', {className:'w-1.5 rounded-full self-stretch '+(colors[r.depth]||'bg-slate-300')}),
+            e('div', {className:'flex-1'},
+              e('div', {className:'flex items-center gap-2 flex-wrap'},
+                e('h4', {className:'font-semibold text-sm'}, r.cat),
+                r.depth==='mrd' ? e('span',{className:'badge bg-emerald-100 text-emerald-700 text-[10px]'},'MRD Criteria') : null,
+                r.depth==='pd' ? e('span',{className:'badge bg-rose-100 text-rose-700 text-[10px]'},'Progression') : null
+              ),
+              e('p', {className:'text-sm text-slate-500 mt-1'}, r.def)
+            )
+          )
+        );
+      })
+    ),
+    e('div', {className:'card p-4 mt-4'},
+      e('h4', {className:'font-semibold text-sm mb-2'}, 'Key Notes'),
+      e('ul', {className:'text-xs text-slate-500 space-y-1'},
+        e('li',null,'• All response categories require two consecutive assessments before new therapy'),
+        e('li',null,'• MRD tests initiated only at time of suspected complete response'),
+        e('li',null,'• Reference NGF method: eight-color two-tube approach (EuroFlow)'),
+        e('li',null,'• Sustained MRD-negativity should annotate the method used')
+      )
+    )
   );
 }
 
-// ─── SUPPORTIVE CARE PAGE ───
 function SupportivePage() {
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">MYEL-I/J/K/L: Supportive Care</h2>
-      <p className="text-sm text-muted-foreground mb-6">Comprehensive supportive management for multiple myeloma</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {SUPPORTIVE_CARE.map((s, i) => (
-          <div key={i} className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">{s.icon}</span>
-              <h3 className="font-semibold text-foreground">{s.title}</h3>
-            </div>
-            <ul className="space-y-2">
-              {s.items.map((item, j) => (
-                <li key={j} className="text-sm text-muted-foreground flex items-start gap-2">
-                  <span className="text-primary mt-1 flex-shrink-0"><Icons.Check/></span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Renal dosing table */}
-      <div className="card p-5 mt-4">
-        <h3 className="font-semibold mb-3">Lenalidomide Dosing in Renal Impairment</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead><tr className="border-b border-border">
-              <th className="text-left py-2 px-3 font-medium">Category</th>
-              <th className="text-left py-2 px-3 font-medium">Renal Function (CrCL)</th>
-              <th className="text-left py-2 px-3 font-medium">Dose</th>
-            </tr></thead>
-            <tbody>
-              <tr className="border-b border-border"><td className="py-2 px-3">Moderate</td><td className="py-2 px-3">≥30 to {'<'}60 mL/min</td><td className="py-2 px-3 font-medium">10 mg q24h</td></tr>
-              <tr className="border-b border-border"><td className="py-2 px-3">Severe</td><td className="py-2 px-3">{'<'}30 mL/min (no dialysis)</td><td className="py-2 px-3 font-medium">15 mg q48h</td></tr>
-              <tr><td className="py-2 px-3">ESRD</td><td className="py-2 px-3">{'<'}30 mL/min (on dialysis)</td><td className="py-2 px-3 font-medium">5 mg daily; post-dialysis on dialysis days</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'MYEL-I/J/K/L: Supportive Care'),
+    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Comprehensive supportive management for multiple myeloma'),
+    e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'},
+      SUPPORTIVE.map(function(s,i) {
+        return e('div', {key:i, className:'card p-5'},
+          e('div', {className:'flex items-center gap-2 mb-3'},
+            e('span', {className:'text-2xl'}, s.emoji),
+            e('h3', {className:'font-semibold'}, s.title)
+          ),
+          e('ul', {className:'space-y-2'},
+            s.items.map(function(item,j) {
+              return e('li', {key:j, className:'text-sm text-slate-500 flex items-start gap-2'},
+                e('span', {className:'text-blue-600 mt-0.5 flex-shrink-0'}, e(IcoCheck,{size:14})),
+                item
+              );
+            })
+          )
+        );
+      })
+    ),
+    e('div', {className:'card p-5 mt-4'},
+      e('h3', {className:'font-semibold mb-3'}, 'Lenalidomide Dosing in Renal Impairment'),
+      e('div', {className:'overflow-x-auto'},
+        e('table', {className:'w-full text-sm'},
+          e('thead', null, e('tr', {className:'border-b border-slate-200'},
+            e('th',{className:'text-left py-2 px-3 font-medium'},'Category'),
+            e('th',{className:'text-left py-2 px-3 font-medium'},'Renal Function (CrCL)'),
+            e('th',{className:'text-left py-2 px-3 font-medium'},'Dose')
+          )),
+          e('tbody', null,
+            e('tr',{className:'border-b border-slate-200'},e('td',{className:'py-2 px-3'},'Moderate'),e('td',{className:'py-2 px-3'},'≥30 to <60 mL/min'),e('td',{className:'py-2 px-3 font-medium'},'10 mg q24h')),
+            e('tr',{className:'border-b border-slate-200'},e('td',{className:'py-2 px-3'},'Severe'),e('td',{className:'py-2 px-3'},'<30 mL/min (no dialysis)'),e('td',{className:'py-2 px-3 font-medium'},'15 mg q48h')),
+            e('tr',null,e('td',{className:'py-2 px-3'},'ESRD'),e('td',{className:'py-2 px-3'},'<30 mL/min (on dialysis)'),e('td',{className:'py-2 px-3 font-medium'},'5 mg daily; post-dialysis'))
+          )
+        )
+      )
+    )
   );
 }
 
-// ─── EVIDENCE BLOCKS PAGE ───
 function EvidencePage() {
-  const measures = [
-    { key:'E', label:'Efficacy', color:'bg-blue-500', desc:'Impact on survival' },
-    { key:'S', label:'Safety', color:'bg-emerald-500', desc:'Toxicity profile' },
-    { key:'Q', label:'Quality', color:'bg-purple-500', desc:'Evidence quality' },
-    { key:'C', label:'Consistency', color:'bg-amber-500', desc:'Consistency of results' },
-    { key:'A', label:'Affordability', color:'bg-rose-500', desc:'Drug cost + supportive care' },
+  var regimens = [
+    {name:'Dara-VRd (HCT)', e:4,s:3,q:4,c:4,a:1},
+    {name:'Isa-VRd (HCT)', e:4,s:3,q:4,c:4,a:1},
+    {name:'VRd', e:4,s:3,q:4,c:4,a:2},
+    {name:'Dara-Rd (non-HCT)', e:4,s:4,q:4,c:4,a:1},
+    {name:'KRd', e:4,s:3,q:3,c:3,a:1},
+    {name:'Lenalidomide (maint.)', e:4,s:4,q:5,c:4,a:2},
+    {name:'Cilta-cel (CAR-T)', e:5,s:2,q:4,c:4,a:1},
+    {name:'Ide-cel (CAR-T)', e:4,s:2,q:4,c:3,a:1},
+    {name:'Teclistamab (BsAb)', e:4,s:2,q:3,c:3,a:1},
   ];
 
-  const regimens = [
-    { name:'Dara-VRd (HCT)', e:4, s:3, q:4, c:4, a:1 },
-    { name:'Isa-VRd (HCT)', e:4, s:3, q:4, c:4, a:1 },
-    { name:'VRd', e:4, s:3, q:4, c:4, a:2 },
-    { name:'Dara-Rd (non-HCT)', e:4, s:4, q:4, c:4, a:1 },
-    { name:'KRd', e:4, s:3, q:3, c:3, a:1 },
-    { name:'Lenalidomide (maint.)', e:4, s:4, q:5, c:4, a:2 },
-    { name:'Cilta-cel (CAR-T)', e:5, s:2, q:4, c:4, a:1 },
-    { name:'Ide-cel (CAR-T)', e:4, s:2, q:4, c:3, a:1 },
-    { name:'Teclistamab (BsAb)', e:4, s:2, q:3, c:3, a:1 },
-  ];
+  var blockColors = {E:'bg-blue-500',S:'bg-emerald-500',Q:'bg-purple-500',C:'bg-amber-500',A:'bg-rose-500'};
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">NCCN Evidence Blocks™</h2>
-      <p className="text-sm text-muted-foreground mb-6">Visual ratings of key treatment attributes on a 1–5 scale</p>
+  function EvidenceBlock(props) {
+    var r = props.r;
+    return e('div', {className:'p-3 border border-slate-200 rounded-lg'},
+      e('p', {className:'font-medium text-sm mb-2'}, r.name),
+      e('div', {className:'flex gap-3'},
+        [{k:'E',v:r.e},{k:'S',v:r.s},{k:'Q',v:r.q},{k:'C',v:r.c},{k:'A',v:r.a}].map(function(b) {
+          return e('div', {key:b.k, className:'flex flex-col items-center gap-0.5'},
+            e('div', {className:'flex flex-col-reverse gap-0.5'},
+              [1,2,3,4,5].map(function(n) {
+                return e('div', {key:n, className:'w-5 h-3 rounded-sm '+(n<=b.v ? blockColors[b.k] : 'bg-slate-100')});
+              })
+            ),
+            e('span', {className:'text-[9px] font-bold text-slate-500'}, b.k)
+          );
+        })
+      )
+    );
+  }
 
-      {/* Legend */}
-      <div className="card p-4 mb-4">
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {measures.map(m => (
-            <div key={m.key} className="flex items-center gap-2">
-              <div className={`w-4 h-4 rounded ${m.color}`}></div>
-              <div><p className="text-xs font-semibold">{m.key} = {m.label}</p><p className="text-[10px] text-muted-foreground">{m.desc}</p></div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Regimen blocks */}
-      <div className="card p-5">
-        <h3 className="font-semibold mb-4">Selected Regimen Ratings</h3>
-        <div className="space-y-4">
-          {regimens.map((r, i) => (
-            <div key={i} className="p-3 border border-border rounded-lg">
-              <p className="font-medium text-sm mb-2">{r.name}</p>
-              <div className="flex gap-2">
-                {[{k:'E',v:r.e,c:'bg-blue'},{k:'S',v:r.s,c:'bg-emerald'},{k:'Q',v:r.q,c:'bg-purple'},{k:'C',v:r.c,c:'bg-amber'},{k:'A',v:r.a,c:'bg-rose'}].map(b => (
-                  <div key={b.k} className="flex flex-col items-center gap-0.5" title={`${b.k}: ${b.v}/5`}>
-                    <div className="flex flex-col-reverse gap-0.5">
-                      {[1,2,3,4,5].map(n => (
-                        <div key={n} className={`w-5 h-3 rounded-sm ${n <= b.v ? b.c + '-500' : 'bg-gray-100'}`}></div>
-                      ))}
-                    </div>
-                    <span className="text-[9px] font-semibold text-muted-foreground">{b.k}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Scale definitions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div className="card p-4">
-          <h4 className="font-semibold text-sm mb-2">Efficacy Scale</h4>
-          <div className="text-xs space-y-1 text-muted-foreground">
-            <p><strong>5:</strong> Highly effective — cure likely, long-term survival advantage</p>
-            <p><strong>4:</strong> Very effective — cure unlikely but sometimes long-term survival</p>
-            <p><strong>3:</strong> Moderately effective — modest survival impact, disease control</p>
-            <p><strong>2:</strong> Minimally effective — unknown survival impact</p>
-            <p><strong>1:</strong> Palliative — symptomatic benefit only</p>
-          </div>
-        </div>
-        <div className="card p-4">
-          <h4 className="font-semibold text-sm mb-2">Safety Scale</h4>
-          <div className="text-xs space-y-1 text-muted-foreground">
-            <p><strong>5:</strong> Usually no meaningful toxicity</p>
-            <p><strong>4:</strong> Occasionally toxic — rare significant toxicities</p>
-            <p><strong>3:</strong> Mildly toxic — interferes with ADLs</p>
-            <p><strong>2:</strong> Moderately toxic — significant but rarely fatal</p>
-            <p><strong>1:</strong> Highly toxic — life-threatening toxicity common</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'NCCN Evidence Blocks™'),
+    e('p', {className:'text-sm text-slate-500 mb-6'}, 'Visual ratings of key treatment attributes on a 1–5 scale'),
+    e('div', {className:'card p-4 mb-4'},
+      e('div', {className:'grid grid-cols-2 sm:grid-cols-5 gap-3'},
+        [{k:'E',l:'Efficacy',c:'bg-blue-500',d:'Impact on survival'},
+         {k:'S',l:'Safety',c:'bg-emerald-500',d:'Toxicity profile'},
+         {k:'Q',l:'Quality',c:'bg-purple-500',d:'Evidence quality'},
+         {k:'C',l:'Consistency',c:'bg-amber-500',d:'Results consistency'},
+         {k:'A',l:'Affordability',c:'bg-rose-500',d:'Drug cost + supportive'}
+        ].map(function(m) {
+          return e('div', {key:m.k, className:'flex items-center gap-2'},
+            e('div', {className:'w-4 h-4 rounded '+m.c}),
+            e('div', null,
+              e('p', {className:'text-xs font-semibold'}, m.k+' = '+m.l),
+              e('p', {className:'text-[10px] text-slate-500'}, m.d)
+            )
+          );
+        })
+      )
+    ),
+    e('div', {className:'card p-5'},
+      e('h3', {className:'font-semibold mb-4'}, 'Selected Regimen Ratings'),
+      e('div', {className:'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'},
+        regimens.map(function(r,i){ return e(EvidenceBlock, {key:i, r:r}); })
+      )
+    ),
+    e('div', {className:'grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'},
+      e('div', {className:'card p-4'},
+        e('h4', {className:'font-semibold text-sm mb-2'}, 'Efficacy Scale'),
+        e('div', {className:'text-xs space-y-1 text-slate-500'},
+          e('p',null,e('strong',null,'5: '),'Highly effective — cure likely'),
+          e('p',null,e('strong',null,'4: '),'Very effective — cure unlikely but long-term benefit'),
+          e('p',null,e('strong',null,'3: '),'Moderately effective — disease control'),
+          e('p',null,e('strong',null,'2: '),'Minimally effective'),
+          e('p',null,e('strong',null,'1: '),'Palliative only')
+        )
+      ),
+      e('div', {className:'card p-4'},
+        e('h4', {className:'font-semibold text-sm mb-2'}, 'Safety Scale'),
+        e('div', {className:'text-xs space-y-1 text-slate-500'},
+          e('p',null,e('strong',null,'5: '),'Usually no meaningful toxicity'),
+          e('p',null,e('strong',null,'4: '),'Occasionally toxic'),
+          e('p',null,e('strong',null,'3: '),'Mildly toxic — interferes with ADLs'),
+          e('p',null,e('strong',null,'2: '),'Moderately toxic — significant but rarely fatal'),
+          e('p',null,e('strong',null,'1: '),'Highly toxic — life-threatening')
+        )
+      )
+    )
   );
 }
 
-// ─── RELATED DISORDERS PAGE ───
 function RelatedPage() {
-  const [tab, setTab] = useState('mgrs');
+  var _s = useState('mgrs'); var tab = _s[0]; var setTab = _s[1];
+  var tabs = [{id:'mgrs',l:'MGRS'},{id:'midd',l:'MIDD'},{id:'mgns',l:'MGNS'},{id:'poems',l:'POEMS'}];
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-foreground mb-1">Related Plasma Cell Disorders</h2>
-      <p className="text-sm text-muted-foreground mb-4">MGRS, MIDD, MGNS, and POEMS syndrome</p>
-
-      <div className="flex gap-1 border-b border-border mb-4 overflow-x-auto">
-        {[{id:'mgrs',label:'MGRS'},{id:'midd',label:'MIDD'},{id:'mgns',label:'MGNS'},{id:'poems',label:'POEMS'}].map(t =>
-          <div key={t.id} className={`tab-trigger ${tab===t.id?'active':''}`} onClick={() => setTab(t.id)}>{t.label}</div>
-        )}
-      </div>
-
-      {tab === 'mgrs' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-3">Monoclonal Gammopathy of Renal Significance (MGRS)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-medium text-sm mb-2">Initial Workup</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Kidney function: established GFR (eGFR)</li>
-                <li>• Urinalysis</li>
-                <li>• 24-h urine for total protein, UPEP, and UIFE</li>
-                <li>• Metabolic panel</li>
-              </ul>
-              <h4 className="font-medium text-sm mt-4 mb-2">Renal Biopsy Recommended if:</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• AKI stage 3</li>
-                <li>• eGFR {'<'}60 mL/min AND {'>'}2 mL/min/year decline</li>
-                <li>• Proteinuria ({'>'}1 g/day)</li>
-                <li>• Evidence of light chain proteinuria</li>
-                <li>• Fanconi syndrome</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium text-sm mb-2">Confirm Diagnosis</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Light microscopy</li>
-                <li>• Immunofluorescence staining (IgG subclasses, IgA, IgM, κ, λ)</li>
-                <li>• Electron microscopy</li>
-                <li>• M-protein in serum/urine must match renal biopsy</li>
-              </ul>
-              <h4 className="font-medium text-sm mt-4 mb-2">Treatment by Clone Type</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• IgG/IgA-associated → MM response criteria (MYEL-E)</li>
-                <li>• IgM-associated → WM response criteria</li>
-                <li>• FLC-associated → Amyloidosis response criteria</li>
-                <li>• Plasma cell-related → MM algorithm (MYEL-4)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {tab === 'midd' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-3">Monoclonal Immunoglobulin Deposition Disease (MIDD)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            {[
-              { type:'LCDD', pct:'~80%', desc:'Light chain deposition (80-90% Kappa LC)' },
-              { type:'HCDD', pct:'~10%', desc:'Heavy chain deposition disease' },
-              { type:'LHCDD', pct:'~10%', desc:'Light and heavy chain deposition' },
-            ].map((t, i) => (
-              <div key={i} className="p-3 bg-secondary rounded-lg text-center">
-                <p className="font-bold text-lg text-primary">{t.type}</p>
-                <p className="text-sm font-medium">{t.pct}</p>
-                <p className="text-xs text-muted-foreground">{t.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
-            <p><strong>Organ involvement:</strong> Kidney (~96%), Heart (~21%), Liver (~19%), Peripheral nervous system (~8%)</p>
-            <p className="mt-1"><strong>Transplant:</strong> Autologous HCT consolidation preferable in eligible patients. Consider solid organ transplant for affected organs.</p>
-          </div>
-        </div>
-      )}
-
-      {tab === 'mgns' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-3">Monoclonal Gammopathy of Neurological Significance (MGNS)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <h4 className="font-medium text-emerald-800 mb-2">High Suspicion → Treat</h4>
-              <ul className="text-sm text-emerald-700 space-y-1">
-                <li>• Sensory predominant, length dependent</li>
-                <li>• Slow progression (years)</li>
-                <li>• Bilateral and symmetrical</li>
-                <li>• Antibodies present</li>
-                <li>• Demyelination by EMG/NCS AND affecting ADLs</li>
-              </ul>
-              <p className="text-sm font-medium text-emerald-800 mt-2">→ See WM/LPL guidelines</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <h4 className="font-medium text-gray-800 mb-2">Low Suspicion → Observe</h4>
-              <ul className="text-sm text-gray-700 space-y-1">
-                <li>• Motor/pain predominant</li>
-                <li>• Rapid progression (weeks-months)</li>
-                <li>• Unilateral/asymmetrical</li>
-                <li>• No antibodies</li>
-                <li>• No demyelination OR not affecting ADLs</li>
-              </ul>
-              <p className="text-sm font-medium text-gray-800 mt-2">→ Observation</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {tab === 'poems' && (
-        <div className="card p-5">
-          <h3 className="font-semibold mb-3">POEMS Syndrome — Diagnostic Criteria</h3>
-          <div className="space-y-3">
-            <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
-              <h4 className="font-medium text-rose-800 mb-1">Mandatory Major Criteria (BOTH required)</h4>
-              <p className="text-sm text-rose-700">1. Polyneuropathy (typical demyelinating)</p>
-              <p className="text-sm text-rose-700">2. Monoclonal plasma cell-proliferative disorder (almost always λ)</p>
-            </div>
-            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <h4 className="font-medium text-amber-800 mb-1">Other Major Criteria (ONE required)</h4>
-              <p className="text-sm text-amber-700">3. Castleman disease | 4. Sclerotic bone lesions | 5. VEGF elevation</p>
-            </div>
-            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-800 mb-1">Minor Criteria (ONE required)</h4>
-              <p className="text-sm text-blue-700">6. Organomegaly | 7. Extravascular volume overload | 8. Endocrinopathy | 9. Skin changes | 10. Papilledema | 11. Thrombocytosis/polycythemia</p>
-            </div>
-          </div>
-          <div className="mt-4 p-3 bg-secondary rounded-lg">
-            <p className="text-sm font-medium">Treatment:</p>
-            <ul className="text-sm text-muted-foreground space-y-1 mt-1">
-              <li>• RT alone for isolated bone lesion ({'<'}3 sites) without clonal BMPC</li>
-              <li>• Autologous HCT in eligible patients</li>
-              <li>• Induction: Len/Dex ± Dara, Bortezomib/Dex, CyDex, Pom/Dex</li>
-              <li>• Non-HCT candidates: above + Melphalan/Dex</li>
-            </ul>
-          </div>
-        </div>
-      )}
-    </div>
+  return e('div', null,
+    e('h2', {className:'text-xl font-bold mb-1'}, 'Related Plasma Cell Disorders'),
+    e('p', {className:'text-sm text-slate-500 mb-4'}, 'MGRS, MIDD, MGNS, and POEMS syndrome'),
+    e('div', {className:'flex gap-1 border-b border-slate-200 mb-4 overflow-x-auto'},
+      tabs.map(function(t){return e('div',{key:t.id,className:'tab-trigger '+(tab===t.id?'active':''),onClick:function(){setTab(t.id)}},t.l)})
+    ),
+    tab==='mgrs' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-3'},'Monoclonal Gammopathy of Renal Significance (MGRS)'),
+      e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
+        e('div',null,
+          e('h4',{className:'font-medium text-sm mb-2'},'Initial Workup'),
+          e('ul',{className:'text-sm text-slate-500 space-y-1'},['Kidney function: eGFR','Urinalysis','24-h urine for total protein, UPEP, UIFE','Metabolic panel'].map(function(i,j){return e('li',{key:j},'• '+i)})),
+          e('h4',{className:'font-medium text-sm mt-4 mb-2'},'Renal Biopsy If:'),
+          e('ul',{className:'text-sm text-slate-500 space-y-1'},['AKI stage 3','eGFR <60 + >2 mL/min/yr decline','Proteinuria (>1 g/day)','Light chain proteinuria','Fanconi syndrome'].map(function(i,j){return e('li',{key:j},'• '+i)}))
+        ),
+        e('div',null,
+          e('h4',{className:'font-medium text-sm mb-2'},'Confirm Diagnosis'),
+          e('ul',{className:'text-sm text-slate-500 space-y-1'},['Light microscopy','IF staining (IgG subclasses, IgA, IgM, κ, λ)','Electron microscopy','M-protein must match renal biopsy'].map(function(i,j){return e('li',{key:j},'• '+i)})),
+          e('h4',{className:'font-medium text-sm mt-4 mb-2'},'Treatment by Clone Type'),
+          e('ul',{className:'text-sm text-slate-500 space-y-1'},['IgG/IgA → MM response criteria','IgM → WM criteria','FLC → Amyloidosis criteria','Plasma cell → MM algorithm (MYEL-4)'].map(function(i,j){return e('li',{key:j},'• '+i)}))
+        )
+      )
+    ) : null,
+    tab==='midd' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-3'},'Monoclonal Immunoglobulin Deposition Disease (MIDD)'),
+      e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'},
+        [{t:'LCDD',p:'~80%',d:'Light chain (80-90% Kappa)'},{t:'HCDD',p:'~10%',d:'Heavy chain'},{t:'LHCDD',p:'~10%',d:'Light and heavy chain'}].map(function(x,i){
+          return e('div',{key:i,className:'p-3 bg-slate-50 rounded-lg text-center'},
+            e('p',{className:'font-bold text-lg text-blue-600'},x.t),
+            e('p',{className:'text-sm font-medium'},x.p),
+            e('p',{className:'text-xs text-slate-500'},x.d)
+          );
+        })
+      ),
+      e('div',{className:'p-3 bg-blue-50 rounded-lg text-sm text-blue-800'},
+        e('p',null,e('strong',null,'Organ involvement: '),'Kidney (~96%), Heart (~21%), Liver (~19%), PNS (~8%)'),
+        e('p',{className:'mt-1'},e('strong',null,'Transplant: '),'Auto HCT preferable in eligible patients. Consider solid organ transplant.')
+      )
+    ) : null,
+    tab==='mgns' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-3'},'Monoclonal Gammopathy of Neurological Significance (MGNS)'),
+      e('div',{className:'grid grid-cols-1 md:grid-cols-2 gap-4'},
+        e('div',{className:'p-4 bg-emerald-50 rounded-lg border border-emerald-200'},
+          e('h4',{className:'font-medium text-emerald-800 mb-2'},'High Suspicion → Treat'),
+          e('ul',{className:'text-sm text-emerald-700 space-y-1'},['Sensory predominant, length dependent','Slow progression (years)','Bilateral and symmetrical','Antibodies present','Demyelination by EMG/NCS AND affecting ADLs'].map(function(f,i){return e('li',{key:i},'• '+f)})),
+          e('p',{className:'font-medium text-emerald-800 mt-2'},'→ See WM/LPL guidelines')
+        ),
+        e('div',{className:'p-4 bg-slate-50 rounded-lg border border-slate-200'},
+          e('h4',{className:'font-medium text-slate-800 mb-2'},'Low Suspicion → Observe'),
+          e('ul',{className:'text-sm text-slate-600 space-y-1'},['Motor/pain predominant','Rapid progression (weeks-months)','Unilateral/asymmetrical','No antibodies','No demyelination OR not affecting ADLs'].map(function(f,i){return e('li',{key:i},'• '+f)})),
+          e('p',{className:'font-medium text-slate-800 mt-2'},'→ Observation')
+        )
+      )
+    ) : null,
+    tab==='poems' ? e('div',{className:'card p-5'},
+      e('h3',{className:'font-semibold mb-3'},'POEMS Syndrome — Diagnostic Criteria'),
+      e('div',{className:'space-y-3'},
+        e('div',{className:'p-3 bg-rose-50 rounded-lg border border-rose-200'},
+          e('h4',{className:'font-medium text-rose-800 mb-1'},'Mandatory Major Criteria (BOTH required)'),
+          e('p',{className:'text-sm text-rose-700'},'1. Polyneuropathy (typical demyelinating)'),
+          e('p',{className:'text-sm text-rose-700'},'2. Monoclonal plasma cell disorder (almost always λ)')
+        ),
+        e('div',{className:'p-3 bg-amber-50 rounded-lg border border-amber-200'},
+          e('h4',{className:'font-medium text-amber-800 mb-1'},'Other Major Criteria (ONE required)'),
+          e('p',{className:'text-sm text-amber-700'},'3. Castleman disease | 4. Sclerotic bone lesions | 5. VEGF elevation')
+        ),
+        e('div',{className:'p-3 bg-blue-50 rounded-lg border border-blue-200'},
+          e('h4',{className:'font-medium text-blue-800 mb-1'},'Minor Criteria (ONE required)'),
+          e('p',{className:'text-sm text-blue-700'},'6. Organomegaly | 7. Volume overload | 8. Endocrinopathy | 9. Skin changes | 10. Papilledema | 11. Thrombocytosis')
+        )
+      ),
+      e('div',{className:'mt-4 p-3 bg-slate-50 rounded-lg'},
+        e('p',{className:'text-sm font-medium'},'Treatment:'),
+        e('ul',{className:'text-sm text-slate-500 space-y-1 mt-1'},
+          e('li',null,'• RT alone for isolated bone lesion (<3 sites) without clonal BMPC'),
+          e('li',null,'• Autologous HCT in eligible patients'),
+          e('li',null,'• Induction: Len/Dex ± Dara, Bortezomib/Dex, CyDex, Pom/Dex'),
+          e('li',null,'• Non-HCT: above + Melphalan/Dex')
+        )
+      )
+    ) : null
   );
 }
 
-// ─── RENDER ───
-ReactDOM.render(<App/>, document.getElementById('root'));
+// ─── APP ───
+function App() {
+  var _s = useState('dashboard'); var page = _s[0]; var setPage = _s[1];
+  var _m = useState(false); var mobileOpen = _m[0]; var setMobileOpen = _m[1];
+
+  var navItems = [
+    {id:'dashboard',label:'Dashboard',ico:IcoHome},
+    {id:'workup',label:'Diagnostic Workup',ico:IcoMicroscope},
+    {id:'algorithm',label:'Clinical Pathway',ico:IcoActivity},
+    {id:'staging',label:'Staging & Risk',ico:IcoBarChart},
+    {id:'calculator',label:'Risk Calculators',ico:IcoCalculator},
+    {id:'treatment',label:'Treatment',ico:IcoPill},
+    {id:'response',label:'Response Criteria',ico:IcoClipboard},
+    {id:'supportive',label:'Supportive Care',ico:IcoHeart},
+    {id:'evidence',label:'Evidence Blocks',ico:IcoShield},
+    {id:'related',label:'Related Disorders',ico:IcoBrain},
+  ];
+
+  function renderPage() {
+    switch(page) {
+      case 'dashboard': return e(Dashboard, {setPage:setPage});
+      case 'workup': return e(WorkupPage);
+      case 'algorithm': return e(AlgorithmPage, {setPage:setPage});
+      case 'staging': return e(StagingPage);
+      case 'calculator': return e(CalculatorPage);
+      case 'treatment': return e(TreatmentPage);
+      case 'response': return e(ResponsePage);
+      case 'supportive': return e(SupportivePage);
+      case 'evidence': return e(EvidencePage);
+      case 'related': return e(RelatedPage);
+      default: return e(Dashboard, {setPage:setPage});
+    }
+  }
+
+  return e('div', {className:'min-h-screen flex'},
+    // Desktop sidebar
+    e('aside', {className:'sidebar-desktop w-64 bg-white border-r border-slate-200 fixed h-full overflow-y-auto z-40', style:{display:''}},
+      e('div', {className:'p-4 border-b border-slate-200'},
+        e('div', {className:'flex items-center gap-2'},
+          e('span', {className:'text-2xl'}, '🩸'),
+          e('div', null,
+            e('h1', {className:'font-bold text-sm'}, 'Blood Doctor'),
+            e('p', {className:'text-[10px] text-slate-500 font-medium'}, 'MYELOMA HUB — NCCN 2026')
+          )
+        )
+      ),
+      e('nav', {className:'p-3 space-y-1'},
+        navItems.map(function(item) {
+          return e('div', {key:item.id, className:'sidebar-item '+(page===item.id?'active':''), onClick:function(){setPage(item.id)}},
+            e(item.ico), e('span',null,item.label)
+          );
+        })
+      ),
+      e('div', {className:'p-4 border-t border-slate-200'},
+        e('div', {className:'text-[10px] text-slate-500'},
+          e('p', {className:'font-semibold'}, 'NCCN Guidelines® v2.2026'),
+          e('p', null, 'All recommendations Category 2A unless noted'),
+          e('p', {className:'mt-1 font-medium text-blue-600'}, '#BloodDoctor')
+        )
+      )
+    ),
+    // Mobile header
+    e('div', {className:'md:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 px-4 py-3 flex items-center justify-between'},
+      e('div', {className:'flex items-center gap-2'},
+        e('span', {className:'text-xl'}, '🩸'),
+        e('span', {className:'font-bold text-sm'}, 'Myeloma Hub')
+      ),
+      e('button', {onClick:function(){setMobileOpen(!mobileOpen)}, className:'p-1'}, mobileOpen ? e(IcoX) : e(IcoMenu))
+    ),
+    // Mobile menu
+    mobileOpen ? e('div', {className:'md:hidden fixed inset-0 bg-black/50 z-40', onClick:function(){setMobileOpen(false)}},
+      e('div', {className:'bg-white w-64 h-full overflow-y-auto', onClick:function(ev){ev.stopPropagation()}},
+        e('div',{className:'p-4 border-b border-slate-200'},e('span',{className:'font-bold text-sm'},'Navigation')),
+        e('nav', {className:'p-3 space-y-1'},
+          navItems.map(function(item) {
+            return e('div', {key:item.id, className:'sidebar-item '+(page===item.id?'active':''), onClick:function(){setPage(item.id);setMobileOpen(false)}},
+              e(item.ico), e('span',null,item.label)
+            );
+          })
+        )
+      )
+    ) : null,
+    // Main
+    e('main', {className:'md:ml-64 flex-1 min-h-screen pt-14 md:pt-0'},
+      e('div', {className:'p-4 md:p-6 max-w-7xl mx-auto fade-in', key:page}, renderPage())
+    )
+  );
+}
+
+// Mount
+var root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(e(App));
 </script>
 </body>
 </html>
