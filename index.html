@@ -868,12 +868,26 @@ function PageWorkup(props){
   // --- FISH abnormalities list ---
   var fishList=['del(17p)','t(4;14)','t(11;14)','t(14;16)','t(14;20)','del(13)','1q21 gain','1q21 amp','1p deletion','TP53 mutation'];
 
-  // --- Helper: labelled number input ---
+  // --- Helper: labelled number input with dual unit display ---
   function numInput(key,label,unit,placeholder){
-    return e('div',{className:'flex items-center gap-2 mb-2'},
-      e('label',{className:'text-xs font-medium text-slate-700 w-32 flex-shrink-0'},label),
+    // Find if this key has dual units
+    var dualMap={calcium:U.calcium,creatinine:U.creatinine,haemoglobin:U.haemoglobin,albumin:U.albumin,mProtein:U.mProtein};
+    var dual=dualMap[key];
+    var altUnit=dual?(isUK?dual.US:dual.UK):null;
+    var altValue='';
+    if(dual&&pd[key]!==undefined&&pd[key]!==''){
+      var v=parseFloat(pd[key]);
+      if(!isNaN(v)){
+        altValue=isUK?dual.convert(v,false):dual.convert(v,true);
+        altValue=altValue.toFixed(altUnit==='g/L'||altUnit==='\u00b5mol/L'?0:1);
+      }
+    }
+    return e('div',{className:'flex items-center gap-2 mb-2.5'},
+      e('label',{className:'text-xs font-medium text-slate-700 w-28 flex-shrink-0'},label),
       e('input',{type:'number',step:'any',className:'calc-input flex-1',placeholder:placeholder||'',value:pd[key]!==undefined?pd[key]:'',onChange:function(ev){upd(key,ev.target.value)}}),
-      unit?e('span',{className:'text-xs text-slate-500 w-14 flex-shrink-0'},unit):null
+      unit?e('span',{className:'text-xs font-semibold w-16 flex-shrink-0 '+(isUK?'text-blue-700':'text-emerald-700')},unit):null,
+      altUnit&&altValue?e('span',{className:'text-[10px] text-slate-400 w-20 flex-shrink-0 border-l border-slate-200 pl-2'},'\u2248 '+altValue+' '+altUnit):
+      altUnit?e('span',{className:'text-[10px] text-slate-300 w-20 flex-shrink-0 border-l border-slate-200 pl-2'},altUnit):null
     );
   }
 
@@ -946,16 +960,32 @@ function PageWorkup(props){
     ),
 
     // Unit toggle
-    e('div',{className:'flex items-center justify-between mb-4'},
-      e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis.'),
-      e('div',{className:'flex items-center gap-2 flex-shrink-0 ml-4'},
-        e('span',{className:'text-xs font-medium text-slate-500'},'Units:'),
-        e('div',{className:'flex rounded-lg border border-slate-200 overflow-hidden'},
-          e('button',{className:'px-3 py-1.5 text-xs font-semibold transition-colors '+(isUK?'bg-blue-600 text-white':'bg-white text-slate-600 hover:bg-slate-50'),onClick:function(){setUnits('UK')}},'UK (SI)'),
-          e('button',{className:'px-3 py-1.5 text-xs font-semibold transition-colors '+(isUK?'bg-white text-slate-600 hover:bg-slate-50':'bg-blue-600 text-white'),onClick:function(){setUnits('US')}},'US')
+    e('div',{className:'card p-3 mb-4'},
+      e('div',{className:'flex items-center justify-between flex-wrap gap-3'},
+        e('div',{className:'flex items-center gap-2'},
+          Ico(ICONS.info,{size:14,className:'text-blue-600'}),
+          e('span',{className:'text-xs text-slate-600'},'Enter values in your preferred unit system. The other unit is auto-converted and shown alongside.')
+        ),
+        e('div',{className:'flex items-center gap-2'},
+          e('span',{className:'text-xs font-semibold text-slate-500'},'Enter values in:'),
+          e('div',{className:'flex rounded-lg border border-slate-200 overflow-hidden'},
+            e('button',{className:'px-4 py-2 text-xs font-bold transition-colors '+(isUK?'bg-blue-600 text-white shadow-inner':'bg-white text-slate-500 hover:bg-slate-50'),onClick:function(){setUnits('UK')}},'UK (SI Units)'),
+            e('button',{className:'px-4 py-2 text-xs font-bold transition-colors '+(isUK?'bg-white text-slate-500 hover:bg-slate-50':'bg-emerald-600 text-white shadow-inner'),onClick:function(){setUnits('US')}},'US (Conventional)')
+          )
         )
+      ),
+      e('div',{className:'flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[10px] text-slate-400'},
+        e('span',null,isUK?'Ca: mmol/L':'Ca: mg/dL'),
+        e('span',null,isUK?'Cr: \u00b5mol/L':'Cr: mg/dL'),
+        e('span',null,isUK?'Hb: g/L':'Hb: g/dL'),
+        e('span',null,isUK?'Albumin: g/L':'Albumin: g/dL'),
+        e('span',null,isUK?'M-protein: g/L':'M-protein: g/dL'),
+        e('span',null,'B2M: mg/L'),
+        e('span',null,'CrCl: mL/min'),
+        e('span',null,'BJP: mg/24h')
       )
     ),
+    e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis. Standard cytogenetics on unselected samples have low sensitivity.'),
 
     // === PATIENT DATA ENTRY CARD ===
     e(Card,{className:'mt-4'},
@@ -986,7 +1016,7 @@ function PageWorkup(props){
       ),
 
       // -- Protein Studies --
-      e(Collapsible,{title:'Protein Studies (M-protein, BJP, FLC Ratio, Ig Levels)'},
+      e(Collapsible,{title:'Protein Studies (M-protein, BJP, FLC Ratio, Ig Levels)',defaultOpen:true},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
             numInput('mProtein','Serum M-protein',isUK?U.mProtein.UK:U.mProtein.US,isUK?U.mProtein.phUK:U.mProtein.phUS),
@@ -1004,7 +1034,7 @@ function PageWorkup(props){
       ),
 
       // -- Bone Marrow --
-      e(Collapsible,{title:'Bone Marrow (BMPCs%, Plasmacytoma Type, Circulating PCs)'},
+      e(Collapsible,{title:'Bone Marrow (BMPCs%, Plasmacytoma Type, Circulating PCs)',defaultOpen:true},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
             numInput('bmpc','BMPCs','%','e.g. 25'),
@@ -1029,7 +1059,7 @@ function PageWorkup(props){
       ),
 
       // -- Imaging --
-      e(Collapsible,{title:'Imaging (Bone Lesions, MRI Lesions)'},
+      e(Collapsible,{title:'Imaging (Bone Lesions, MRI Lesions)',defaultOpen:true},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
             selInput('boneLesions','Bone Lesions',[
@@ -1047,7 +1077,7 @@ function PageWorkup(props){
       ),
 
       // -- Cytogenetics/FISH --
-      e(Collapsible,{title:'Cytogenetics / FISH (Select All Detected Abnormalities)'},
+      e(Collapsible,{title:'Cytogenetics / FISH (Select All Detected Abnormalities)',defaultOpen:true},
         e('div',{className:'grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3'},
           fishList.map(function(f){
             var sel=(pd.fishResults||[]).indexOf(f)>=0;
@@ -1066,7 +1096,7 @@ function PageWorkup(props){
       ),
 
       // -- Additional --
-      e(Collapsible,{title:'Additional (Amyloidosis, Organ Dysfunction, Cardiac)'},
+      e(Collapsible,{title:'Additional (Amyloidosis, Organ Dysfunction, Cardiac)',defaultOpen:true},
         e('div',{className:'grid md:grid-cols-2 gap-x-6'},
           e('div',null,
             selInput('amyloidosis','Amyloidosis',[
