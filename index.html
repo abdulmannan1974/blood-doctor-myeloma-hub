@@ -805,30 +805,148 @@ function PageRadiation(){
 }
 
 // === CLINICAL PATHWAY ===
-function PagePathway(){
+function PagePathway(props){
+  var nav = props && props.nav ? props.nav : function(){};
+  var openReg = props && props.onSelectRegimen ? props.onSelectRegimen : function(){};
+  var expanded = useState(null); var exp = expanded[0]; var setExp = expanded[1];
+  function toggleStep(id){ setExp(exp===id?null:id); }
+
   var steps=[
-    {id:'myel1',title:'MYEL-1: Diagnostic Workup',desc:'H&P, bloods, protein studies, imaging, BM biopsy with FISH/NGS',color:'bg-blue-600'},
-    {id:'myel2',title:'MYEL-2: Solitary Plasmacytoma',desc:'RT \u00b1 surgery or clinical trial. Follow-up q3\u20136mo. Image yearly \u22655 years.',color:'bg-violet-600'},
-    {id:'myel3',title:'MYEL-3: Smoldering Myeloma',desc:'Low risk: observe q3\u20136mo (Cat 1). High risk: clinical trial (preferred), or daratumumab (Cat 1) / lenalidomide (Cat 2B).',color:'bg-amber-600'},
-    {id:'myel4',title:'MYEL-4: Active MM \u2014 Primary Therapy',desc:'Initiate myeloma therapy + bone-targeting. Assess HCT candidacy. Harvest stem cells within 6 cycles.',color:'bg-red-600'},
-    {id:'myel5',title:'MYEL-5: Response After Primary Therapy',desc:'Auto-HCT (Cat 1) \u2192 Maintenance (Cat 1). Or continuous therapy. High-risk: consider tandem auto or allo-HCT.',color:'bg-green-600'},
-    {id:'myel6',title:'MYEL-6: Relapse/Progression',desc:'Clinical trial, previously treated MM regimens (MYEL-G), auto/allo-HCT. Consider CAR-T and palliative care referral.',color:'bg-slate-700'},
+    {id:'myel1',title:'MYEL-1: Diagnostic Workup',desc:'H&P, bloods, protein studies, imaging, BM biopsy with FISH/NGS',color:'bg-blue-600',
+     linkTo:'workup', linkLabel:'Open Full Workup Checklist',
+     detail:[
+       {type:'section',title:'Essential Investigations (13 tests)',items:['H&P exam with frailty assessment for older adults','CBC with differential and platelet count','Peripheral blood smear (Rouleaux, circulating plasma cells)','Comprehensive metabolic panel: BUN, creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, \u03B22-microglobulin','Creatinine clearance (calculated or measured)','Serum quantitative Igs, SPEP, SIFE','24-h urine: total protein, UPEP, UIFE','Serum FLC assay (FLCr required for sCR assessment)','Whole-body FDG-PET/CT (preferred) or low-dose CT','Unilateral BM aspirate & biopsy with IHC and/or multiparameter flow cytometry','FISH panel on CD138-selected cells: del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amp, 1p deletion','NGS for TP53 mutation','NT-proBNP / BNP']},
+       {type:'alert',msg:'After workup \u2192 classify into: Solitary Plasmacytoma (MYEL-2), Smoldering Myeloma (MYEL-3), Active MM (MYEL-4), Monoclonal Gammopathies (MGRS/MIDD/MGNS), or POEMS.'},
+       {type:'links',items:[{label:'Full Workup Checklist \u2192',target:'workup'},{label:'Definitions & Classification \u2192',target:'definitions'},{label:'Imaging Principles \u2192',target:'imaging'}]}
+     ]
+    },
+    {id:'myel2',title:'MYEL-2: Solitary Plasmacytoma',desc:'RT \u00b1 surgery or clinical trial. Follow-up q3\u20136mo. Image yearly \u22655 years.',color:'bg-violet-600',
+     linkTo:'radiation', linkLabel:'Radiation Therapy Principles',
+     detail:[
+       {type:'section',title:'Primary Treatment',items:['Radiation therapy (RT) is the intervention of choice: 40\u201350 Gy in 1.8\u20132.0 Gy fractions (20\u201325 fractions)','35\u201340 Gy acceptable for plasmacytomas <5 cm (high local control rates)','Consider surgery if structurally unstable or neurologic compromise due to mass effect','Clinical trial is an alternative option']},
+       {type:'section',title:'Follow-up/Surveillance (every 3\u20136 months)',items:['CBC with differential and platelet count','Serum chemistry for creatinine and corrected calcium','Serum quantitative Igs, SPEP with SIFE','Serum FLC assay','24-h urine for total protein, UPEP with UIFE as needed','BM aspirate and biopsy as indicated','All plasmacytomas should be imaged yearly \u22655 years (same technique as at diagnosis)']},
+       {type:'alert',msg:'Risk of progression to MM or relapse: 14\u201338% within first 3 years of diagnosis. Reassess after \u22653 months post-RT before imaging (results may be inaccurate sooner).'},
+       {type:'section',title:'If Progressive Disease or Response Followed by Progression',items:['Restage with full myeloma workup','Proceed to MYEL-4 (Active MM) if criteria met','Systemic therapy may be indicated in patients with high risk of progression based on clinical context']},
+       {type:'alert_warning',msg:'Solitary plasmacytoma with \u226510% clonal BMPCs should be treated as active MM (MYEL-4), not as solitary plasmacytoma.'},
+       {type:'links',items:[{label:'Radiation Therapy Dosing \u2192',target:'radiation'},{label:'Imaging Principles \u2192',target:'imaging'},{label:'Definitions (MYEL-A) \u2192',target:'definitions'}]}
+     ]
+    },
+    {id:'myel3',title:'MYEL-3: Smoldering Myeloma (Asymptomatic)',desc:'Risk-stratify by Mayo 2018 (20/2/20) criteria. Low risk: observe. High risk: clinical trial or treat.',color:'bg-amber-600',
+     linkTo:'staging', linkLabel:'Staging & Risk Stratification',
+     detail:[
+       {type:'section',title:'Risk Stratification (Mayo 2018 / IMWG 20/2/20 Criteria)',items:['BMPCs >20%','M-protein >2 g/dL','FLCr >20','High risk = \u22652 of these factors (median TTP ~29 months)','Intermediate risk = 1 factor (median TTP ~68 months)','Low risk = 0 factors (median TTP ~110 months)']},
+       {type:'section',title:'Low-Risk Smoldering Myeloma',items:['Clinical trial (Category 1 option)','OR Observe at 3\u2013 to 6-month intervals (Category 1)','Monitor for evolving risk factors \u2014 patients can evolve from low to high risk over time']},
+       {type:'section',title:'High-Risk Smoldering Myeloma',items:['Clinical trial (preferred option \u2014 strongly recommended by panel)','OR Observe at 3-month intervals as clinically indicated','OR Select patients: Daratumumab (Category 1) \u2014 based on AQUILA trial','OR Select patients: Lenalidomide (Category 2B) \u2014 based on ECOG E3A06 and PETHEMA studies','Consider collection of hematopoietic stem cells for future use']},
+       {type:'section',title:'Follow-up/Surveillance (every 3\u20136 months)',items:['CBC, differential, platelet count','Creatinine, corrected calcium','Serum quantitative Igs, SPEP, SIFE','Serum FLC assay','24-h urine for total protein, UPEP, UIFE as indicated','BM aspirate and biopsy with FISH, NGS, or multiparameter flow as indicated','Whole-body MRI, low-dose CT, FDG-PET/CT annually or as needed']},
+       {type:'alert',msg:'If progression to symptomatic myeloma \u2192 proceed to MYEL-4 (Active MM). Rising parameters = high risk, monitor closely.'},
+       {type:'links',items:[{label:'Staging & Risk \u2192',target:'staging'},{label:'Definitions (MYEL-A) \u2192',target:'definitions'},{label:'Treatment Navigator \u2192',target:'treatment'}]}
+     ]
+    },
+    {id:'myel4',title:'MYEL-4: Active MM \u2014 Primary Therapy',desc:'Initiate myeloma therapy + bone-targeting + supportive care. Assess HCT candidacy and refer to transplant centre.',color:'bg-red-600',
+     linkTo:'treatment', linkLabel:'Treatment Navigator (All Regimens)',
+     detail:[
+       {type:'section',title:'Step 1: Initiate Myeloma Therapy',items:['HCT candidates \u2192 Preferred: Dara-VRd or Isa-VRd (Category 1)','Non-HCT / deferred \u2192 Preferred: Dara-Rd (Cat 1), Dara-VRd or Isa-VRd (<80 yrs, not frail, Cat 1)','Quadruplet regimen preferred; start with 2\u20133 drugs if frail, escalate as performance improves','Consider dose modifications based on functional status and age','Systemic therapy should NOT be delayed for advanced imaging if diagnosis is clear']},
+       {type:'section',title:'Step 2: Bone-Targeting Treatment',items:['ALL patients should receive bisphosphonates (Category 1) OR denosumab','Zoledronic acid 4 mg IV every 1\u20133 months (preferred bisphosphonate) OR pamidronate 90 mg IV every 3\u20134 weeks','Denosumab 120 mg SQ every 4 weeks (preferred in renal insufficiency)','Baseline dental exam strongly recommended','Continue for up to 2 years, then individualize']},
+       {type:'section',title:'Step 3: Supportive Care',items:['VTE prophylaxis per IMPEDE/SAVED score (aspirin vs anticoagulation)','HSV/VZV prophylaxis: acyclovir 400\u2013800 mg PO BID','PJP prophylaxis if high-dose dexamethasone','Consider levofloxacin for 12 weeks post-diagnosis','Immunoglobulin replacement if IgG <400 mg/dL','Assess vitamin D status']},
+       {type:'section',title:'Step 4: Assess HCT Candidacy',items:['Refer to HCT centre after starting therapy; reassess as performance improves','Age and renal dysfunction are NOT absolute contraindications','Limit myelotoxic agents (melphalan, nitrosoureas) before harvest','Harvest PBSC within first 6 cycles before prolonged lenalidomide/daratumumab exposure','Collect for 2 transplants if appropriate','If delaying HCT, collect and store stem cells']},
+       {type:'section',title:'Follow-up/Surveillance',items:['Laboratory: CBC with differential, metabolic panel','Serum quantitative Igs, SPEP, SIFE','24-h urine for total protein, UPEP, UIFE as indicated','Serum FLC assay','Imaging: WB MRI/low-dose CT/FDG-PET/CT annually or as indicated','BM aspirate and biopsy at relapse with FISH','Consider MRD testing for prognostication (shared decision)']},
+       {type:'alert',msg:'Response \u2192 MYEL-5 (Response After Primary Therapy). Progression \u2192 MYEL-6 (Relapse/Progressive Disease).'},
+       {type:'regimens',title:'Quick Access: Preferred Primary Regimens',items:[
+         {name:'Dara-VRd',label:'Dara-VRd (Cat 1, HCT)',abbr:'Dara-VRd'},
+         {name:'Isa-VRd',label:'Isa-VRd (Cat 1, HCT)',abbr:'Isa-VRd'},
+         {name:'Dara-Rd',label:'Dara-Rd (Cat 1, Non-HCT)',abbr:'Dara-Rd'},
+         {name:'VRd',label:'VRd (Cat 1)',abbr:'VRd'}
+       ]},
+       {type:'links',items:[{label:'All Treatment Regimens \u2192',target:'treatment'},{label:'Supportive Care \u2192',target:'supportive'},{label:'VTE Calculator \u2192',target:'calculators'},{label:'Infection Management \u2192',target:'infection'},{label:'Renal Management \u2192',target:'renal'},{label:'Radiation Therapy \u2192',target:'radiation'}]}
+     ]
+    },
+    {id:'myel5',title:'MYEL-5: Response After Primary Therapy',desc:'Auto-HCT (Cat 1) \u2192 Maintenance (Cat 1). Continuous therapy or de-escalation. High-risk: consider tandem auto or allo-HCT.',color:'bg-green-600',
+     linkTo:'treatment', linkLabel:'Maintenance Regimens',
+     detail:[
+       {type:'section',title:'Transplant-Eligible Patients',items:['Autologous HCT (Category 1) \u2014 proceed directly after primary therapy to high-dose therapy and HCT','Collecting stem cells and delaying HCT is also an option','WB FDG-PET/CT recommended around day 100 after auto-HCT','Response or stable disease \u2192 Maintenance therapy (Category 1)']},
+       {type:'section',title:'Maintenance Therapy (Category 1)',items:['Preferred: Lenalidomide (single-agent, Category 1)','High-risk MM: Two-drug maintenance recommended \u2014 Carfilzomib/Lenalidomide or Daratumumab/Lenalidomide','Useful: Bortezomib \u00b1 Lenalidomide, Daratumumab alone, Ixazomib (Cat 2B)','Balance length of therapy with toxicity and depth of response','Discuss risk of secondary primary malignancies with lenalidomide maintenance']},
+       {type:'section',title:'Non-Transplant Patients',items:['Continuous myeloma therapy or maintenance therapy','Continue primary therapy until progression with de-escalation (dose/duration) as needed']},
+       {type:'section',title:'High-Risk/Certain Circumstances',items:['Tandem autologous HCT can be considered for patients with stable disease','Allogeneic HCT in selected high-risk patients','Follow up with tests listed on MYEL-4 under Follow-up/Surveillance']},
+       {type:'alert',msg:'Relapse or progression \u2192 MYEL-6. Patients with stable disease after auto-HCT can be considered for second auto-HCT.'},
+       {type:'regimens',title:'Quick Access: Maintenance Regimens',items:[
+         {name:'Lenalidomide',label:'Lenalidomide (Cat 1)',abbr:'Lenalidomide-maintenance'}
+       ]},
+       {type:'links',items:[{label:'All Treatment Regimens \u2192',target:'treatment'},{label:'Response Criteria (IMWG) \u2192',target:'response'},{label:'Evidence Blocks \u2192',target:'evidence'}]}
+     ]
+    },
+    {id:'myel6',title:'MYEL-6: Relapse/Progressive Disease',desc:'Discuss goals of care. Consider CAR-T referral, previously treated regimens, allo-HCT. Palliative care if refractory.',color:'bg-slate-700',
+     linkTo:'treatment', linkLabel:'Relapsed Treatment Regimens',
+     detail:[
+       {type:'section',title:'Initial Assessment at Relapse',items:['Discuss patient preferences and goals of care','Consider referral to CAR T-cell therapy specialist','Consider referral to palliative care specialist for symptom management','BM aspirate and biopsy at relapse with FISH (cytogenetics may change)','Agents may be reconsidered if relapse \u22656 months after stopping therapy']},
+       {type:'section',title:'Treatment Options (by sequence)',items:['Clinical trial, if eligible','Therapy for previously treated myeloma \u2014 select based on prior refractoriness:','  \u2022 Anti-CD38 refractory: KRd (Cat 1), KPd, PVd (Cat 1)','  \u2022 Bortezomib refractory: KRd (Cat 1), Dara-Kd (Cat 1), Isa-Kd (Cat 1)','  \u2022 Lenalidomide refractory: Dara-Vd (Cat 1), Dara-Kd (Cat 1), PVd (Cat 1)','  \u2022 After 1 prior (Len+PI): Dara-Pd (Cat 1)','  \u2022 After 2 prior (Len+PI): Isa-Pd (Cat 1)','Autologous HCT (if eligible and not previously received or had prolonged response)','Allogeneic HCT (donor lymphocyte infusion for relapse after allo-HCT)']},
+       {type:'section',title:'CAR T-Cell Therapy',items:['Ciltacabtagene autoleucel (Cilta-cel) \u2014 Category 1','  \u2022 After 1 prior line including IMiD + PI, refractory to lenalidomide','Idecabtagene vicleucel (Ide-cel) \u2014 Category 1','  \u2022 After 2 prior lines including IMiD + anti-CD38 mAb + PI','Bendamustine and alkylating agents can impact T-cell collection \u2014 avoid before leukapheresis']},
+       {type:'section',title:'After \u22654 Prior Lines: Bispecific Antibodies',items:['Elranatamab-bcmm (BCMA \u00d7 CD3)','Linvoseltamab-gcpt (BCMA \u00d7 CD3)','Talquetamab-tgvs (GPRC5D \u00d7 CD3) \u2014 non-BCMA target','Teclistamab-cqyv (BCMA \u00d7 CD3)','Prophylactic tocilizumab may be considered before first BsAb dose to reduce CRS']},
+       {type:'section',title:'Refractory Disease',items:['Continue palliative care','Consider re-evaluation of goals of care','Consider hospice initiation','See Palliative Care and Supportive Care Guidelines']},
+       {type:'regimens',title:'Quick Access: Key Relapsed Regimens',items:[
+         {name:'Cilta-cel',label:'Cilta-cel (CAR-T, Cat 1)',abbr:'Cilta-cel'},
+         {name:'Ide-cel',label:'Ide-cel (CAR-T, Cat 1)',abbr:'Ide-cel'},
+         {name:'Dara-Kd',label:'Dara-Kd (Cat 1)',abbr:'Dara-Kd'},
+         {name:'Isa-Kd',label:'Isa-Kd (Cat 1)',abbr:'Isa-Kd'},
+         {name:'PVd',label:'PVd (Cat 1)',abbr:'PVd'},
+         {name:'Teclistamab',label:'Teclistamab (BsAb)',abbr:'Teclistamab'}
+       ]},
+       {type:'links',items:[{label:'All Treatment Regimens \u2192',target:'treatment'},{label:'Therapy Considerations \u2192',target:'therapy'},{label:'CNS Disease Management \u2192',target:'cns'},{label:'Supportive Care \u2192',target:'supportive'},{label:'Response Criteria \u2192',target:'response'}]}
+     ]
+    },
   ];
+
   return e('div',{className:'fade-in'},
     e(SectionTitle,{code:'MYEL-1\u20136'},'Clinical Pathway'),
+    e('p',{className:'text-sm text-slate-500 mb-4'},'Click each step to expand the full management strategy with actionable links to relevant sections.'),
     e('div',{className:'space-y-3'},steps.map(function(s,i){
-      return e('div',{key:s.id,className:'card p-0 overflow-hidden'},
-        e('div',{className:'flex'},
+      var isOpen = exp === s.id;
+      return e('div',{key:s.id,className:'card p-0 overflow-hidden transition-all'},
+        // Header (always visible)
+        e('div',{className:'flex cursor-pointer',onClick:function(){toggleStep(s.id)}},
           e('div',{className:s.color+' w-1.5 flex-shrink-0'}),
           e('div',{className:'p-4 flex-1'},
-            e('div',{className:'flex items-center gap-2 mb-1'},
-              e('span',{className:'text-white text-xs font-bold px-2 py-0.5 rounded '+s.color},s.id.toUpperCase().replace('MYEL','MYEL-')),
-              i<steps.length-1?e('span',{className:'text-slate-400'},'\u2192'):null
+            e('div',{className:'flex items-center justify-between'},
+              e('div',{className:'flex items-center gap-2 mb-1'},
+                e('span',{className:'text-white text-xs font-bold px-2 py-0.5 rounded '+s.color},'MYEL-'+(i+1)),
+                i<steps.length-1?e('span',{className:'text-slate-300'},'\u2192'):null
+              ),
+              e('span',{className:'text-slate-400 transform transition-transform '+(isOpen?'rotate-180':'')},Ico(ICONS.chevDown,{size:16}))
             ),
             e('h3',{className:'font-bold text-sm text-slate-900'},s.title),
-            e('p',{className:'text-xs text-slate-600 mt-1'},s.desc)
+            e('p',{className:'text-xs text-slate-600 mt-1'},s.desc),
+            !isOpen && s.linkTo ? e('button',{className:'mt-2 text-xs text-blue-600 font-medium hover:text-blue-800 flex items-center gap-1',onClick:function(ev){ev.stopPropagation();nav(s.linkTo)}},Ico(ICONS.chevRight,{size:12}),s.linkLabel) : null
           )
-        )
+        ),
+        // Expanded detail
+        isOpen && s.detail ? e('div',{className:'border-t border-slate-200 p-4 bg-slate-50/50 fade-in'},
+          s.detail.map(function(d,j){
+            if(d.type==='section') return e('div',{key:j,className:'mb-4'},
+              e('h4',{className:'font-bold text-sm text-slate-800 mb-2 flex items-center gap-2'},Ico(ICONS.chevRight,{size:12}),d.title),
+              e('ul',{className:'list-disc ml-5 text-sm space-y-1 text-slate-700'},
+                d.items.map(function(item,k){return e('li',{key:k},item)})
+              )
+            );
+            if(d.type==='alert') return e(AlertBox,{key:j,type:'info'},d.msg);
+            if(d.type==='alert_warning') return e(AlertBox,{key:j,type:'warning'},d.msg);
+            if(d.type==='regimens') return e('div',{key:j,className:'mb-4'},
+              e('h4',{className:'font-bold text-sm text-slate-800 mb-2'},d.title),
+              e('div',{className:'grid grid-cols-1 sm:grid-cols-2 gap-2'},
+                d.items.map(function(r,k){
+                  return e('button',{key:k,className:'text-left border border-blue-200 bg-blue-50 rounded-lg p-3 hover:bg-blue-100 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer',onClick:function(){openReg(r.abbr)}},
+                    e('div',{className:'font-medium text-sm text-blue-800'},r.label),
+                    e('div',{className:'text-xs text-blue-600 mt-0.5 flex items-center gap-1'},'View full regimen details ',Ico(ICONS.chevRight,{size:10}))
+                  );
+                })
+              )
+            );
+            if(d.type==='links') return e('div',{key:j,className:'flex flex-wrap gap-2 mt-2 pt-3 border-t border-slate-200'},
+              d.items.map(function(l,k){
+                return e('button',{key:k,className:'text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg px-3 py-1.5 transition-colors cursor-pointer',onClick:function(){nav(l.target)}},l.label);
+              })
+            );
+            return null;
+          })
+        ) : null
       );
     })),
     e(Card,{className:'mt-4'},
@@ -841,6 +959,10 @@ function PagePathway(){
         e('li',null,'WB MRI / low-dose CT / FDG-PET/CT annually or as indicated'),
         e('li',null,'BM aspirate and biopsy at relapse with FISH as indicated'),
         e('li',null,'Consider MRD testing for prognostication after shared decision with patient')
+      ),
+      e('div',{className:'flex flex-wrap gap-2 mt-3'},
+        e('button',{className:'text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg px-3 py-1.5 cursor-pointer',onClick:function(){nav('response')}},'Response Criteria (IMWG) \u2192'),
+        e('button',{className:'text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg px-3 py-1.5 cursor-pointer',onClick:function(){nav('imaging')}},'Imaging Principles \u2192')
       )
     )
   );
@@ -2031,7 +2153,7 @@ function App(){
     dashboard:e(PageDashboard,{nav:navigate}),
     workup:e(PageWorkup),
     definitions:e(PageDefinitions),
-    pathway:e(PagePathway),
+    pathway:e(PagePathway,{nav:navigate,onSelectRegimen:openRegimen}),
     staging:e(PageStaging),
     imaging:e(PageImaging),
     radiation:e(PageRadiation),
