@@ -727,14 +727,12 @@ function PageDashboard(props){
 // === DIAGNOSTIC WORKUP ===
 function PageWorkup(props){
   var pdState=useState({});var pd=pdState[0];var setPd=pdState[1];
-  var chk=useState({});var checked=chk[0];var setChecked=chk[1];
 
   function upd(key,val){setPd(function(p){var n=Object.assign({},p);n[key]=val;return n;});}
-  function toggle(id){setChecked(function(p){var n=Object.assign({},p);n[id]=!n[id];return n;});}
   function toggleFish(f){setPd(function(p){var n=Object.assign({},p);var arr=(n.fishResults||[]).slice();var idx=arr.indexOf(f);if(idx>=0)arr.splice(idx,1);else arr.push(f);n.fishResults=arr;return n;});}
+  function toggleArrayField(key,val){setPd(function(p){var n=Object.assign({},p);var arr=(n[key]||[]).slice();var idx=arr.indexOf(val);if(idx>=0)arr.splice(idx,1);else arr.push(val);n[key]=arr;return n;});}
 
-  // --- Classification Engine ---
-  // Unit system toggle
+  // --- Unit system toggle ---
   var unitSt=useState('UK');var units=unitSt[0];var setUnits=unitSt[1];
   var isUK=units==='UK';
 
@@ -748,15 +746,26 @@ function PageWorkup(props){
     b2m:{unit:'mg/L',ph:'e.g. 3.2'},
     mProtein:{UK:'g/L',US:'g/dL',phUK:'e.g. 25',phUS:'e.g. 2.5',threshUK:30,threshUS:3,convert:function(v,toUK){return toUK?v*10:v/10}},
     bjp:{unit:'mg/24h',ph:'e.g. 350'},
+    urea:{UK:'mmol/L',US:'mg/dL',convert:function(v,toUK){return toUK?v/2.8:v*2.8}},
+    bilirubin:{UK:'\u00b5mol/L',US:'mg/dL',convert:function(v,toUK){return toUK?v*17.1:v/17.1}},
+    uricAcid:{UK:'\u00b5mol/L',US:'mg/dL',convert:function(v,toUK){return toUK?v*59.48:v/59.48}},
   };
 
+  // --- Auto-calculate FLC ratio ---
+  var autoFlcRatio='';
+  if(pd.flcKappa&&pd.flcLambda&&parseFloat(pd.flcLambda)>0){
+    autoFlcRatio=(parseFloat(pd.flcKappa)/parseFloat(pd.flcLambda)).toFixed(2);
+  }
+  var effectiveFlcRatio=pd.flcRatio||autoFlcRatio;
+
+  // --- Classification Engine ---
   function classify(d){
     var crab={c:false,r:false,a:false,b:false};
     var slim={s:false,li:false,m:false};
     var classification='Insufficient data';
     var iss=null;var risk=null;
 
-    // CRAB — thresholds adapt to unit system
+    // CRAB -- thresholds adapt to unit system
     if(d.calcium!==undefined&&d.calcium!==''){
       var caVal=parseFloat(d.calcium);
       crab.c=isUK?(caVal>U.calcium.threshUK):(caVal>U.calcium.threshUS);
@@ -770,11 +779,18 @@ function PageWorkup(props){
       var hbVal=parseFloat(d.haemoglobin);
       crab.a=isUK?(hbVal<U.haemoglobin.threshUK):(hbVal<U.haemoglobin.threshUS);
     }
+    // Bone lesions -- support both old and new field formats
+    var bl=d.boneCount||'';
+    if(bl==='1'||bl==='2-5'||bl==='>5')crab.b=true;
     if(d.boneLesions==='1+')crab.b=true;
 
     // SLiM
     if(d.bmpc!==undefined&&d.bmpc!=='')slim.s=parseFloat(d.bmpc)>=60;
-    if(d.flcRatio!==undefined&&d.flcRatio!=='')slim.li=parseFloat(d.flcRatio)>=100;
+    var flcR=d.flcRatio||autoFlcRatio;
+    if(flcR!==undefined&&flcR!=='')slim.li=parseFloat(flcR)>=100;
+    // MRI lesions -- support new tick field or direct number
+    var mriSel=d.mriLesionCategory||'';
+    if(mriSel==='>1'||mriSel==='diffuse')slim.m=true;
     if(d.mriLesions!==undefined&&d.mriLesions!=='')slim.m=parseFloat(d.mriLesions)>1;
 
     var anyCrab=crab.c||crab.r||crab.a||crab.b;
@@ -782,15 +798,15 @@ function PageWorkup(props){
     var bmpcVal=d.bmpc!==undefined&&d.bmpc!==''?parseFloat(d.bmpc):null;
     var mProtVal=d.mProtein!==undefined&&d.mProtein!==''?parseFloat(d.mProtein):null;
     var bjpVal=d.bjp!==undefined&&d.bjp!==''?parseFloat(d.bjp):null;
-    var mProtThresh=isUK?U.mProtein.threshUK:U.mProtein.threshUS; // 30 g/L UK or 3 g/dL US
+    var mProtThresh=isUK?U.mProtein.threshUK:U.mProtein.threshUS;
 
     // Classification logic
     if(d.circulatingPC==='>=5%'){
       classification='Plasma Cell Leukaemia';
     } else if(d.plasmacytoma&&d.plasmacytoma!=='None'&&d.plasmacytoma!==''){
-      if((d.plasmacytoma==='Solitary bone'||d.plasmacytoma==='Solitary soft tissue'||d.plasmacytoma==='Solitary with <10% BMPC')&&!anyCrab&&!anySlim){
+      if((d.plasmacytoma==='Solitary osseous'||d.plasmacytoma==='Solitary extraosseous'||d.plasmacytoma==='Solitary with <10% BMPC'||d.plasmacytoma==='Solitary bone'||d.plasmacytoma==='Solitary soft tissue')&&!anyCrab&&!anySlim){
         classification='Solitary Plasmacytoma';
-      } else if(d.plasmacytoma==='Solitary with >=10% BMPC'||(anyCrab||anySlim)){
+      } else if(d.plasmacytoma==='Solitary with >=10% BMPC'||d.plasmacytoma==='Multiple'||(anyCrab||anySlim)){
         classification='Active Multiple Myeloma';
       } else {
         classification='Solitary Plasmacytoma';
@@ -798,11 +814,11 @@ function PageWorkup(props){
     } else if(bmpcVal!==null&&bmpcVal>=10&&(anyCrab||anySlim)){
       classification='Active Multiple Myeloma';
     } else if((mProtVal!==null&&mProtVal>=mProtThresh)||(bjpVal!==null&&bjpVal>=500)||(bmpcVal!==null&&bmpcVal>=10&&bmpcVal<60)){
-      if(!anyCrab&&!anySlim&&d.amyloidosis!=='Confirmed'){
+      if(!anyCrab&&!anySlim&&d.amyloidosis!=='Confirmed AL'){
         classification='Smoldering Myeloma';
       } else if(anyCrab||anySlim){
         classification='Active Multiple Myeloma';
-      } else if(d.amyloidosis==='Confirmed'){
+      } else if(d.amyloidosis==='Confirmed AL'){
         classification='Active Multiple Myeloma';
       }
     } else if(d.organDysfunction&&d.organDysfunction!=='None'&&d.organDysfunction!==''){
@@ -811,7 +827,7 @@ function PageWorkup(props){
       }
     }
 
-    // ISS — albumin threshold adapts to unit system (35 g/L UK, 3.5 g/dL US)
+    // ISS -- albumin threshold adapts to unit system
     if(d.b2m!==undefined&&d.b2m!==''&&d.albumin!==undefined&&d.albumin!==''){
       var b2mVal=parseFloat(d.b2m);var albVal=parseFloat(d.albumin);
       var albThresh=isUK?U.albumin.threshUK_iss:U.albumin.threshUS_iss;
@@ -828,73 +844,66 @@ function PageWorkup(props){
       fishArr.forEach(function(f){if(highRiskFish.indexOf(f)>=0)hasHigh=true;});
       risk=hasHigh?'High':'Standard';
     }
+    // Also check NGS panel for TP53
+    if(d.ngsPanel==='Done - TP53 mutated'){risk='High';}
 
     return {crab:crab,slim:slim,classification:classification,iss:iss,risk:risk};
   }
 
   var cx=classify(pd);
 
-  // --- Investigation items with data entry fields ---
-  var essential=[
-    {id:'hp',label:'History and physical (H&P) exam',cat:'Clinical',note:'Include performance status assessment. For older adults (>65 yrs), perform frailty assessment.'},
-    {id:'cbc',label:'CBC, differential, and platelet count',cat:'Blood',note:'Baseline for monitoring cytopenias and disease burden.'},
-    {id:'smear',label:'Peripheral blood smear',cat:'Blood',note:'Assess for rouleaux, circulating plasma cells.'},
-    {id:'chem',label:'Serum BUN/creatinine, electrolytes, LFTs, albumin, calcium, uric acid, LDH, beta-2 microglobulin',cat:'Chemistry',note:'LDH and beta-2 microglobulin essential for ISS, R-ISS, R2-ISS staging.'},
-    {id:'crcl_test',label:'Creatinine clearance (calculated or measured)',cat:'Chemistry',note:'CrCl <40 mL/min is a CRAB criterion (renal). Required for lenalidomide dose adjustment.'},
-    {id:'spep',label:'Serum quantitative immunoglobulins, SPEP, and SIFE',cat:'Protein',note:'Quantify M-protein for response monitoring. SIFE more sensitive than SPEP.'},
-    {id:'urine',label:'24-h urine for total protein, UPEP, and UIFE',cat:'Protein',note:'BJP >=500 mg/24h = smoldering myeloma criterion.'},
-    {id:'flc',label:'Serum free light chain (FLC) assay',cat:'Protein',note:'Involved:uninvolved FLC ratio >=100 = SLiM biomarker. Normal ratio 0.26-1.65.'},
-    {id:'pet',label:'Whole-body FDG-PET/CT (preferred) or low-dose CT',cat:'Imaging',note:'Preferred over skeletal survey. If negative, consider WB MRI.'},
-    {id:'bm',label:'Bone marrow aspirate and biopsy with IHC and/or flow cytometry',cat:'Pathology',note:'BMPCs >=10% or biopsy-proven plasmacytoma required for active MM. CD138+ selection recommended for FISH.'},
-    {id:'fish_test',label:'FISH panel on CD138-selected plasma cells',cat:'Genetics',note:'del(13), del(17p13), t(4;14), t(11;14), t(14;16), t(14;20), 1q21 gain/amplification, 1p deletion.'},
-    {id:'ngs',label:'NGS to assess for TP53 mutation',cat:'Genetics',note:'TP53 mutation is high-risk regardless of del(17p) status per IMS-IMWG 2025.'},
-    {id:'bnp',label:'NT-proBNP / BNP',cat:'Cardiac',note:'Screen for cardiac amyloidosis. Elevated levels warrant echo and amyloidosis workup.'},
-  ];
-  var useful=[
-    {id:'mri_test',label:'Whole-body MRI without contrast',cat:'Imaging',note:'When PET/CT negative. >1 focal MRI lesion = myeloma-defining event (SLiM).'},
-    {id:'biopsy',label:'Tissue biopsy to confirm suspected plasmacytoma',cat:'Pathology',note:'Essential for solitary plasmacytoma diagnosis.'},
-    {id:'echo',label:'Echocardiogram',cat:'Cardiac',note:'If cardiac amyloidosis suspected, or before carfilzomib.'},
-    {id:'amyloid_test',label:'Evaluation for light chain amyloidosis',cat:'Special',note:'Fat pad aspirate, Congo red staining, or tissue biopsy.'},
-    {id:'mrd',label:'Baseline clonotype identification / store aspirate for MRD',cat:'Molecular',note:'Enables subsequent MRD monitoring.'},
-    {id:'viscosity',label:'Serum viscosity',cat:'Chemistry',note:'For IgA/IgG3 myeloma or hyperviscosity symptoms.'},
-    {id:'hep',label:'Hepatitis B, C testing and HIV screening',cat:'Infectious',note:'Required before anti-CD38 antibodies and CAR-T.'},
-    {id:'cpc',label:'Assess for circulating plasma cells',cat:'Blood',note:'>=5% circulating plasma cells = plasma cell leukaemia.'},
-    {id:'renal_bx',label:'Renal biopsy if albuminuria or abnormal renal function',cat:'Renal',note:'Per Dimopoulos criteria: AKI stage 3, eGFR <60 with progressive decline.'},
-  ];
-  var allItems=essential.concat(useful);
-  var count=0;allItems.forEach(function(it){if(checked[it.id])count++;});
-  var totalItems=allItems.length;
+  // --- Count filled fields for progress ---
+  var trackedFields=['haemoglobin','wcc','neutrophils','lymphocytes','platelets','calcium','creatinine','crcl','urea','albumin','ldh','uricAcid','b2m','alt','alp','bilirubin','mProtein','igg','iga','igm','sife','flcKappa','flcLambda','flcRatio','urineProtein','bjp','uife','bmpc','bmMorphology','bmClonality','mrdStored','boneCount','mriLesionCategory','plasmacytoma','fishPerformedOn','oneqCopyNumber','ngsPanel','karyotype','ntProBnp','echoResult','amyloidosis','hepB','hepC','hiv','circulatingPC','ecog','frailty'];
+  var count=0;trackedFields.forEach(function(f){if(pd[f]!==undefined&&pd[f]!==''&&pd[f]!==null){count++;}});
+  if(pd.fishResults&&pd.fishResults.length>0)count++;
+  if(pd.imagingModality&&pd.imagingModality.length>0)count++;
+  if(pd.bmFlow&&pd.bmFlow.length>0)count++;
+  if(pd.diseaseSites&&pd.diseaseSites.length>0)count++;
+  var totalItems=50;
 
   // --- FISH abnormalities list ---
   var fishList=['del(17p)','t(4;14)','t(11;14)','t(14;16)','t(14;20)','del(13)','1q21 gain','1q21 amp','1p deletion','TP53 mutation'];
 
-  // --- Helper: labelled number input with dual unit display ---
-  function numInput(key,label,unit,placeholder){
-    // Find if this key has dual units
-    var dualMap={calcium:U.calcium,creatinine:U.creatinine,haemoglobin:U.haemoglobin,albumin:U.albumin,mProtein:U.mProtein};
+  // --- Helper: dual-unit conversion text for table cells ---
+  function dualConv(key,val){
+    var dualMap={calcium:U.calcium,creatinine:U.creatinine,haemoglobin:U.haemoglobin,albumin:U.albumin,mProtein:U.mProtein,urea:U.urea,bilirubin:U.bilirubin,uricAcid:U.uricAcid};
     var dual=dualMap[key];
-    var altUnit=dual?(isUK?dual.US:dual.UK):null;
-    var altValue='';
-    if(dual&&pd[key]!==undefined&&pd[key]!==''){
-      var v=parseFloat(pd[key]);
-      if(!isNaN(v)){
-        altValue=isUK?dual.convert(v,false):dual.convert(v,true);
-        altValue=altValue.toFixed(altUnit==='g/L'||altUnit==='\u00b5mol/L'?0:1);
-      }
-    }
-    return e('div',{className:'flex items-center gap-2 mb-2.5'},
-      e('label',{className:'text-xs font-medium text-slate-700 w-28 flex-shrink-0'},label),
-      e('input',{type:'number',step:'any',className:'calc-input flex-1',placeholder:placeholder||'',value:pd[key]!==undefined?pd[key]:'',onChange:function(ev){upd(key,ev.target.value)}}),
-      unit?e('span',{className:'text-xs font-semibold w-16 flex-shrink-0 '+(isUK?'text-blue-700':'text-emerald-700')},unit):null,
-      altUnit&&altValue?e('span',{className:'text-[10px] text-slate-400 w-20 flex-shrink-0 border-l border-slate-200 pl-2'},'\u2248 '+altValue+' '+altUnit):
-      altUnit?e('span',{className:'text-[10px] text-slate-300 w-20 flex-shrink-0 border-l border-slate-200 pl-2'},altUnit):null
+    if(!dual||val===undefined||val==='')return null;
+    var v=parseFloat(val);if(isNaN(v))return null;
+    var altUnit=isUK?dual.US:dual.UK;
+    var altVal=isUK?dual.convert(v,false):dual.convert(v,true);
+    var decimals=(altUnit==='g/L'||altUnit==='\u00b5mol/L')?0:1;
+    return '\u2248 '+altVal.toFixed(decimals)+' '+altUnit;
+  }
+
+  // --- Helper: table row with number input ---
+  function labRow(key,label,placeholder,unitLabel,refRange){
+    var convText=dualConv(key,pd[key]);
+    return e('tr',{key:key},
+      e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},label),
+      e('td',{className:'py-1'},e('input',{type:'number',step:'any',className:'calc-input w-full',style:{minWidth:'80px'},placeholder:placeholder||'',value:pd[key]!==undefined?pd[key]:'',onChange:function(ev){upd(key,ev.target.value)}})),
+      e('td',{className:'text-xs px-2 whitespace-nowrap '+(isUK?'text-blue-600':'text-emerald-600')},unitLabel,convText?e('div',{className:'text-[10px] text-slate-400'},convText):null),
+      e('td',{className:'text-xs text-slate-400'},refRange)
     );
   }
 
-  // --- Helper: labelled select ---
+  // --- Helper: table row with select input ---
+  function selRow(key,label,options,unitLabel,refRange){
+    return e('tr',{key:key},
+      e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},label),
+      e('td',{className:'py-1'},e('select',{className:'calc-input w-full',style:{minWidth:'80px'},value:pd[key]||'',onChange:function(ev){upd(key,ev.target.value)}},
+        e('option',{value:''},'-- Select --'),
+        options.map(function(o){return e('option',{key:o.v||o,value:o.v||o},o.l||o);})
+      )),
+      e('td',{className:'text-xs px-2 whitespace-nowrap '+(isUK?'text-blue-600':'text-emerald-600')},unitLabel||''),
+      e('td',{className:'text-xs text-slate-400'},refRange||'')
+    );
+  }
+
+  // --- Helper: standalone select ---
   function selInput(key,label,options){
     return e('div',{className:'flex items-center gap-2 mb-2'},
-      e('label',{className:'text-xs font-medium text-slate-700 w-32 flex-shrink-0'},label),
+      e('label',{className:'text-xs font-medium text-slate-700 w-40 flex-shrink-0'},label),
       e('select',{className:'calc-input flex-1',value:pd[key]||'',onChange:function(ev){upd(key,ev.target.value)}},
         e('option',{value:''},'-- Select --'),
         options.map(function(o){return e('option',{key:o.v||o,value:o.v||o},o.l||o);})
@@ -902,27 +911,24 @@ function PageWorkup(props){
     );
   }
 
-  // --- State for free-text results on each checklist item ---
-  var resSt=useState({});var results=resSt[0];var setResults=resSt[1];
-  function updResult(id,val){setResults(function(p){var n=Object.assign({},p);n[id]=val;return n;});}
-
-  // --- Helper: checklist item with result entry ---
-  function checkItem(it,badgeType){
-    return e('div',{key:it.id,className:'py-2.5 border-b border-slate-100 last:border-0'},
-      e('div',{className:'flex gap-3 items-start'},
-        e('input',{type:'checkbox',checked:!!checked[it.id],onChange:function(){toggle(it.id)},className:'mt-1 accent-blue-700 w-4 h-4 flex-shrink-0'}),
-        e('div',{className:'flex-1'},
-          e('div',{className:'flex items-center gap-2 flex-wrap'},
-            e('span',{className:'font-medium text-sm '+(checked[it.id]?'text-slate-900':'text-slate-700')},it.label),
-            e(Badge,{type:badgeType},it.cat)
-          ),
-          e('p',{className:'text-xs text-slate-500 mt-0.5'},it.note),
-          e('div',{className:'mt-1.5'},
-            e('input',{type:'text',className:'calc-input text-xs w-full',placeholder:'Enter result / findings...',value:results[it.id]||'',onChange:function(ev){updResult(it.id,ev.target.value)}})
-          )
-        )
-      )
+  // --- Helper: tick-block grid ---
+  function tickGrid(key,options,cols){
+    cols=cols||3;
+    return e('div',{className:'grid grid-cols-2 sm:grid-cols-'+cols+' gap-2'},
+      options.map(function(opt){
+        var arr=pd[key]||[];
+        var sel=Array.isArray(arr)?arr.indexOf(opt.v)>=0:false;
+        return e('label',{key:opt.v,className:'flex items-center gap-2 p-2 rounded-lg border cursor-pointer text-xs font-medium transition-colors '+(sel?'bg-blue-50 border-blue-300 text-blue-800':'bg-white border-slate-200 text-slate-600 hover:bg-slate-50')},
+          e('input',{type:'checkbox',checked:sel,onChange:function(){toggleArrayField(key,opt.v)},className:'accent-blue-700 w-3.5 h-3.5'}),
+          opt.l
+        );
+      })
     );
+  }
+
+  // --- Helper: section label ---
+  function secLabel(text){
+    return e('div',{className:'text-xs font-bold text-slate-600 uppercase tracking-wider mt-3 mb-2'},text);
   }
 
   // --- CRAB/SLiM indicator ---
@@ -962,9 +968,9 @@ function PageWorkup(props){
 
     // --- Progress bar ---
     e('div',{className:'flex items-center gap-3 mb-4'},
-      e('div',{className:'text-sm text-slate-600'},count+'/'+totalItems+' completed'),
+      e('div',{className:'text-sm text-slate-600'},Math.min(count,totalItems)+'/'+totalItems+' fields entered'),
       e('div',{className:'flex-1 h-2 bg-slate-100 rounded-full overflow-hidden'},
-        e('div',{className:'h-full bg-blue-600 rounded-full transition-all',style:{width:Math.round(count/totalItems*100)+'%'}})
+        e('div',{className:'h-full bg-blue-600 rounded-full transition-all',style:{width:Math.min(Math.round(count/totalItems*100),100)+'%'}})
       )
     ),
 
@@ -994,144 +1000,389 @@ function PageWorkup(props){
         e('span',null,'BJP: mg/24h')
       )
     ),
+
     e(AlertBox,{type:'info',title:'Clinical Pearl:'},'Perform CD138+ selection on bone marrow aspirate before FISH analysis. Standard cytogenetics on unselected samples have low sensitivity.'),
 
-    // === PATIENT DATA ENTRY CARD ===
+    // =================================================================
+    // SECTION 1: FULL BLOOD COUNT (FBC/CBC)
+    // =================================================================
     e(Card,{className:'mt-4'},
-      e('h3',{className:'font-bold text-sm text-slate-800 mb-3 flex items-center gap-2'},Ico(ICONS.clipboard,{size:14}),' Patient Data Entry & Investigation Checklist'),
-
-      // -- Core Laboratory --
-      e(Collapsible,{title:'Core Laboratory (Calcium, Creatinine, CrCl, Hb, Albumin, LDH, B2M)',defaultOpen:true},
-        e('div',{className:'grid md:grid-cols-2 gap-x-6'},
-          e('div',null,
-            numInput('calcium','Calcium',isUK?U.calcium.UK:U.calcium.US,isUK?U.calcium.phUK:U.calcium.phUS),
-            numInput('creatinine','Creatinine',isUK?U.creatinine.UK:U.creatinine.US,isUK?U.creatinine.phUK:U.creatinine.phUS),
-            numInput('crcl','CrCl',U.crcl.unit,U.crcl.ph),
-            numInput('haemoglobin','Haemoglobin',isUK?U.haemoglobin.UK:U.haemoglobin.US,isUK?U.haemoglobin.phUK:U.haemoglobin.phUS)
-          ),
-          e('div',null,
-            numInput('albumin','Albumin',isUK?U.albumin.UK:U.albumin.US,isUK?U.albumin.phUK:U.albumin.phUS),
-            selInput('ldh','LDH',['Normal','Elevated above ULN']),
-            numInput('b2m','Beta-2 Microglobulin',U.b2m.unit,U.b2m.ph)
+      e(Collapsible,{title:'Section 1: Full Blood Count (FBC / CBC)',defaultOpen:true},
+        e('table',{className:'tbl w-full'},
+          e('thead',null,e('tr',null,
+            e('th',null,'Parameter'),
+            e('th',{style:{width:'100px'}},'Value'),
+            e('th',{style:{width:'120px'}},'Unit'),
+            e('th',null,'Reference Range')
+          )),
+          e('tbody',null,
+            labRow('haemoglobin','Haemoglobin',isUK?U.haemoglobin.phUK:U.haemoglobin.phUS,isUK?U.haemoglobin.UK:U.haemoglobin.US,isUK?'130-170 (M) / 120-150 (F)':'13-17 (M) / 12-15 (F)'),
+            labRow('wcc','White Cell Count','e.g. 7.5','\u00d710\u2079/L','4.0-11.0'),
+            labRow('neutrophils','Neutrophils','e.g. 4.0','\u00d710\u2079/L','2.0-7.5'),
+            labRow('lymphocytes','Lymphocytes','e.g. 2.0','\u00d710\u2079/L','1.0-4.0'),
+            labRow('platelets','Platelets','e.g. 250','\u00d710\u2079/L','150-400')
           )
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
-          checkItem(essential[0],'essential'),
-          checkItem(essential[1],'essential'),
-          checkItem(essential[2],'essential'),
-          checkItem(essential[3],'essential'),
-          checkItem(essential[4],'essential')
         )
-      ),
+      )
+    ),
 
-      // -- Protein Studies --
-      e(Collapsible,{title:'Protein Studies (M-protein, BJP, FLC Ratio, Ig Levels)',defaultOpen:true},
-        e('div',{className:'grid md:grid-cols-2 gap-x-6'},
-          e('div',null,
-            numInput('mProtein','Serum M-protein',isUK?U.mProtein.UK:U.mProtein.US,isUK?U.mProtein.phUK:U.mProtein.phUS),
-            numInput('bjp','Bence-Jones Protein',U.bjp.unit,U.bjp.ph)
-          ),
-          e('div',null,
-            numInput('flcRatio','FLC Ratio','','e.g. 45.2')
+    // =================================================================
+    // SECTION 2: BIOCHEMISTRY / METABOLIC PANEL
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 2: Biochemistry / Metabolic Panel',defaultOpen:true},
+        e('table',{className:'tbl w-full'},
+          e('thead',null,e('tr',null,
+            e('th',null,'Parameter'),
+            e('th',{style:{width:'100px'}},'Value'),
+            e('th',{style:{width:'120px'}},'Unit'),
+            e('th',null,'Reference Range')
+          )),
+          e('tbody',null,
+            labRow('calcium','Calcium (corrected)',isUK?U.calcium.phUK:U.calcium.phUS,isUK?U.calcium.UK:U.calcium.US,isUK?'2.20-2.60':'8.8-10.4'),
+            labRow('creatinine','Creatinine',isUK?U.creatinine.phUK:U.creatinine.phUS,isUK?U.creatinine.UK:U.creatinine.US,isUK?'60-110':'0.7-1.2'),
+            labRow('crcl','CrCl (calculated)',U.crcl.ph,'mL/min','>60'),
+            labRow('urea','Urea / BUN',isUK?'e.g. 5.0':'e.g. 14',isUK?'mmol/L':'mg/dL',isUK?'2.5-7.8':'7-22'),
+            labRow('albumin','Albumin',isUK?U.albumin.phUK:U.albumin.phUS,isUK?U.albumin.UK:U.albumin.US,isUK?'35-50':'3.5-5.0'),
+            e('tr',{key:'ldh'},
+              e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},'LDH'),
+              e('td',{className:'py-1'},e('select',{className:'calc-input w-full',value:pd.ldh||'',onChange:function(ev){upd('ldh',ev.target.value)}},
+                e('option',{value:''},'-- Select --'),
+                e('option',{value:'Normal'},'Normal'),
+                e('option',{value:'Elevated'},'Elevated above ULN')
+              )),
+              e('td',{className:'text-xs px-2 text-slate-500'},'U/L'),
+              e('td',{className:'text-xs text-slate-400'},'120-246 (lab-specific)')
+            ),
+            labRow('uricAcid','Uric Acid',isUK?'e.g. 350':'e.g. 5.5',isUK?'\u00b5mol/L':'mg/dL',isUK?'200-430':'3.4-7.0'),
+            labRow('b2m','Beta-2 Microglobulin',U.b2m.ph,'mg/L','0.8-2.2'),
+            labRow('alt','ALT','e.g. 25','U/L','7-56'),
+            labRow('alp','ALP','e.g. 80','U/L','44-147'),
+            labRow('bilirubin','Bilirubin',isUK?'e.g. 12':'e.g. 0.7',isUK?'\u00b5mol/L':'mg/dL',isUK?'3-21':'0.2-1.2')
           )
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
-          checkItem(essential[5],'essential'),
-          checkItem(essential[6],'essential'),
-          checkItem(essential[7],'essential')
         )
-      ),
+      )
+    ),
 
-      // -- Bone Marrow --
-      e(Collapsible,{title:'Bone Marrow (BMPCs%, Plasmacytoma Type, Circulating PCs)',defaultOpen:true},
-        e('div',{className:'grid md:grid-cols-2 gap-x-6'},
-          e('div',null,
-            numInput('bmpc','BMPCs','%','e.g. 25'),
-            selInput('plasmacytoma','Plasmacytoma',[
-              {v:'None',l:'None'},
-              {v:'Solitary bone',l:'Solitary bone'},
-              {v:'Solitary soft tissue',l:'Solitary soft tissue'},
-              {v:'Solitary with <10% BMPC',l:'Solitary with <10% BMPC'},
-              {v:'Solitary with >=10% BMPC',l:'Solitary with >=10% BMPC'}
+    // =================================================================
+    // SECTION 3: PROTEIN STUDIES
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 3: Protein Studies',defaultOpen:true},
+        e('table',{className:'tbl w-full'},
+          e('thead',null,e('tr',null,
+            e('th',null,'Parameter'),
+            e('th',{style:{width:'100px'}},'Value'),
+            e('th',{style:{width:'120px'}},'Unit'),
+            e('th',null,'Reference / Notes')
+          )),
+          e('tbody',null,
+            labRow('mProtein','Serum M-protein (SPEP)',isUK?U.mProtein.phUK:U.mProtein.phUS,isUK?U.mProtein.UK:U.mProtein.US,isUK?'>=30 g/L = SMM criterion':'>=3 g/dL = SMM criterion'),
+            labRow('igg','IgG','e.g. 8.0','g/L','6.0-16.0'),
+            labRow('iga','IgA','e.g. 2.0','g/L','0.8-4.0'),
+            labRow('igm','IgM','e.g. 0.8','g/L','0.4-2.3'),
+            selRow('sife','SIFE result',[{v:'Not done',l:'Not done'},{v:'Positive',l:'Positive'},{v:'Negative',l:'Negative'}],'','Serum immunofixation'),
+            labRow('flcKappa','Serum FLC Kappa','e.g. 15.5','mg/L','3.3-19.4'),
+            labRow('flcLambda','Serum FLC Lambda','e.g. 12.0','mg/L','5.7-26.3'),
+            e('tr',{key:'flcRatio'},
+              e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},'FLC Ratio (\u03ba/\u03bb)'),
+              e('td',{className:'py-1'},e('input',{type:'number',step:'any',className:'calc-input w-full',style:{minWidth:'80px'},placeholder:autoFlcRatio?'Auto: '+autoFlcRatio:'e.g. 45.2',value:pd.flcRatio!==undefined?pd.flcRatio:'',onChange:function(ev){upd('flcRatio',ev.target.value)}})),
+              e('td',{className:'text-xs px-2 text-slate-500'},autoFlcRatio&&!pd.flcRatio?e('span',{className:'text-blue-600 font-medium'},'Auto: '+autoFlcRatio):'ratio'),
+              e('td',{className:'text-xs text-slate-400'},'0.26-1.65 (>=100 = SLiM)')
+            ),
+            labRow('urineProtein','24h Urine Total Protein','e.g. 1200','mg/24h','<150'),
+            labRow('bjp','UPEP (Bence Jones Protein)',U.bjp.ph,'mg/24h','>=500 = SMM criterion'),
+            selRow('uife','UIFE result',[{v:'Not done',l:'Not done'},{v:'Positive',l:'Positive'},{v:'Negative',l:'Negative'}],'','Urine immunofixation')
+          )
+        )
+      )
+    ),
+
+    // =================================================================
+    // SECTION 4: BONE MARROW FINDINGS
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 4: Bone Marrow Findings',defaultOpen:true},
+        e('div',{className:'space-y-3'},
+
+          // BMPC %
+          e('div',{className:'flex items-center gap-3'},
+            e('label',{className:'text-xs font-bold text-slate-700 w-48 flex-shrink-0'},'Bone Marrow Plasma Cells:'),
+            e('input',{type:'number',step:'any',className:'calc-input',style:{width:'80px'},placeholder:'e.g. 25',value:pd.bmpc||'',onChange:function(ev){upd('bmpc',ev.target.value)}}),
+            e('span',{className:'text-xs text-slate-500'},'%'),
+            pd.bmpc&&parseFloat(pd.bmpc)>=60?e('span',{className:'text-xs font-bold text-red-600'},'SLiM criterion met (>=60%)'):
+            pd.bmpc&&parseFloat(pd.bmpc)>=10?e('span',{className:'text-xs font-bold text-amber-600'},'>=10% (diagnostic threshold)'):null
+          ),
+
+          // Morphology
+          selInput('bmMorphology','Morphology:',[{v:'Normal',l:'Normal'},{v:'Abnormal',l:'Abnormal'},{v:'Not assessed',l:'Not assessed'}]),
+
+          // Immunophenotype (Flow) -- multi-tick
+          secLabel('Immunophenotype (Flow Cytometry)'),
+          tickGrid('bmFlow',[
+            {v:'CD138+',l:'CD138+'},{v:'CD38+',l:'CD38+'},{v:'CD56+',l:'CD56+'},{v:'CD19-',l:'CD19-'},{v:'CD45-',l:'CD45-'},{v:'Cyclin D1+',l:'Cyclin D1+'},{v:'Other',l:'Other'}
+          ],4),
+
+          // IHC
+          selInput('bmIHC','IHC performed:',[{v:'Yes',l:'Yes'},{v:'No',l:'No'}]),
+
+          // Clonality
+          selInput('bmClonality','Clonality:',[{v:'Kappa restricted',l:'Kappa restricted'},{v:'Lambda restricted',l:'Lambda restricted'},{v:'Polyclonal',l:'Polyclonal'},{v:'Not assessed',l:'Not assessed'}]),
+
+          // MRD baseline
+          selInput('mrdStored','MRD baseline sample stored:',[{v:'Yes',l:'Yes'},{v:'No',l:'No'}])
+        )
+      )
+    ),
+
+    // =================================================================
+    // SECTION 5: IMAGING
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 5: Imaging',defaultOpen:true},
+        e('div',{className:'space-y-4'},
+
+          // Imaging modality performed
+          secLabel('Imaging Modality Performed'),
+          tickGrid('imagingModality',[
+            {v:'WBLDCT',l:'Whole-body low-dose CT'},
+            {v:'PET-CT',l:'FDG-PET/CT'},
+            {v:'WB-MRI',l:'Whole-body MRI'},
+            {v:'Skeletal survey',l:'Skeletal survey'},
+            {v:'None',l:'None yet'}
+          ],3),
+
+          // Bone lesions
+          secLabel('Bone Lesions'),
+          tickGrid('boneFindings',[
+            {v:'No lytic lesions',l:'No lytic lesions'},
+            {v:'1 lytic lesion',l:'1 lytic lesion'},
+            {v:'2-5 lytic lesions',l:'2-5 lytic lesions'},
+            {v:'>5 lytic lesions',l:'>5 lytic lesions'},
+            {v:'Diffuse osteopenia',l:'Diffuse osteopenia'}
+          ],3),
+          // Map bone findings to boneCount for classification
+          e('div',{className:'mt-1'},
+            selInput('boneCount','Lytic lesion count (for classification):',[
+              {v:'0',l:'None'},{v:'1',l:'1 lesion'},{v:'2-5',l:'2-5 lesions'},{v:'>5',l:'>5 lesions'}
             ])
           ),
-          e('div',null,
-            selInput('circulatingPC','Circulating PCs',[
-              {v:'No',l:'No'},{v:'<5%',l:'<5%'},{v:'>=5%',l:'>=5%'}
-            ])
-          )
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
-          checkItem(essential[9],'essential'),
-          checkItem(useful[7],'other')
-        )
-      ),
 
-      // -- Imaging --
-      e(Collapsible,{title:'Imaging (Bone Lesions, MRI Lesions)',defaultOpen:true},
-        e('div',{className:'grid md:grid-cols-2 gap-x-6'},
-          e('div',null,
-            selInput('boneLesions','Bone Lesions',[
-              {v:'None',l:'None'},{v:'1+',l:'1 or more osteolytic lesions'}
+          // Sites of disease
+          secLabel('Sites of Disease (tick all that apply)'),
+          tickGrid('diseaseSites',[
+            {v:'Skull',l:'Skull'},{v:'Spine',l:'Spine'},{v:'Ribs',l:'Ribs'},{v:'Pelvis',l:'Pelvis'},{v:'Long bones',l:'Long bones'},{v:'Extramedullary soft tissue',l:'Extramedullary soft tissue'}
+          ],3),
+
+          // MRI focal lesions
+          secLabel('MRI Focal Lesions'),
+          e('div',{className:'flex items-center gap-3 mb-2'},
+            e('label',{className:'text-xs font-medium text-slate-700 w-40 flex-shrink-0'},'Number of lesions:'),
+            e('input',{type:'number',step:'1',className:'calc-input',style:{width:'80px'},placeholder:'e.g. 2',value:pd.mriLesions||'',onChange:function(ev){upd('mriLesions',ev.target.value)}})
+          ),
+          tickGrid('mriFindings',[
+            {v:'None',l:'None'},
+            {v:'1 lesion',l:'1 lesion'},
+            {v:'>1 lesion',l:'>1 lesion (SLiM criterion met)'},
+            {v:'Diffuse infiltration',l:'Diffuse infiltration'}
+          ],2),
+          e('div',{className:'mt-1'},
+            selInput('mriLesionCategory','MRI lesion category (for classification):',[
+              {v:'none',l:'None'},{v:'1',l:'1 lesion'},{v:'>1',l:'>1 lesion (SLiM criterion)'},{v:'diffuse',l:'Diffuse infiltration'}
             ])
           ),
-          e('div',null,
-            numInput('mriLesions','MRI Focal Lesions','','e.g. 2')
-          )
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
-          checkItem(essential[8],'essential'),
-          checkItem(useful[0],'other')
-        )
-      ),
 
-      // -- Cytogenetics/FISH --
-      e(Collapsible,{title:'Cytogenetics / FISH (Select All Detected Abnormalities)',defaultOpen:true},
-        e('div',{className:'grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3'},
-          fishList.map(function(f){
-            var sel=(pd.fishResults||[]).indexOf(f)>=0;
-            var isHigh=['del(17p)','t(4;14)','t(14;16)','t(14;20)','1q21 amp','TP53 mutation'].indexOf(f)>=0;
-            return e('label',{key:f,className:'flex items-center gap-2 p-2 rounded-lg border cursor-pointer text-xs font-medium transition-colors '+(sel?(isHigh?'bg-red-50 border-red-300 text-red-800':'bg-blue-50 border-blue-300 text-blue-800'):'bg-white border-slate-200 text-slate-600 hover:bg-slate-50')},
-              e('input',{type:'checkbox',checked:sel,onChange:function(){toggleFish(f)},className:'accent-blue-700 w-3.5 h-3.5'}),
-              f,
-              isHigh?e('span',{className:'text-xs text-red-500 ml-auto'},'HR'):null
-            );
-          })
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2'},
-          checkItem(essential[10],'essential'),
-          checkItem(essential[11],'essential')
-        )
-      ),
+          // FDG-PET/CT findings
+          secLabel('FDG-PET/CT Findings'),
+          tickGrid('petFindings',[
+            {v:'No FDG-avid lesions',l:'No FDG-avid lesions'},
+            {v:'FDG-avid bone lesions',l:'FDG-avid bone lesions'},
+            {v:'FDG-avid extramedullary disease',l:'FDG-avid extramedullary disease'},
+            {v:'Not done',l:'Not done'}
+          ],2),
 
-      // -- Additional --
-      e(Collapsible,{title:'Additional (Amyloidosis, Organ Dysfunction, Cardiac)',defaultOpen:true},
-        e('div',{className:'grid md:grid-cols-2 gap-x-6'},
-          e('div',null,
-            selInput('amyloidosis','Amyloidosis',[
-              {v:'No',l:'No'},{v:'Suspected',l:'Suspected'},{v:'Confirmed',l:'Confirmed'}
-            ]),
-            selInput('organDysfunction','Organ Dysfunction',[
-              {v:'None',l:'None'},{v:'Renal',l:'Renal'},{v:'Neurological',l:'Neurological'},{v:'Cardiac',l:'Cardiac'},{v:'Other',l:'Other'}
-            ])
+          // Plasmacytoma
+          secLabel('Plasmacytoma'),
+          selInput('plasmacytoma','Plasmacytoma:',[
+            {v:'None',l:'None'},
+            {v:'Solitary osseous',l:'Solitary osseous'},
+            {v:'Solitary extraosseous',l:'Solitary extraosseous'},
+            {v:'Solitary with <10% BMPC',l:'Solitary with <10% BMPC'},
+            {v:'Solitary with >=10% BMPC',l:'Solitary with >=10% BMPC'},
+            {v:'Multiple',l:'Multiple'}
+          ])
+        )
+      )
+    ),
+
+    // =================================================================
+    // SECTION 6: CYTOGENETICS / FISH
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 6: Cytogenetics / FISH',defaultOpen:true},
+        e('div',{className:'space-y-4'},
+
+          // FISH performed on
+          secLabel('FISH Performed On'),
+          tickGrid('fishPerformedOnArr',[
+            {v:'CD138-selected',l:'CD138-selected cells (recommended)'},
+            {v:'Unsorted',l:'Unsorted cells'},
+            {v:'Not done',l:'Not done'}
+          ],3),
+
+          // FISH results -- keep existing grid design with HR markers
+          secLabel('Results (tick all detected)'),
+          e('div',{className:'grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3'},
+            fishList.map(function(f){
+              var sel=(pd.fishResults||[]).indexOf(f)>=0;
+              var isHigh=['del(17p)','t(4;14)','t(14;16)','t(14;20)','1q21 amp','TP53 mutation'].indexOf(f)>=0;
+              return e('label',{key:f,className:'flex items-center gap-2 p-2 rounded-lg border cursor-pointer text-xs font-medium transition-colors '+(sel?(isHigh?'bg-red-50 border-red-300 text-red-800':'bg-blue-50 border-blue-300 text-blue-800'):'bg-white border-slate-200 text-slate-600 hover:bg-slate-50')},
+                e('input',{type:'checkbox',checked:sel,onChange:function(){toggleFish(f)},className:'accent-blue-700 w-3.5 h-3.5'}),
+                f,
+                isHigh?e('span',{className:'text-xs text-red-500 ml-auto'},'HR'):null
+              );
+            })
           ),
-          e('div',null)
-        ),
-        e('div',{className:'border-t border-slate-100 pt-2 mt-2'},
-          checkItem(essential[12],'essential'),
-          checkItem(useful[1],'other'),
-          checkItem(useful[2],'other'),
-          checkItem(useful[3],'other'),
-          checkItem(useful[4],'other'),
-          checkItem(useful[5],'other'),
-          checkItem(useful[6],'other'),
-          checkItem(useful[8],'other')
+
+          // 1q21 copy number
+          selInput('oneqCopyNumber','1q21 Copy Number:',[
+            {v:'Not assessed',l:'Not assessed'},
+            {v:'Normal (2 copies)',l:'Normal (2 copies)'},
+            {v:'Gain (3 copies)',l:'Gain (3 copies)'},
+            {v:'Amplification (>=4 copies)',l:'Amplification (>=4 copies)'}
+          ]),
+
+          // NGS panel
+          selInput('ngsPanel','NGS Panel:',[
+            {v:'Not done',l:'Not done'},
+            {v:'Done - TP53 wild-type',l:'Done - TP53 wild-type'},
+            {v:'Done - TP53 mutated',l:'Done - TP53 mutated'},
+            {v:'Done - Other mutations found',l:'Done - Other mutations found'}
+          ]),
+
+          // Karyotype
+          selInput('karyotype','Karyotype:',[
+            {v:'Not done',l:'Not done'},
+            {v:'Normal',l:'Normal'},
+            {v:'Hyperdiploid',l:'Hyperdiploid'},
+            {v:'Hypodiploid',l:'Hypodiploid'},
+            {v:'Complex',l:'Complex'},
+            {v:'Other',l:'Other'}
+          ])
+        )
+      )
+    ),
+
+    // =================================================================
+    // SECTION 7: CARDIAC & ADDITIONAL
+    // =================================================================
+    e(Card,{className:'mt-4'},
+      e(Collapsible,{title:'Section 7: Cardiac & Additional Assessments',defaultOpen:true},
+        e('div',{className:'space-y-3'},
+
+          // NT-proBNP / BNP
+          e('div',{className:'flex items-center gap-3 flex-wrap'},
+            e('label',{className:'text-xs font-bold text-slate-700 w-40 flex-shrink-0'},'NT-proBNP / BNP:'),
+            e('input',{type:'number',step:'any',className:'calc-input',style:{width:'100px'},placeholder:'e.g. 125',value:pd.ntProBnp||'',onChange:function(ev){upd('ntProBnp',ev.target.value)}}),
+            e('span',{className:'text-xs text-slate-500'},'pg/mL (BNP) or ng/L (NT-proBNP)'),
+            e('select',{className:'calc-input',style:{width:'120px'},value:pd.bnpStatus||'',onChange:function(ev){upd('bnpStatus',ev.target.value)}},
+              e('option',{value:''},'-- Status --'),
+              e('option',{value:'Normal'},'Normal'),
+              e('option',{value:'Elevated'},'Elevated')
+            )
+          ),
+
+          // Echocardiogram
+          selInput('echoResult','Echocardiogram:',[
+            {v:'Not done',l:'Not done'},
+            {v:'Normal',l:'Normal'},
+            {v:'Abnormal',l:'Abnormal - specify below'}
+          ]),
+          pd.echoResult==='Abnormal'?e('div',{className:'flex items-center gap-2 ml-4'},
+            e('label',{className:'text-xs font-medium text-slate-700 w-36 flex-shrink-0'},'Echo findings:'),
+            e('input',{type:'text',className:'calc-input flex-1',placeholder:'Describe abnormal findings...',value:pd.echoFindings||'',onChange:function(ev){upd('echoFindings',ev.target.value)}})
+          ):null,
+
+          // Amyloidosis assessment
+          selInput('amyloidosis','Amyloidosis assessment:',[
+            {v:'Not suspected',l:'Not suspected'},
+            {v:'Suspected',l:'Suspected'},
+            {v:'Confirmed AL',l:'Confirmed AL'},
+            {v:'Confirmed other',l:'Confirmed other'}
+          ]),
+
+          // Serum viscosity
+          e('div',{className:'flex items-center gap-3 flex-wrap'},
+            e('label',{className:'text-xs font-bold text-slate-700 w-40 flex-shrink-0'},'Serum viscosity:'),
+            e('input',{type:'number',step:'any',className:'calc-input',style:{width:'80px'},placeholder:'e.g. 1.8',value:pd.serumViscosity||'',onChange:function(ev){upd('serumViscosity',ev.target.value)}}),
+            e('span',{className:'text-xs text-slate-500'},'cP'),
+            e('select',{className:'calc-input',style:{width:'120px'},value:pd.viscosityStatus||'',onChange:function(ev){upd('viscosityStatus',ev.target.value)}},
+              e('option',{value:''},'-- Status --'),
+              e('option',{value:'Normal'},'Normal'),
+              e('option',{value:'Elevated'},'Elevated')
+            )
+          ),
+
+          // Infection screening
+          secLabel('Infection Screening'),
+          selInput('hepB','Hepatitis B:',[
+            {v:'Not tested',l:'Not tested'},
+            {v:'HBsAg- HBcAb-',l:'HBsAg- HBcAb-'},
+            {v:'HBsAg- HBcAb+',l:'HBsAg- HBcAb+'},
+            {v:'HBsAg+',l:'HBsAg+'},
+            {v:'Unknown',l:'Unknown'}
+          ]),
+          selInput('hepC','Hepatitis C:',[
+            {v:'Not tested',l:'Not tested'},
+            {v:'Negative',l:'Negative'},
+            {v:'Positive',l:'Positive'}
+          ]),
+          selInput('hiv','HIV:',[
+            {v:'Not tested',l:'Not tested'},
+            {v:'Negative',l:'Negative'},
+            {v:'Positive',l:'Positive'}
+          ]),
+
+          // Circulating plasma cells
+          secLabel('Disease Burden'),
+          selInput('circulatingPC','Circulating plasma cells:',[
+            {v:'Not assessed',l:'Not assessed'},
+            {v:'None detected',l:'None detected'},
+            {v:'<5%',l:'<5%'},
+            {v:'>=5%',l:'>=5% (= Plasma Cell Leukaemia)'}
+          ]),
+
+          // Performance status
+          selInput('ecog','Performance status:',[
+            {v:'ECOG 0',l:'ECOG 0'},
+            {v:'ECOG 1',l:'ECOG 1'},
+            {v:'ECOG 2',l:'ECOG 2'},
+            {v:'ECOG 3',l:'ECOG 3'},
+            {v:'ECOG 4',l:'ECOG 4'}
+          ]),
+
+          // Frailty
+          selInput('frailty','Frailty (if >=65):',[
+            {v:'Not assessed',l:'Not assessed'},
+            {v:'Fit',l:'Fit'},
+            {v:'Intermediate',l:'Intermediate'},
+            {v:'Frail',l:'Frail'}
+          ]),
+
+          // Organ dysfunction
+          selInput('organDysfunction','Organ dysfunction:',[
+            {v:'None',l:'None'},
+            {v:'Renal',l:'Renal'},
+            {v:'Neurological',l:'Neurological'},
+            {v:'Cardiac',l:'Cardiac'},
+            {v:'Other',l:'Other'}
+          ])
         )
       )
     ),
 
     // === CLASSIFICATION RESULT CARD ===
-    e('div',{className:'card p-4 mb-4 border-2 '+ccol.border+' '+ccol.bg},
+    e('div',{className:'card p-4 mb-4 mt-4 border-2 '+ccol.border+' '+ccol.bg},
       e('h3',{className:'font-bold text-sm text-slate-800 mb-3 flex items-center gap-2'},Ico(ICONS.layers,{size:14}),' Classification Result'),
 
       // Overall classification banner
@@ -1149,13 +1400,13 @@ function PageWorkup(props){
           criterionRow('C - Hypercalcaemia ('+(isUK?'>2.75 mmol/L':'>11 mg/dL')+')',cx.crab.c,pd.calcium?pd.calcium+' '+(isUK?U.calcium.UK:U.calcium.US):null),
           criterionRow('R - Renal insufficiency ('+(isUK?'Cr>177 \u00b5mol/L':' Cr>2 mg/dL')+' or CrCl<40)',cx.crab.r,pd.creatinine?(pd.creatinine+' '+(isUK?U.creatinine.UK:U.creatinine.US)):pd.crcl?(pd.crcl+' mL/min'):null),
           criterionRow('A - Anaemia (Hb '+(isUK?'<100 g/L':'<10 g/dL')+')',cx.crab.a,pd.haemoglobin?pd.haemoglobin+' '+(isUK?U.haemoglobin.UK:U.haemoglobin.US):null),
-          criterionRow('B - Bone lesions',cx.crab.b,pd.boneLesions||null)
+          criterionRow('B - Bone lesions',cx.crab.b,pd.boneCount||pd.boneLesions||null)
         ),
         e('div',null,
           e('div',{className:'text-xs font-bold text-slate-700 uppercase tracking-wider mb-2'},'SLiM Criteria'),
           criterionRow('S - BMPCs >=60%',cx.slim.s,pd.bmpc?pd.bmpc+'%':null),
-          criterionRow('Li - FLC ratio >=100',cx.slim.li,pd.flcRatio?'Ratio: '+pd.flcRatio:null),
-          criterionRow('M - >1 focal MRI lesion',cx.slim.m,pd.mriLesions?pd.mriLesions+' lesions':null)
+          criterionRow('Li - FLC ratio >=100',cx.slim.li,effectiveFlcRatio?'Ratio: '+effectiveFlcRatio:null),
+          criterionRow('M - >1 focal MRI lesion',cx.slim.m,pd.mriLesions?(pd.mriLesions+' lesions'):(pd.mriLesionCategory||null))
         )
       ),
 
@@ -1172,7 +1423,8 @@ function PageWorkup(props){
           e('div',{className:'text-xs font-bold text-slate-700 uppercase tracking-wider mb-1'},'Cytogenetic Risk'),
           e('div',{className:'text-sm'},
             e('span',{className:cx.risk==='High'?'text-red-700 font-bold':'text-green-700 font-bold'},cx.risk+' Risk'),
-            (pd.fishResults&&pd.fishResults.length>0)?e('span',{className:'text-xs text-slate-500 ml-2'},'('+pd.fishResults.join(', ')+')'):null
+            (pd.fishResults&&pd.fishResults.length>0)?e('span',{className:'text-xs text-slate-500 ml-2'},'('+pd.fishResults.join(', ')+')'):null,
+            pd.ngsPanel==='Done - TP53 mutated'?e('span',{className:'text-xs text-red-500 ml-2'},'+ TP53 mutated (NGS)'):null
           )
         ):null
       ):null
