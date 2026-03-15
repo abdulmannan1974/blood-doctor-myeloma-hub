@@ -1085,7 +1085,7 @@ function PageWorkup(props){
             labRow('flcKappa','Serum FLC Kappa','e.g. 15.5','mg/L','3.3-19.4'),
             labRow('flcLambda','Serum FLC Lambda','e.g. 12.0','mg/L','5.7-26.3'),
             e('tr',{key:'flcRatio'},
-              e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},'FLC Ratio (\u03ba/\u03bb)'),
+              e('td',{className:'text-xs font-medium text-slate-700 py-1.5 pr-2'},'FLC Ratio'),
               e('td',{className:'py-1'},e('input',{type:'number',step:'any',className:'calc-input w-full',style:{minWidth:'80px'},placeholder:autoFlcRatio?'Auto: '+autoFlcRatio:'e.g. 45.2',value:pd.flcRatio!==undefined?pd.flcRatio:'',onChange:function(ev){upd('flcRatio',ev.target.value)}})),
               e('td',{className:'text-xs px-2 text-slate-500'},autoFlcRatio&&!pd.flcRatio?e('span',{className:'text-blue-600 font-medium'},'Auto: '+autoFlcRatio):'ratio'),
               e('td',{className:'text-xs text-slate-400'},'0.26-1.65 (>=100 = SLiM)')
